@@ -33,6 +33,14 @@ public class DBConnector {
 		System.out.println("Pretend I am connecting to the database.");
 		return true;
 	}
+	public void disconnect() {
+		/* Disconnects from the database. 
+		 */
+		// TODO implement disconnecting
+		// TODO make it log 
+		// TODO catch and throw exceptions
+		System.out.println("Pretend I am disconnecting from the database.");
+	}
 
 	public void showCredentials() {
 		/* This is only for testing/debugging */
