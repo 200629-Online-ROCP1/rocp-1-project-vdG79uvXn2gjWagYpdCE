@@ -1,4 +1,4 @@
-import resources.DBConnector.DBConnector;
+import database.*;
 
 public class BankingAPI {
 	
