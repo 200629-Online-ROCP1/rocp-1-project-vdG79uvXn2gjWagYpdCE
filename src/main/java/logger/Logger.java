@@ -18,7 +18,6 @@ public class Logger {
 		 * 
 		 */
 		String logstring = new String("<TIMESTAMP> " + level + ": " + message);
-		System.out.println("Pretend I just logged this message.");
 		System.out.println(logstring);
 	}
 	

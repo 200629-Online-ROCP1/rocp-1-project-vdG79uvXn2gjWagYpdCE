@@ -1,5 +1,7 @@
 package database;
 
+import logger.Logger;
+
 public class DBConnector {
 	/* This will control connections to the database for the various models.
 	 * The username and password must exist as environment variables.
@@ -31,6 +33,7 @@ public class DBConnector {
 		// TODO make it log success or failure
 		// TODO catch and throw exceptions
 		System.out.println("Pretend I am connecting to the database.");
+		Logger.makeEntry("INFO", "Connecting to the database.");
 		return true;
 	}
 	public void disconnect() {
@@ -40,6 +43,7 @@ public class DBConnector {
 		// TODO make it log 
 		// TODO catch and throw exceptions
 		System.out.println("Pretend I am disconnecting from the database.");
+		Logger.makeEntry("INFO", "Disconnecting from the database.");
 	}
 
 	public void showCredentials() {
