@@ -1,6 +1,8 @@
 package model;
 
 public class Model {
+    private String tableName;
+    
     public Model() {
         super();
     }
@@ -18,7 +20,7 @@ public class Model {
     }
 
     public void delete(int pk) {
-        
+
     }
     
 }
