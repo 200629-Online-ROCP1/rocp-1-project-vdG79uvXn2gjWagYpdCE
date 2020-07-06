@@ -29,12 +29,19 @@ public class DBConnector {
 		 * and returns false.
 		 */
 		// TODO implement connection
-		// TODO check hostname, port, and database are set
 		// TODO make it log success or failure
 		// TODO catch and throw exceptions
-		System.out.println("Pretend I am connecting to the database.");
-		Logger.makeEntry("INFO", "Connecting to the database.");
-		return true;
+		if (hostname == null) {
+			Logger.makeEntry("ERROR", "No database server hostname provided.");
+			return false;
+		} else if (database == null) {
+			Logger.makeEntry("ERROR", "No database name provided.");
+			return false;
+		} else {
+			System.out.println("Pretend I am connecting to the database.");
+			Logger.makeEntry("INFO", "Connecting to the database.");
+			return true;
+		}
 	}
 	public void disconnect() {
 		/* Disconnects from the database. 
