@@ -23,6 +23,11 @@ public class DBConnector {
 		this.port = port;
 		this.database = database;
 	}
+	public DBConnector(String hostname, String database) {
+		super();
+		this.hostname = hostname;
+		this.database = database;
+	}
 	public boolean connect() {
 		/* Checks if there is currently a connection. If not,
 		 * tries to make connection. If it fails, logs the error
