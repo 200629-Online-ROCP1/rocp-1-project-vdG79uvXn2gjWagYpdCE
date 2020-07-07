@@ -10,6 +10,8 @@ public class Server {
 		Logger.makeEntry("INFO", "Starting application");
 
 		db.connect();
+		System.out.println(db.is_connected);
+		db.disconnect();
 
 	} 
 }
