@@ -1,7 +1,7 @@
 package field;
 
 public class Field {
-    private String fieldName;
+    protected String fieldName;
     private String fieldType;
     private boolean null_allowed = false;
     
