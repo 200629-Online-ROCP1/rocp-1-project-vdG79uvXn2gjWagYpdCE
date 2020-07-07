@@ -1,7 +1,7 @@
 package field;
 
-import field.IntegerField;
-
 public class IntegerField extends Field {
-    
+    public IntegerField(String fieldName) {
+        super(fieldName, "INTEGER");
+    }
 }

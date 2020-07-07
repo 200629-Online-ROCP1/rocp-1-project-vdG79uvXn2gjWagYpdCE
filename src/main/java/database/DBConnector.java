@@ -16,6 +16,7 @@ public class DBConnector {
 	private String database;
 
 	public Connection dbconn;
+	public boolean is_connected = false;
 
 	public DBConnector() {
 		super();
@@ -31,29 +32,23 @@ public class DBConnector {
 		this.hostname = hostname;
 		this.database = database;
 	}
-	public boolean connect() {
+	public void connect() {
 		/* Checks if there is currently a connection. If not,
 		 * tries to make connection. If it fails, logs the error
 		 * and returns false.
 		 */
-		// TODO implement connection
-		// TODO make it log success or failure
-		// TODO catch and throw exceptions
 		if (hostname == null) {
 			Logger.makeEntry("ERROR", "No database server hostname provided.");
-			return false;
 		} else if (database == null) {
 			Logger.makeEntry("ERROR", "No database name provided.");
-			return false;
 		} else {
 			try {
-				String dbUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + database + ";";
-				Connection dbconn = DriverManager.getConnection(dbUrl, username, password);
+				String dbUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + database;
+				dbconn = DriverManager.getConnection(dbUrl, username, password);
 				Logger.makeEntry("INFO", "Connecting to the database.");
-				return true;
+				is_connected = true;
 			} catch (SQLException e) {
 				Logger.makeEntry("ERROR", "Database access failed " + e);
-				return false;
 			}
 
 		}
@@ -61,11 +56,13 @@ public class DBConnector {
 	public void disconnect() {
 		/* Disconnects from the database. 
 		 */
-		// TODO implement disconnecting
-		// TODO make it log 
-		// TODO catch and throw exceptions
-		System.out.println("Pretend I am disconnecting from the database.");
-		Logger.makeEntry("INFO", "Disconnecting from the database.");
+		try {
+			dbconn.close();
+			Logger.makeEntry("INFO", "Disconnecting from the database.");
+		} catch (SQLException e) {
+			Logger.makeEntry("ERROR", "Database disconnection failed " + e);
+		}
+		is_connected = true;
 	}
 
 	public void showCredentials() {
