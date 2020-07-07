@@ -1,5 +1,6 @@
 package database;
 
+import java.sql.*;
 import logger.Logger;
 
 public class DBConnector {
@@ -14,6 +15,8 @@ public class DBConnector {
 	private String hostname;
 	private String database;
 
+	public Connection dbconn;
+
 	public DBConnector() {
 		super();
 	}
@@ -23,18 +26,37 @@ public class DBConnector {
 		this.port = port;
 		this.database = database;
 	}
+	public DBConnector(String hostname, String database) {
+		super();
+		this.hostname = hostname;
+		this.database = database;
+	}
 	public boolean connect() {
 		/* Checks if there is currently a connection. If not,
 		 * tries to make connection. If it fails, logs the error
 		 * and returns false.
 		 */
 		// TODO implement connection
-		// TODO check hostname, port, and database are set
 		// TODO make it log success or failure
 		// TODO catch and throw exceptions
-		System.out.println("Pretend I am connecting to the database.");
-		Logger.makeEntry("INFO", "Connecting to the database.");
-		return true;
+		if (hostname == null) {
+			Logger.makeEntry("ERROR", "No database server hostname provided.");
+			return false;
+		} else if (database == null) {
+			Logger.makeEntry("ERROR", "No database name provided.");
+			return false;
+		} else {
+			try {
+				String dbUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + database + ";";
+				Connection dbconn = DriverManager.getConnection(dbUrl, username, password);
+				Logger.makeEntry("INFO", "Connecting to the database.");
+				return true;
+			} catch (SQLException e) {
+				Logger.makeEntry("ERROR", "Database access failed " + e);
+				return false;
+			}
+
+		}
 	}
 	public void disconnect() {
 		/* Disconnects from the database. 
