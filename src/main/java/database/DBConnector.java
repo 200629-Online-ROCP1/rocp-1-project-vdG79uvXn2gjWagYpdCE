@@ -47,7 +47,7 @@ public class DBConnector {
 			return false;
 		} else {
 			try {
-				String dbUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + database + ";";
+				String dbUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + database;
 				Connection dbconn = DriverManager.getConnection(dbUrl, username, password);
 				Logger.makeEntry("INFO", "Connecting to the database.");
 				return true;
