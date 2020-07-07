@@ -1,6 +1,5 @@
 package model;
 
-import java.io.*; 
 import java.util.*; 
 import field.*;
 
@@ -15,13 +14,18 @@ public class Model {
     }
 
     private void addPKField() {
-        PrimaryKeyField pk = new PrimaryKeyField("PK" + tableName);
+        PrimaryKeyField pk = new PrimaryKeyField(tableName + "_id");
         Fields.add(pk);
+    }
+    protected void addField(field.Field newField) {
+        Fields.add(newField);
     }
 
     public String createSQL() {
         String retString = "CREATE TABLE " + tableName + "\n(\n";
-        retString += Fields.get(0);
+        for (int i=0; i<Fields.size(); i++) {
+            retString += Fields.get(i);
+        }
         retString += ");\n\n";
         return retString;
     }
