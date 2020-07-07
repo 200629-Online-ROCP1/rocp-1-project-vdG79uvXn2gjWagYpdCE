@@ -1,5 +1,6 @@
 package database;
 
+import java.sql.*;
 import logger.Logger;
 
 public class DBConnector {
@@ -13,6 +14,8 @@ public class DBConnector {
 	private int port = 5432; //Default port for postgres
 	private String hostname;
 	private String database;
+
+	public Connection dbconn;
 
 	public DBConnector() {
 		super();
@@ -43,9 +46,16 @@ public class DBConnector {
 			Logger.makeEntry("ERROR", "No database name provided.");
 			return false;
 		} else {
-			System.out.println("Pretend I am connecting to the database.");
-			Logger.makeEntry("INFO", "Connecting to the database.");
-			return true;
+			try {
+				String dbUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + database + ";";
+				Connection dbconn = DriverManager.getConnection(dbUrl, username, password);
+				Logger.makeEntry("INFO", "Connecting to the database.");
+				return true;
+			} catch (SQLException e) {
+				Logger.makeEntry("ERROR", "Database access failed " + e);
+				return false;
+			}
+
 		}
 	}
 	public void disconnect() {
