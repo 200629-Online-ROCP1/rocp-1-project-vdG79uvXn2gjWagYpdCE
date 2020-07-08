@@ -14,7 +14,12 @@ public class Server {
 		// System.out.println(db.is_connected);
 		// db.disconnect();
 
-		createSQL();
+		// createSQL();
+		AccountStatus record_accountStatus1 = new AccountStatus();
+		AccountStatus record_accountStatus2 = new AccountStatus();
+		record_accountStatus1.changeData("Pending");
+		System.out.println(record_accountStatus1);
+		System.out.println(record_accountStatus2);
 	} 
 
 	static private void createSQL() {
