@@ -26,9 +26,15 @@ public class Model {
     }
     
     public String createSQL() {
-        String retString = "CREATE TABLE " + tableName + "\n(\n";
+        String retString = "DROP TABLE IF EXISTS " + tableName + ";\n";
+        retString += "CREATE TABLE " + tableName + "\n(\n";
         for (int i=0; i<Fields.size(); i++) {
             retString += Fields.get(i);
+            if (i==Fields.size()-1) {
+                retString += "\n";
+            } else {
+                retString += ",\n";
+            }
         }
         retString += ");\n\n";
         return retString;

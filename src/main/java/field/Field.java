@@ -26,7 +26,7 @@ public class Field {
         if (options.get("null_allowed")==0) {
             retString += " NOT NULL";
         }
-        return retString + ",\n"; 
+        return retString; 
     }
     public int Option(String optionName) {
         return options.get(optionName);

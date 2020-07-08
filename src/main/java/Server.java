@@ -15,11 +15,13 @@ public class Server {
 		// db.disconnect();
 
 		Role Role = new Role();
+		User User = new User();
 		AccountStatus AccountStatus = new AccountStatus();
 		AccountType AccountType = new AccountType();
 		Account Account = new Account();
 
 		System.out.println(Role.createSQL());
+		System.out.println(User.createSQL());
 		System.out.println(AccountStatus.createSQL());
 		System.out.println(AccountType.createSQL());
 		System.out.println(Account.createSQL());

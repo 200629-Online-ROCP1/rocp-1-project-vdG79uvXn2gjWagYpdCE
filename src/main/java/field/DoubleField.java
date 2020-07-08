@@ -16,6 +16,6 @@ public class DoubleField extends Field {
         if (options.get("null_allowed")==0) {
             retString += " NOT NULL";
         }
-        return retString + ",\n";
+        return retString;
     }
 }

@@ -10,6 +10,6 @@ public class ForeignKeyField extends IntegerField {
     
     public String toString() {
         return "    " + fieldName + " INTEGER REFERENCES " + 
-            parentTable + "(" + parentTable + "_id) ON DELETE RESTRICT,\n";
+            parentTable + "(" + parentTable + "_id) ON DELETE RESTRICT";
     }
 }
