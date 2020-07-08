@@ -17,7 +17,7 @@ public class Account extends Model {
     BooleanField deleted = new BooleanField("deleted");
     ForeignKeyField account_status = new ForeignKeyField("AccountStatus");
     ForeignKeyField account_type = new ForeignKeyField("AccountType");
-    ForeignKeyField owner = new ForeignKeyField("User");
+    ForeignKeyField owner = new ForeignKeyField("AccountHolder");
 
     public Account() {
         super("Account");

@@ -13,7 +13,7 @@ import field.*;
 }
 */
 
-public class User extends Model {
+public class AccountHolder extends Model {
     StringField username = new StringField("username");
     StringField password = new StringField("password");
     StringField firstName = new StringField("firstName");
@@ -22,8 +22,8 @@ public class User extends Model {
     BooleanField deleted = new BooleanField("deleted");
     ForeignKeyField role = new ForeignKeyField("Role");
 
-    public User() {
-        super("User");
+    public AccountHolder() {
+        super("AccountHolder");
         this.username.Option("null_allowed", 0);
         this.username.Option("is_unique", 1);
         this.addField(username);

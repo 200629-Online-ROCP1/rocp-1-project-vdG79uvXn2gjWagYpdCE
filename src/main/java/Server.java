@@ -14,17 +14,20 @@ public class Server {
 		// System.out.println(db.is_connected);
 		// db.disconnect();
 
+		createSQL();
+	} 
+
+	static private void createSQL() {
 		Role Role = new Role();
-		User User = new User();
+		AccountHolder AccountHolder = new AccountHolder();
 		AccountStatus AccountStatus = new AccountStatus();
 		AccountType AccountType = new AccountType();
 		Account Account = new Account();
 
 		System.out.println(Role.createSQL());
-		System.out.println(User.createSQL());
+		System.out.println(AccountHolder.createSQL());
 		System.out.println(AccountStatus.createSQL());
 		System.out.println(AccountType.createSQL());
 		System.out.println(Account.createSQL());
-
-	} 
+	}
 }
