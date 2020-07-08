@@ -21,6 +21,10 @@ public class Model {
         Fields.add(newField);
     }
 
+    public String getPrimaryField() {
+        return Fields.get(0).FieldName();
+    }
+    
     public String createSQL() {
         String retString = "CREATE TABLE " + tableName + "\n(\n";
         for (int i=0; i<Fields.size(); i++) {

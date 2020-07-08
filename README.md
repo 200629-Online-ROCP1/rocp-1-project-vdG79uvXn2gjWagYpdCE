@@ -3,7 +3,6 @@
 ## Models 
 * User
 * Account
-* AccountType
 
 ## Endpoints
 * RPC

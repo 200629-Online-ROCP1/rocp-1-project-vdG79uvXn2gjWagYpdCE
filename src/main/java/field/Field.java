@@ -35,4 +35,7 @@ public class Field {
         options.put(optionName, value);
         return options.get(optionName);
     }
+    public String FieldName() {
+        return fieldName;
+    }
 }
