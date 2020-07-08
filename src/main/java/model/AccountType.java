@@ -14,8 +14,8 @@ public class AccountType extends Model {
 
     public AccountType() {
         super("AccountType");
-        this.type.Option("null_allowed", false);
-        this.type.Option("is_unique", true);
+        this.type.Option("null_allowed", 0);
+        this.type.Option("is_unique", 1);
         this.addField(type);
     }
 }

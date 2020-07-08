@@ -4,9 +4,9 @@ import java.util.Hashtable;
 
 public class Field {
     protected String fieldName;
-    private String fieldType;
+    protected String fieldType;
 
-    Hashtable<String, Boolean> options = new Hashtable<String, Boolean>();
+    protected Hashtable<String, Integer> options = new Hashtable<String, Integer>();
     
     public Field() {
         super();
@@ -14,24 +14,24 @@ public class Field {
     public Field(String fieldName, String fieldType) {
         this.fieldName = fieldName;
         this.fieldType = fieldType;
-        options.put("null_allowed", false);
-        options.put("is_unique", true);
+        options.put("null_allowed", 0);
+        options.put("is_unique", 1);
     }
     public String toString() {
         String retString = "    " + fieldName + " " + this.fieldType;
 
-        if (options.get("is_unique")==true) {
+        if (options.get("is_unique")==1) {
             retString += " UNIQUE";
         }
-        if (options.get("null_allowed")==false) {
+        if (options.get("null_allowed")==0) {
             retString += " NOT NULL";
         }
         return retString + ",\n"; 
     }
-    public boolean Option(String optionName) {
+    public int Option(String optionName) {
         return options.get(optionName);
     }
-    public boolean Option(String optionName, boolean value) {
+    public int Option(String optionName, int value) {
         options.put(optionName, value);
         return options.get(optionName);
     }

@@ -14,8 +14,8 @@ public class AccountStatus extends Model {
 
     public AccountStatus() {
         super("AccountStatus");
-        this.status.Option("null_allowed", false);
-        this.status.Option("is_unique", true);
+        this.status.Option("null_allowed", 0);
+        this.status.Option("is_unique", 1);
         this.addField(status);
     }
 }
