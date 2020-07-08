@@ -1,7 +1,5 @@
 package field;
 
-import field.IntegerField;
-
 public class PrimaryKeyField extends IntegerField {
     
     public PrimaryKeyField(String fieldName) {

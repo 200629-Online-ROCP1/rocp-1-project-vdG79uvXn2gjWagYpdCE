@@ -1,3 +1,46 @@
+# To Implement
+
+## Models 
+* User
+* Account
+* AccountType
+
+## Endpoints
+* RPC
+  * Login
+  * Logout
+  * Register
+  * Withdraw
+  * Deposit
+  * Transfer
+* RESTful
+  * Users
+  * User by ID
+  * User update
+  * User deletion
+  * Accounts
+  * Accounts by Status
+  * Accounts by ID
+  * Accounts by User
+  * Account creation
+  * Account update
+  * Account deletion
+  * Paging for all list endpoints
+    * Users
+    * Accounts
+  * Sorting for all list endpoints
+    * Users
+    * Accounts
+
+
+## Session Storage
+
+## JWT
+
+## Interest Accrual 
+
+Includes a RESTful endpoint to simulate the passage of time.
+
 # Banking API
 The Banking API will manage the bank accounts of its users. It will be managed by the Bank's employees and admins. Employees and Admins count as Standard users with additional abilities.
 * Employees can view all customer information, but not modify in any way.
