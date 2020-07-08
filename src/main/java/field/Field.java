@@ -26,7 +26,7 @@ public class Field {
         if (options.get("null_allowed")==0) {
             retString += " NOT NULL";
         }
-        return retString + ",\n"; 
+        return retString; 
     }
     public int Option(String optionName) {
         return options.get(optionName);
@@ -34,5 +34,8 @@ public class Field {
     public int Option(String optionName, int value) {
         options.put(optionName, value);
         return options.get(optionName);
+    }
+    public String FieldName() {
+        return fieldName;
     }
 }

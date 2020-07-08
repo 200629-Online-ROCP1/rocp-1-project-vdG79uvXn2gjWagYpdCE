@@ -1,10 +1,5 @@
 # To Implement
 
-## Models 
-* User
-* Account
-* AccountType
-
 ## Endpoints
 * RPC
   * Login
@@ -40,6 +35,19 @@
 ## Interest Accrual 
 
 Includes a RESTful endpoint to simulate the passage of time.
+
+# Docker
+
+Starting the container, getting its ip address, and getting a shell on the container:
+```sh
+docker-compose up
+docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+docker-compose run database bash
+```
+Once in a shell, this puts the user at the database console
+```sh
+psql --dbname=bank_database --username=bankDBadmin --host=database
+```
 
 # Banking API
 The Banking API will manage the bank accounts of its users. It will be managed by the Bank's employees and admins. Employees and Admins count as Standard users with additional abilities.

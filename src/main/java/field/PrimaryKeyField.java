@@ -7,6 +7,6 @@ public class PrimaryKeyField extends IntegerField {
     }
     
     public String toString() {
-        return "    " + fieldName + " serial PRIMARY KEY,\n";
+        return "    " + fieldName + " serial PRIMARY KEY";
     }
 }
