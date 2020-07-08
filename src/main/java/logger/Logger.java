@@ -13,11 +13,13 @@ public class Logger {
 		/* Logs the given message to filename with a timestamp and level.
 		 * 
 		 * TODO: Implement writing to the file
-		 * TODO: Get timestamp
 		 * TODO: catch any errors
 		 * 
 		 */
-		String logstring = new String("<TIMESTAMP> " + level + ": " + message);
+		java.time.LocalDateTime currentDateTime = java.time.LocalDateTime.now();
+		final java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+		String timestamp = currentDateTime.format(formatter);
+		String logstring = new String(timestamp + " " + level + ": " + message);
 		System.out.println(logstring);
 	}
 	
