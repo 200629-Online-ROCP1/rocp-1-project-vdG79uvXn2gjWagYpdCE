@@ -16,12 +16,17 @@ public class Server {
 
 		/* Status possibilities are Pending, Open, or Closed, or Denied */
 		AccountStatus accountStatus = AccountStatus.search("Pending");
-		System.out.println(accountStatus);
+		// System.out.println(accountStatus);
 
-		accountStatus = new AccountStatus("Okpen");
+		accountStatus = new AccountStatus("Iniaxxaataial11");
 		System.out.println(accountStatus);
 		accountStatus.save();
 		System.out.println(accountStatus);
+		accountStatus.setField("status", "renamexxd");
+		System.out.println(accountStatus);
+		accountStatus.save();
+		System.out.println(accountStatus);
+
 		// accountStatus = new AccountStatus("Open");
 		// accountStatus.save();
 		// accountStatus = new AccountStatus("Closed");

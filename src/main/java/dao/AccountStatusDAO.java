@@ -23,7 +23,26 @@ public class AccountStatusDAO implements AccountStatusDAOInterface {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
 			String sql = "INSERT INTO accountstatus(status) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, accountStatus.Field("status"));
+			statement.setString(1, accountStatus.getField("status"));
+			
+			System.out.println(statement);
+            
+			if(!statement.execute()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+        }
+        return false;
+    }
+
+    public boolean update(AccountStatus accountStatus) {
+        try {
+            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+			String sql = "UPDATE accountstatus SET status=? WHERE accountstatus_id=?";
+			PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.setString(1, accountStatus.getField("status"));
+            statement.setInt(2, accountStatus.getID());
 			
 			System.out.println(statement);
             

@@ -28,7 +28,7 @@ public class AccountStatus {
     }
     public String toString() {
       String retString = new String("PK => " + primaryKey);
-      retString += ", " + Field("status");
+      retString += ", " + getField("status");
       if (!saved) {
         retString += " (NOT SAVED)";
       }
@@ -36,17 +36,31 @@ public class AccountStatus {
 
     }
 
-    public String Field(String fieldName) {
+    public String getField(String fieldName) {
       return status;
+    }
+    public String setField(String fieldName, String status) {
+      this.status = status;
+      this.saved = false;
+      return status;
+    }
+    public int getID() {
+      return primaryKey;
     }
 
     // Database operations - save(insert or update), search, refresh
     public void save() {
       AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
-      if (dao.insert(this)) {
-        AccountStatus tmp = AccountStatus.search(status);
-        this.primaryKey = tmp.primaryKey;
-        saved = true;
+      if (primaryKey > 0) {
+        if (dao.update(this)) {
+          saved = true;
+        }
+      } else {
+        if (dao.insert(this)) { //Only runs if the insert is successful
+          AccountStatus tmp = AccountStatus.search(status);
+          this.primaryKey = tmp.primaryKey;
+          saved = true;
+        }
       }
     }
 
