@@ -1,35 +1,37 @@
 package model;
 
+import dao.AccountStatusDAO;
 import database.DBConnector;
 import field.*;
 
 
 
-public class AccountStatus extends Model {
+public class AccountStatus {
     StringField statusField = new StringField("status");
 
+    private String status = "";
+
+    // Constructors
     public AccountStatus() {
-        super("AccountStatus");
-        this.statusField.Option("null_allowed", 0);
-        this.statusField.Option("is_unique", 1);
-        this.addField(statusField);
+      super();
+    }
+    public AccountStatus(String status) {
+      super();
+      this.status = status;
     }
 
-    public void create(String status) {
-      is_saved = false;
-      pk = 0;
-      this.statusField.setValue(status);
+    public String Field(String fieldName) {
+      return status;
     }
 
-    public int save(DBConnector db) {
-      String sql = new String();
-      if (this.pk==0) { // There is no database record associated with this object. (INSERT)
-        sql = "INSERT INTO accountstatus (status) VALUES (?);";
-      } else { // (UPDATE)
-        sql = "UPDATE accountstatus SET status=\'" + statusField.getValue() + "\' WHERE accountstatus_id=" + this.pk + ";";
-      }
-      this.pk = db.execute(sql);
-      is_saved = true;
-      return this.pk;
+    // public void create(String status) {
+    //   is_saved = false;
+    //   pk = 0;
+    //   this.statusField.setValue(status);
+    // }
+
+    public void save() {
+      AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
+      dao.insert(this);
     }
 }
