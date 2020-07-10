@@ -25,8 +25,6 @@ public class AccountStatusDAO implements AccountStatusDAOInterface {
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountStatus.getField("status"));
 			
-			System.out.println(statement);
-            
 			if(!statement.execute()) {
 				return true;
 			}
@@ -44,8 +42,6 @@ public class AccountStatusDAO implements AccountStatusDAOInterface {
             statement.setString(1, accountStatus.getField("status"));
             statement.setInt(2, accountStatus.getID());
 			
-			System.out.println(statement);
-            
 			if(!statement.execute()) {
 				return true;
 			}
@@ -74,7 +70,18 @@ public class AccountStatusDAO implements AccountStatusDAOInterface {
         return null;
     }
 
-    public boolean insertStatement(AccountStatus celeb) {
+    public void delete() {
+        try {
+            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+			String sql = "DELETE FROM accountstatus";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.execute();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+    }
+
+    public boolean insertStatement(AccountStatus accountStatus) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -88,4 +95,5 @@ public class AccountStatusDAO implements AccountStatusDAOInterface {
         // TODO Auto-generated method stub
         return null;
     }
+
 }

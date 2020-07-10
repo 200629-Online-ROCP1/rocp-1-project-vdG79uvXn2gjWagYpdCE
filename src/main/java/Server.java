@@ -14,24 +14,22 @@ public class Server {
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
 
-		/* Status possibilities are Pending, Open, or Closed, or Denied */
-		AccountStatus accountStatus = AccountStatus.search("Pending");
-		// System.out.println(accountStatus);
+		initialDataLoad();
 
-		accountStatus = new AccountStatus("Iniaxxaataial11");
-		System.out.println(accountStatus);
-		accountStatus.save();
-		System.out.println(accountStatus);
-		accountStatus.setField("status", "renamexxd");
-		System.out.println(accountStatus);
-		accountStatus.save();
-		System.out.println(accountStatus);
+	}
 
-		// accountStatus = new AccountStatus("Open");
-		// accountStatus.save();
-		// accountStatus = new AccountStatus("Closed");
-		// accountStatus.save();
-		// accountStatus = new AccountStatus("Denied");
-		// accountStatus.save();
+	static public void initialDataLoad() {
+		initialDataLoadAccountStatus();
+	}
+	static public void initialDataLoadAccountStatus() {
+		AccountStatus.deleteAll();
+		AccountStatus accountStatus = new AccountStatus("Pending");
+		accountStatus.save();
+		accountStatus = new AccountStatus("Open");
+		accountStatus.save();
+		accountStatus = new AccountStatus("Closed");
+		accountStatus.save();
+		accountStatus = new AccountStatus("Denied");
+		accountStatus.save();
 	}
 }

@@ -68,4 +68,9 @@ public class AccountStatus {
       AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
       return dao.search(status);
     }
+
+    public static void deleteAll() {
+      AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
+      dao.delete();
+    }
 }
