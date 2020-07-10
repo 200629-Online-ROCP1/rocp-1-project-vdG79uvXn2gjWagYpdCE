@@ -6,6 +6,8 @@ import field.*;
 public class Model {
     private String tableName;
     private ArrayList<field.Field> Fields = new ArrayList<field.Field>(12); 
+    protected boolean is_saved = false;
+    protected int pk = 0;
     
     public Model(String tableName) {
         super();
@@ -24,7 +26,7 @@ public class Model {
     public String getPrimaryField() {
         return Fields.get(0).FieldName();
     }
-    
+
     public String createSQL() {
         String retString = "DROP TABLE IF EXISTS " + tableName + ";\n";
         retString += "CREATE TABLE " + tableName + "\n(\n";
