@@ -6,7 +6,8 @@ import field.*;
 public class Model {
     private String tableName;
     private ArrayList<field.Field> Fields = new ArrayList<field.Field>(12); 
-    private boolean is_saved = false;
+    protected boolean is_saved = false;
+    protected int pk = 0;
     
     public Model(String tableName) {
         super();
