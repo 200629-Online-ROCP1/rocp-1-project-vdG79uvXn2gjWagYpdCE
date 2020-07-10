@@ -15,13 +15,18 @@ public class Server {
 		// Logger.makeEntry("INFO", "Starting application");
 
 		/* Status possibilities are Pending, Open, or Closed, or Denied */
-		AccountStatus accountStatus = new AccountStatus("Pending");
+		AccountStatus accountStatus = AccountStatus.search("Pending");
+		System.out.println(accountStatus);
+
+		accountStatus = new AccountStatus("Okpen");
+		System.out.println(accountStatus);
 		accountStatus.save();
-		accountStatus = new AccountStatus("Open");
-		accountStatus.save();
-		accountStatus = new AccountStatus("Closed");
-		accountStatus.save();
-		accountStatus = new AccountStatus("Denied");
-		accountStatus.save();
+		System.out.println(accountStatus);
+		// accountStatus = new AccountStatus("Open");
+		// accountStatus.save();
+		// accountStatus = new AccountStatus("Closed");
+		// accountStatus.save();
+		// accountStatus = new AccountStatus("Denied");
+		// accountStatus.save();
 	}
 }
