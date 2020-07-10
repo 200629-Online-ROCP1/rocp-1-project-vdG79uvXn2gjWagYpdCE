@@ -20,14 +20,13 @@ public class AccountStatusDAO implements AccountStatusDAOInterface {
     public boolean insert(AccountStatus accountStatus) {
         try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-            int index =0;
 			String sql = "INSERT INTO accountstatus(status) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountStatus.Field("status"));
 			
 			System.out.println(statement);
-			
-			if(statement.execute()) {
+            
+			if(!statement.execute()) {
 				return true;
 			}
 		} catch (SQLException e) {

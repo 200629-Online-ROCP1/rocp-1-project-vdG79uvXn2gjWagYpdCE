@@ -10,6 +10,8 @@ public class AccountStatus {
     StringField statusField = new StringField("status");
 
     private String status = "";
+    private boolean saved = false;
+    private int primaryKey = 0;
 
     // Constructors
     public AccountStatus() {
@@ -32,6 +34,8 @@ public class AccountStatus {
 
     public void save() {
       AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
-      dao.insert(this);
+      if (dao.insert(this)) {
+        saved = true;
+      }
     }
 }
