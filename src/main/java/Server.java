@@ -20,7 +20,7 @@ public class Server {
 
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
-		initialDataLoad();
+		// initialDataLoad();
 
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("role", "Standard");
@@ -30,11 +30,9 @@ public class Server {
 		data.put("password", "COVID-19forever");
 		data.put("email", "hsimpson2112@hotmail.com");
 		AccountHolder accountHolder = new AccountHolder(data); 
-		System.out.println(accountHolder);
-		data = new HashMap<String, String>();
-		data.put("email", "bighottie@gmail.com");
-		accountHolder.setField(data);
-		System.out.println(accountHolder);
+		// System.out.println(accountHolder);
+		accountHolder.save();
+		// System.out.println(accountHolder);
 	}
 
 	static public void initialDataLoad() {

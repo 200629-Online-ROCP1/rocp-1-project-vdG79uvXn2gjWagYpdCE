@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import utils.Password;
 import model.AccountHolder;
 import database.DBConnector;
 
@@ -21,10 +22,15 @@ public class AccountHolderDAO {
     public boolean insert(AccountHolder accountHolder) {
         try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "INSERT INTO accountholder(status) VALUES(?)";
+			String sql = "INSERT INTO accountholder(username, email, firstname, lastname, password, role) VALUES(?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, accountHolder.getField("status"));
-			
+			statement.setString(1, accountHolder.getField("username"));
+			statement.setString(2, accountHolder.getField("email"));
+			statement.setString(3, accountHolder.getField("firstname"));
+			statement.setString(4, accountHolder.getField("lastname"));
+			statement.setString(5, Password.makeSHA256(accountHolder.getField("password")));
+			statement.setInt(6, accountHolder.getRoleID());
+
 			if(!statement.execute()) {
 				return true;
 			}

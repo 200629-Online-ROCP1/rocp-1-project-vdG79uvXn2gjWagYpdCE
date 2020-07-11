@@ -44,7 +44,7 @@ public class AccountHolder {
       String retString = new String("PK => " + primaryKey + "\n");
       for (String field: fields) {
         if (field=="role") {
-          retString += "    Role PK => " + role_fk.getID() + " ("+ role_fk.getField("role") + ")\n";
+          retString += "    Role PK => " + getRoleID() + " ("+ role_fk.getField("role") + ")\n";
         } else {
           retString += "    " + getField(field) + "\n";
         }
@@ -67,26 +67,31 @@ public class AccountHolder {
     public int getID() {
       return primaryKey;
     }
+    public int getRoleID() {
+      return role_fk.getID();
+    }
 
     // Database operations - save(insert or update), search, refresh
     public void save() {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      if (primaryKey > 0) {
+      if (primaryKey > 0) { //FIX
         if (dao.update(this)) {
           saved = true;
         }
       } else {
-        if (dao.insert(this)) { //Only runs if the insert is successful
-          AccountHolder tmp = AccountHolder.search("status");  // FIX
+        if (dao.insert(this)) { //FIX
+          Map<String, String> data = new HashMap<String, String>();
+		      data.put("username", getField("username"));
+          AccountHolder tmp = AccountHolder.search(data);  // FIX
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
       }
     }
 
-    public static AccountHolder search(String status) {  // FIX
+    public static AccountHolder search(Map<String, String> data) {  // FIX
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      return dao.search(status);
+      return dao.search("ddd"); //FIX
     }
 
     public static void deleteAll() {
