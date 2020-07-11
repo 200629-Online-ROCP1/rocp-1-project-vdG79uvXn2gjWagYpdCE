@@ -30,6 +30,7 @@ public class Server {
 		data.put("password", "COVID-19forever");
 		data.put("email", "hsimpson2112@hotmail.com");
 		AccountHolder accountHolder = new AccountHolder(data); 
+		System.out.println(accountHolder);
 
 	}
 

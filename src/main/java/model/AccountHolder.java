@@ -28,7 +28,7 @@ public class AccountHolder {
       super();
       for (String field: fields) {
         if (data.containsKey(field)) {
-          this.fieldValues.replace(field, data.get(field));
+          this.fieldValues.put(field, data.get(field));
         } else {
           System.out.println("ERROR: No value was provided for field " + field);
         }
@@ -41,17 +41,23 @@ public class AccountHolder {
       this.saved = true;
     }
     public String toString() {
-      String retString = new String("PK => " + primaryKey);
-      retString += ", " + getField("status");
+      String retString = new String("PK => " + primaryKey + "\n");
+      for (String field: fields) {
+        if (field=="role") {
+          retString += "    Role PK => " + role_fk.getID() + " ("+ role_fk.getField("role") + ")\n";
+        } else {
+          retString += "    " + getField(field) + "\n";
+        }
+      }
       if (!saved) {
-        retString += " (NOT SAVED)";
+        retString += "    (NOT SAVED)";
       }
       return retString;
 
     }
 
     public String getField(String fieldName) {
-      return "status";  // FIX
+      return fieldValues.get(fieldName);
     }
     public String setField(String fieldName, String status) {
       // this.status = status;
@@ -78,7 +84,7 @@ public class AccountHolder {
       }
     }
 
-    public static AccountHolder search(String status) {
+    public static AccountHolder search(String status) {  // FIX
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
       return dao.search(status);
     }
