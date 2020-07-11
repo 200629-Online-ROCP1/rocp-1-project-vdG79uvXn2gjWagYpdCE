@@ -1,40 +1,72 @@
 package model;
 
+import dao.AccountHolderDAO;
+import database.DBConnector;
 import field.*;
 
-/* public class User {
-  private int userId; // primary key
-  private String username; // not null, unique
-  private String password; // not null
-  private String firstName; // not null
-  private String lastName; // not null
-  private String email; // not null
-  private Role role;
-}
-*/
+public class AccountHolder {
+    private String status = "";
+    private boolean saved = false;
+    private int primaryKey = 0;
 
-public class AccountHolder extends Model {
-    StringField username = new StringField("username");
-    StringField password = new StringField("password");
-    StringField firstName = new StringField("firstName");
-    StringField lastName = new StringField("lastName");
-    StringField email = new StringField("email");
-    BooleanField deleted = new BooleanField("deleted");
-    ForeignKeyField role = new ForeignKeyField("Role");
-
+    // Constructors
     public AccountHolder() {
-        super("AccountHolder");
-        this.username.Option("null_allowed", 0);
-        this.username.Option("is_unique", 1);
-        this.addField(username);
-        this.password.Option("null_allowed", 0);
-        this.addField(password);
-        this.firstName.Option("null_allowed", 0);
-        this.addField(firstName);
-        this.lastName.Option("null_allowed", 0);
-        this.addField(lastName);
-        this.email.Option("null_allowed", 0);
-        this.addField(email);
-        this.addField(role);
+      super();
+    }
+    public AccountHolder(String status) {
+      super();
+      this.status = status;
+    }
+    public AccountHolder(int pk, String status) {
+      this(status);
+      this.primaryKey = pk;
+      this.saved = true;
+    }
+    public String toString() {
+      String retString = new String("PK => " + primaryKey);
+      retString += ", " + getField("status");
+      if (!saved) {
+        retString += " (NOT SAVED)";
+      }
+      return retString;
+
+    }
+
+    public String getField(String fieldName) {
+      return status;
+    }
+    public String setField(String fieldName, String status) {
+      this.status = status;
+      this.saved = false;
+      return status;
+    }
+    public int getID() {
+      return primaryKey;
+    }
+
+    // Database operations - save(insert or update), search, refresh
+    public void save() {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      if (primaryKey > 0) {
+        if (dao.update(this)) {
+          saved = true;
+        }
+      } else {
+        if (dao.insert(this)) { //Only runs if the insert is successful
+          AccountHolder tmp = AccountHolder.search(status);
+          this.primaryKey = tmp.primaryKey;
+          saved = true;
+        }
+      }
+    }
+
+    public static AccountHolder search(String status) {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      return dao.search(status);
+    }
+
+    public static void deleteAll() {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      dao.delete();
     }
 }

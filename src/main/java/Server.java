@@ -2,6 +2,7 @@ import database.DBConnector;
 import logger.Logger;
 import model.AccountStatus;
 import model.AccountType;
+import model.AccountHolder;
 import model.Role;
 
 import java.util.ArrayList;
