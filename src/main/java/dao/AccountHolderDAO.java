@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Map;
 import java.util.Set;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -57,12 +58,12 @@ public class AccountHolderDAO {
         return false;
     }
 
-    public AccountHolder search(String status) {
+    public AccountHolder search(Map<String, String> data) {
 		try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "SELECT * FROM accountholder WHERE status=?";
+			String sql = "SELECT * FROM accountholder WHERE username=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, status);
+			statement.setString(1, "hsimpson"); // FIX
 			
 			ResultSet result = statement.executeQuery();
 			

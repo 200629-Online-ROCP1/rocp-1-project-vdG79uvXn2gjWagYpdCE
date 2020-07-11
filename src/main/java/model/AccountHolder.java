@@ -89,9 +89,9 @@ public class AccountHolder {
       }
     }
 
-    public static AccountHolder search(Map<String, String> data) {  // FIX
+    public static AccountHolder search(Map<String, String> data) {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      return dao.search("ddd"); //FIX
+      return dao.search(data);
     }
 
     public static void deleteAll() {
