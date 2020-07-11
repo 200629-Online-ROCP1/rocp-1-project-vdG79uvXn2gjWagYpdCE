@@ -2,6 +2,7 @@ import database.DBConnector;
 import logger.Logger;
 import model.AccountStatus;
 import model.AccountType;
+import model.Role;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class Server {
 	static public void initialDataLoad() {
 		initialDataLoadAccountStatus();
 		initialDataLoadAccountType();
+		initialDataLoadRole();
 	}
 	static public void initialDataLoadAccountStatus() {
 		AccountStatus.deleteAll();
@@ -41,6 +43,14 @@ public class Server {
 		for (String type: Arrays.asList("Checking", "Savings")) {
 			accountType = new AccountType(type);
 			accountType.save();
+        }
+	}
+	static public void initialDataLoadRole() {
+		Role.deleteAll();
+		Role role;
+		for (String description: Arrays.asList("Admin", "Employee", "Premium", "Standard")) {
+			role = new Role(description);
+			role.save();
         }
 	}
 }

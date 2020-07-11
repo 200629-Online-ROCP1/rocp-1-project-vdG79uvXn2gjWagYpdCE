@@ -4,11 +4,7 @@ import dao.AccountStatusDAO;
 import database.DBConnector;
 import field.*;
 
-
-
 public class AccountStatus {
-    StringField statusField = new StringField("status"); // TODO remove
-
     private String status = "";
     private boolean saved = false;
     private int primaryKey = 0;
