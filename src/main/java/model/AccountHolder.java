@@ -4,21 +4,39 @@ import dao.AccountHolderDAO;
 import database.DBConnector;
 import field.*;
 
+import model.Role;
+
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 public class AccountHolder {
-    private String status = "";
-    private boolean saved = false;
+    private ArrayList<String> fields = 
+      new ArrayList<String>(Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+    private Map<String, String> fieldValues = new HashMap<String, String>();
+    private Role role_fk;
     private int primaryKey = 0;
+    private boolean saved = false;
 
     // Constructors
     public AccountHolder() {
       super();
     }
-    public AccountHolder(String status) {
+
+    public AccountHolder(Map<String, String> data) {
       super();
-      this.status = status;
+      for (String field: fields) {
+        if (data.containsKey(field)) {
+          this.fieldValues.replace(field, data.get(field));
+        } else {
+          System.out.println("ERROR: No value was provided for field " + field);
+        }
+      }
+      this.role_fk = Role.search(data.get("role")); 
     }
-    public AccountHolder(int pk, String status) {
-      this(status);
+    public AccountHolder(int pk, Map<String, String> data) { 
+      this(data);
       this.primaryKey = pk;
       this.saved = true;
     }
@@ -33,12 +51,12 @@ public class AccountHolder {
     }
 
     public String getField(String fieldName) {
-      return status;
+      return "status";  // FIX
     }
     public String setField(String fieldName, String status) {
-      this.status = status;
-      this.saved = false;
-      return status;
+      // this.status = status;
+      // this.saved = false;
+      return "status";  //FIX
     }
     public int getID() {
       return primaryKey;
@@ -53,7 +71,7 @@ public class AccountHolder {
         }
       } else {
         if (dao.insert(this)) { //Only runs if the insert is successful
-          AccountHolder tmp = AccountHolder.search(status);
+          AccountHolder tmp = AccountHolder.search("status");  // FIX
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }

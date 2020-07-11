@@ -61,7 +61,7 @@ public class AccountHolderDAO {
 			ResultSet result = statement.executeQuery();
 			
 			if(result.next()) {
-				return new AccountHolder(result.getInt("accountholder_id"), result.getString("status"));
+				// return new AccountHolder(result.getInt("accountholder_id"), result.getString("status")); FIX
 			}
 			
 		}catch(SQLException e) {

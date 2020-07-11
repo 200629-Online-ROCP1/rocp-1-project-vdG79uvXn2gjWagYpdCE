@@ -20,8 +20,16 @@ public class Server {
 
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
-
 		initialDataLoad();
+
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("role", "Standard");
+		data.put("username", "hsimpson");
+		data.put("firstname", "Homer");
+		data.put("lastname", "Simpson");
+		data.put("password", "COVID-19forever");
+		data.put("email", "hsimpson2112@hotmail.com");
+		AccountHolder accountHolder = new AccountHolder(data); 
 
 	}
 
