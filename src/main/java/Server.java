@@ -31,7 +31,10 @@ public class Server {
 		data.put("email", "hsimpson2112@hotmail.com");
 		AccountHolder accountHolder = new AccountHolder(data); 
 		System.out.println(accountHolder);
-
+		data = new HashMap<String, String>();
+		data.put("email", "bighottie@gmail.com");
+		accountHolder.setField(data);
+		System.out.println(accountHolder);
 	}
 
 	static public void initialDataLoad() {

@@ -59,10 +59,10 @@ public class AccountHolder {
     public String getField(String fieldName) {
       return fieldValues.get(fieldName);
     }
-    public String setField(String fieldName, String status) {
-      // this.status = status;
-      // this.saved = false;
-      return "status";  //FIX
+    public void setField(Map<String, String> data) {
+      for (String field: data.keySet()) {
+        this.fieldValues.put(field, data.get(field));
+      }
     }
     public int getID() {
       return primaryKey;
