@@ -2,6 +2,10 @@ import database.DBConnector;
 import logger.Logger;
 import model.AccountStatus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.Connection;
@@ -23,13 +27,10 @@ public class Server {
 	}
 	static public void initialDataLoadAccountStatus() {
 		AccountStatus.deleteAll();
-		AccountStatus accountStatus = new AccountStatus("Pending");
-		accountStatus.save();
-		accountStatus = new AccountStatus("Open");
-		accountStatus.save();
-		accountStatus = new AccountStatus("Closed");
-		accountStatus.save();
-		accountStatus = new AccountStatus("Denied");
-		accountStatus.save();
+		AccountStatus accountStatus;
+		for (String status: Arrays.asList("Pending", "Open", "Closed", "Denied")) {
+			accountStatus = new AccountStatus(status);
+			accountStatus.save();
+        }
 	}
 }
