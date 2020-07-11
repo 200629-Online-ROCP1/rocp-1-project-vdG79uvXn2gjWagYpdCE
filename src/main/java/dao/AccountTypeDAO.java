@@ -6,24 +6,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import model.AccountStatus;
+import model.AccountType;
 import database.DBConnector;
 
-public class AccountStatusDAO {
-    private static AccountStatusDAO self = new AccountStatusDAO();
+public class AccountTypeDAO {
+    private static AccountTypeDAO self = new AccountTypeDAO();
     
-    private AccountStatusDAO() {}
+    private AccountTypeDAO() {}
 	
-	public static AccountStatusDAO getInstance() {
+	public static AccountTypeDAO getInstance() {
 		return self;
     }
     
-    public boolean insert(AccountStatus accountStatus) {
+    public boolean insert(AccountType accountType) {
         try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "INSERT INTO accountstatus(status) VALUES(?)";
+			String sql = "INSERT INTO accounttype(type) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, accountStatus.getField("status"));
+			statement.setString(1, accountType.getField("type"));
 			
 			if(!statement.execute()) {
 				return true;
@@ -34,13 +34,13 @@ public class AccountStatusDAO {
         return false;
     }
 
-    public boolean update(AccountStatus accountStatus) {
+    public boolean update(AccountType accountType) {
         try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "UPDATE accountstatus SET status=? WHERE accountstatus_id=?";
+			String sql = "UPDATE accounttype SET type=? WHERE accounttype_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-            statement.setString(1, accountStatus.getField("status"));
-            statement.setInt(2, accountStatus.getID());
+            statement.setString(1, accountType.getField("type"));
+            statement.setInt(2, accountType.getID());
 			
 			if(!statement.execute()) {
 				return true;
@@ -51,17 +51,17 @@ public class AccountStatusDAO {
         return false;
     }
 
-    public AccountStatus search(String status) {
+    public AccountType search(String type) {
 		try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "SELECT * FROM accountstatus WHERE status=?";
+			String sql = "SELECT * FROM accounttype WHERE type=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, status);
+			statement.setString(1, type);
 			
 			ResultSet result = statement.executeQuery();
 			
 			if(result.next()) {
-				return new AccountStatus(result.getInt("accountstatus_id"), result.getString("status"));
+				return new AccountType(result.getInt("accounttype_id"), result.getString("type"));
 			}
 			
 		}catch(SQLException e) {
@@ -73,11 +73,27 @@ public class AccountStatusDAO {
     public void delete() {
         try {
             Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "DELETE FROM accountstatus";
+			String sql = "DELETE FROM accounttype";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();
 		}catch(SQLException e) {
 			System.out.println(e);
 		}
     }
+
+    public boolean insertStatement(AccountType accountType) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public AccountType findByFirstName(String firstName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Set<AccountType> selectAll() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
