@@ -1,7 +1,10 @@
 import database.DBConnector;
+import database.QueryBuilder;
 import logger.Logger;
 import model.AccountStatus;
 import model.AccountType;
+import model.AccountHolder;
+import model.Role;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,14 +21,33 @@ public class Server {
 
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
+		// initialDataLoad();
 
-		initialDataLoad();
+		// ArrayList<String> fields = new ArrayList<String>(Arrays.asList("username", "firstname", "lastname"));
+		// ArrayList<String> operators = new ArrayList<String>(Arrays.asList("eq", "gte", "lt"));
+		// System.out.println(QueryBuilder.Where(fields, operators));
+		// fields = new ArrayList<String>(Arrays.asList("username"));
+		// operators = new ArrayList<String>(Arrays.asList("eq"));
+		// System.out.println(QueryBuilder.Where(fields, operators));
 
+		AccountHolder.deleteAll();
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("role", "Standard");
+		data.put("username", "hsimpson");
+		data.put("firstname", "Homer");
+		data.put("lastname", "Simpson");
+		data.put("password", "COVID-19forever");
+		data.put("email", "hsimpson2112@hotmail.com");
+		AccountHolder accountHolder = new AccountHolder(data); 
+		// System.out.println(accountHolder);
+		accountHolder.save();
+		// System.out.println(accountHolder);
 	}
 
 	static public void initialDataLoad() {
 		initialDataLoadAccountStatus();
 		initialDataLoadAccountType();
+		initialDataLoadRole();
 	}
 	static public void initialDataLoadAccountStatus() {
 		AccountStatus.deleteAll();
@@ -41,6 +63,14 @@ public class Server {
 		for (String type: Arrays.asList("Checking", "Savings")) {
 			accountType = new AccountType(type);
 			accountType.save();
+        }
+	}
+	static public void initialDataLoadRole() {
+		Role.deleteAll();
+		Role role;
+		for (String description: Arrays.asList("Admin", "Employee", "Premium", "Standard")) {
+			role = new Role(description);
+			role.save();
         }
 	}
 }
