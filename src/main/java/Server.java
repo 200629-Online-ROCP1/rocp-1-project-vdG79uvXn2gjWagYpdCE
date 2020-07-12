@@ -1,4 +1,5 @@
 import database.DBConnector;
+import database.QueryBuilder;
 import logger.Logger;
 import model.AccountStatus;
 import model.AccountType;
@@ -22,17 +23,24 @@ public class Server {
 		// Logger.makeEntry("INFO", "Starting application");
 		// initialDataLoad();
 
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("role", "Standard");
-		data.put("username", "hsimpson");
-		data.put("firstname", "Homer");
-		data.put("lastname", "Simpson");
-		data.put("password", "COVID-19forever");
-		data.put("email", "hsimpson2112@hotmail.com");
-		AccountHolder accountHolder = new AccountHolder(data); 
-		// System.out.println(accountHolder);
-		accountHolder.save();
-		// System.out.println(accountHolder);
+		ArrayList<String> fields = new ArrayList<String>(Arrays.asList("username", "firstname", "lastname"));
+		ArrayList<String> operators = new ArrayList<String>(Arrays.asList("eq", "gte", "lt"));
+		System.out.println(QueryBuilder.Where(fields, operators));
+		fields = new ArrayList<String>(Arrays.asList("username"));
+		operators = new ArrayList<String>(Arrays.asList("eq"));
+		System.out.println(QueryBuilder.Where(fields, operators));
+
+		// Map<String, String> data = new HashMap<String, String>();
+		// data.put("role", "Standard");
+		// data.put("username", "hsimpson");
+		// data.put("firstname", "Homer");
+		// data.put("lastname", "Simpson");
+		// data.put("password", "COVID-19forever");
+		// data.put("email", "hsimpson2112@hotmail.com");
+		// AccountHolder accountHolder = new AccountHolder(data); 
+		// // System.out.println(accountHolder);
+		// accountHolder.save();
+		// // System.out.println(accountHolder);
 	}
 
 	static public void initialDataLoad() {

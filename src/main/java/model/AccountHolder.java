@@ -82,7 +82,7 @@ public class AccountHolder {
         if (dao.insert(this)) { //FIX
           Map<String, String> data = new HashMap<String, String>();
 		      data.put("username", getField("username"));
-          AccountHolder tmp = AccountHolder.search(data);  // FIX
+          AccountHolder tmp = AccountHolder.search(data);
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
