@@ -2,6 +2,7 @@ package model;
 
 import dao.AccountHolderDAO;
 import database.DBConnector;
+import database.QueryBuilder;
 import field.*;
 
 import model.Role;

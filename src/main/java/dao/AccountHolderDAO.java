@@ -60,16 +60,17 @@ public class AccountHolderDAO {
 
     public AccountHolder search(Map<String, String> data) {
 		try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+			Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+			System.out.println(data.keySet());
 			String sql = "SELECT * FROM accountholder WHERE username=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, "hsimpson"); // FIX
+			System.out.println(statement);
+			// ResultSet result = statement.executeQuery();
 			
-			ResultSet result = statement.executeQuery();
-			
-			if(result.next()) {
+			// if(result.next()) {
 				// return new AccountHolder(result.getInt("accountholder_id"), result.getString("status")); FIX
-			}
+			// }
 			
 		}catch(SQLException e) {
 			System.out.println(e);
