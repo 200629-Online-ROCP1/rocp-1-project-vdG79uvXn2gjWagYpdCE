@@ -25,13 +25,17 @@ public class Server {
 	}
 
 	static public void initialDataLoad() {
+		AccountHolder.deleteAll();
+		AccountStatus.deleteAll();
+		AccountType.deleteAll();
+		Role.deleteAll();
+
 		initialDataLoadAccountStatus();
 		initialDataLoadAccountType();
 		initialDataLoadRole();
 		initialDataLoadAccountHolder();
 	}
 	static public void initialDataLoadAccountHolder() {
-		AccountHolder.deleteAll();
 		AccountHolder accountHolder;
 		Map<String, String> data = new HashMap<String, String>();
 		
