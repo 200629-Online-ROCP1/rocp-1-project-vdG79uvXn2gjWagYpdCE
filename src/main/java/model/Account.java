@@ -14,9 +14,12 @@ import java.util.HashMap;
 
 public class Account {
     private ArrayList<String> fields = 
-      new ArrayList<String>(Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+      new ArrayList<String>(Arrays.asList("balance", "deleted", "accountstatus", "accountype", "accountholder"));
     private Map<String, String> fieldValues = new HashMap<String, String>();
-    private Role role_fk;
+
+    private AccountType accounttype_fk;
+    private AccountStatus accountstatus_fk;
+    private AccountHolder accountholder_fk;
     private int primaryKey = 0;
     private boolean saved = false;
 
@@ -31,9 +34,9 @@ public class Account {
         if (data.containsKey(field)) {
           this.fieldValues.put(field, data.get(field));
         } else {
-          if (field=="role") { // Missing the role, need to check if contains role_id
-            if (data.containsKey("role_id")) {
-              this.role_fk = Role.searchID(data.get("role_id"));
+          if (field=="accountholder") { 
+            if (data.containsKey("accountholder_id")) {
+              this.accountholder_fk = accountholder.searchID(data.get("accountholder_id"));
             }
           } else {
             System.out.println("ERROR: No value was provided for field " + field);
