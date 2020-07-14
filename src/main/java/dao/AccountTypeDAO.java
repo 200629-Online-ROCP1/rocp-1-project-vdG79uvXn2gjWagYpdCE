@@ -20,7 +20,7 @@ public class AccountTypeDAO {
     
     public boolean insert(AccountType accountType) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "INSERT INTO accounttype(type) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountType.getField("type"));
@@ -36,7 +36,7 @@ public class AccountTypeDAO {
 
     public boolean update(AccountType accountType) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "UPDATE accounttype SET type=? WHERE accounttype_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.setString(1, accountType.getField("type"));
@@ -53,7 +53,7 @@ public class AccountTypeDAO {
 
     public AccountType search(String type) {
 		try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accounttype WHERE type=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, type);
@@ -72,7 +72,7 @@ public class AccountTypeDAO {
 
     public void delete() {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accounttype";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();

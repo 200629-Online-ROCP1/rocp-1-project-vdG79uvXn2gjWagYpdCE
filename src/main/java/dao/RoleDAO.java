@@ -20,7 +20,7 @@ public class RoleDAO {
     
     public boolean insert(Role accountStatus) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "INSERT INTO role(role) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountStatus.getField("role"));
@@ -36,7 +36,7 @@ public class RoleDAO {
 
     public boolean update(Role accountStatus) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "UPDATE role SET role=? WHERE role_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.setString(1, accountStatus.getField("role"));
@@ -53,7 +53,7 @@ public class RoleDAO {
 
     public Role search(String role) {
 		try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM role WHERE role=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, role);
@@ -92,7 +92,7 @@ public class RoleDAO {
 
     public void delete() {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM role";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();

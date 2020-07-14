@@ -91,7 +91,7 @@ public class AccountHolderDAO {
 
     public void delete() {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accountholder";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();
