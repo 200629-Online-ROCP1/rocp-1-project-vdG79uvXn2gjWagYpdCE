@@ -1,6 +1,6 @@
 package model;
 
-import dao.AccountHolderDAO;
+import dao.AccountDAO;
 import database.DBConnector;
 import database.QueryBuilder;
 import field.*;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class AccountHolder {
+public class Account {
     private ArrayList<String> fields = 
       new ArrayList<String>(Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
     private Map<String, String> fieldValues = new HashMap<String, String>();
@@ -21,11 +21,11 @@ public class AccountHolder {
     private boolean saved = false;
 
     // Constructors
-    public AccountHolder() {
+    public Account() {
       super();
     }
 
-    public AccountHolder(Map<String, String> data) {
+    public Account(Map<String, String> data) {
       super();
       for (String field: fields) {
         if (data.containsKey(field)) {
@@ -42,7 +42,7 @@ public class AccountHolder {
       }
       this.role_fk = Role.search(data.get("role")); 
     }
-    public AccountHolder(int pk, Map<String, String> data) { 
+    public Account(int pk, Map<String, String> data) { 
       this(data);
       this.primaryKey = pk;
       this.saved = true;
@@ -81,27 +81,27 @@ public class AccountHolder {
 
     // Database operations - save(insert or update), search, refresh
     public void save() {
-      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      AccountDAO dao = AccountDAO.getInstance(); 
       if (primaryKey > 0) { //FIX
         if (dao.update(this)) {
           saved = true;
         }
       } else {
         if (dao.insert(this)) {
-          AccountHolder tmp = AccountHolder.searchUsername(getField("username"));
+          Account tmp = Account.searchUsername(getField("username"));
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
       }
     }
 
-    public static AccountHolder searchUsername(String username) {
-      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+    public static Account searchUsername(String username) {
+      AccountDAO dao = AccountDAO.getInstance(); 
       return dao.searchUsername(username);
     }
 
-    public static void deleteAll() {
-      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      dao.delete();
+    public static void truncate() {
+      AccountDAO dao = AccountDAO.getInstance(); 
+      dao.truncate();
     }
 }

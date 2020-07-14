@@ -9,29 +9,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import utils.Password;
-import model.AccountHolder;
+import model.Account;
 import database.DBConnector;
 
-public class AccountHolderDAO {
-    private static AccountHolderDAO self = new AccountHolderDAO();
+public class AccountDAO {
+    private static AccountDAO self = new AccountDAO();
     
-    private AccountHolderDAO() {}
+    private AccountDAO() {}
 	
-	public static AccountHolderDAO getInstance() {
+	public static AccountDAO getInstance() {
 		return self;
     }
     
-    public boolean insert(AccountHolder accountHolder) {
+    public boolean insert(Account account) {
         try {
             Connection dbconn = DBConnector.getConnection();
 			String sql = "INSERT INTO accountholder(username, email, firstname, lastname, password, role) VALUES(?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, accountHolder.getField("username"));
-			statement.setString(2, accountHolder.getField("email"));
-			statement.setString(3, accountHolder.getField("firstname"));
-			statement.setString(4, accountHolder.getField("lastname"));
-			statement.setString(5, Password.makeSHA256(accountHolder.getField("password")));
-			statement.setInt(6, accountHolder.getRoleID());
+			statement.setString(1, account.getField("username"));
+			statement.setString(2, account.getField("email"));
+			statement.setString(3, account.getField("firstname"));
+			statement.setString(4, account.getField("lastname"));
+			statement.setString(5, Password.makeSHA256(account.getField("password")));
+			statement.setInt(6, account.getRoleID());
 
 			if(!statement.execute()) {
 				return true;
@@ -42,18 +42,18 @@ public class AccountHolderDAO {
         return false;
     }
 
-    public boolean update(AccountHolder accountHolder) {
+    public boolean update(Account account) {
         try {
 			Connection dbconn = DBConnector.getConnection();
 			String sql = "UPDATE accountholder SET username=?, email=?, firstname=?, lastname=?, password=?, role=? WHERE accountholder_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, accountHolder.getField("username"));
-			statement.setString(2, accountHolder.getField("email"));
-			statement.setString(3, accountHolder.getField("firstname"));
-			statement.setString(4, accountHolder.getField("lastname"));
-			statement.setString(5, Password.makeSHA256(accountHolder.getField("password")));
-			statement.setInt(6, accountHolder.getRoleID());
-            statement.setInt(7, accountHolder.getID());
+			statement.setString(1, account.getField("username"));
+			statement.setString(2, account.getField("email"));
+			statement.setString(3, account.getField("firstname"));
+			statement.setString(4, account.getField("lastname"));
+			statement.setString(5, Password.makeSHA256(account.getField("password")));
+			statement.setInt(6, account.getRoleID());
+            statement.setInt(7, account.getID());
 			
 			if(!statement.execute()) {
 				return true;
@@ -64,7 +64,7 @@ public class AccountHolderDAO {
         return false;
     }
 
-	public AccountHolder searchUsername(String username) {
+	public Account searchUsername(String username) {
 		try {
 			Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accountholder WHERE username=?";
@@ -80,7 +80,7 @@ public class AccountHolderDAO {
 				data.put("lastname", result.getString("lastname"));
 				data.put("password", result.getString("password"));
 				data.put("email", result.getString("email"));
-				return new AccountHolder(result.getInt("accountholder_id"), data);
+				return new Account(result.getInt("accountholder_id"), data);
 			}
 		} catch (SQLException e) {
 			System.out.println(e);
@@ -89,11 +89,23 @@ public class AccountHolderDAO {
 
 	}
 
-    public void delete() {
+	public void truncate() {
+		try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "TRUNCATE TABLE account RESTART IDENTITY;";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.execute();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+	}
+
+    public void delete(int ID) {
         try {
             Connection dbconn = DBConnector.getConnection();
-			String sql = "DELETE FROM accountholder";
-            PreparedStatement statement = dbconn.prepareStatement(sql);
+			String sql = "DELETE FROM accountholder WHERE account_id=?";
+			PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
             statement.execute();
 		}catch(SQLException e) {
 			System.out.println(e);

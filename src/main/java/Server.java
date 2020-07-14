@@ -1,19 +1,5 @@
-import database.DBConnector;
-import database.QueryBuilder;
-import logger.Logger;
-import model.AccountStatus;
-import model.AccountType;
-import model.AccountHolder;
-import model.Role;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.sql.Connection;
-import java.sql.SQLException;
+import model.*;
+import java.util.*;
 
 public class Server {
 	
@@ -25,6 +11,7 @@ public class Server {
 	}
 
 	static public void initialDataLoad() {
+		Account.truncate();
 		AccountHolder.deleteAll();
 		AccountStatus.deleteAll();
 		AccountType.deleteAll();
