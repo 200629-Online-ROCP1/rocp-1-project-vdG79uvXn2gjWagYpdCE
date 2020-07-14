@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public class AccountHolderDAO {
     
     public boolean insert(AccountHolder accountHolder) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "INSERT INTO accountholder(username, email, firstname, lastname, password, role) VALUES(?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountHolder.getField("username"));
@@ -43,11 +44,16 @@ public class AccountHolderDAO {
 
     public boolean update(AccountHolder accountHolder) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			String sql = "UPDATE accountholder SET status=? WHERE accountholder_id=?";
+			Connection dbconn = DBConnector.getConnection();
+			String sql = "UPDATE accountholder SET username=?, email=?, firstname=?, lastname=?, password=?, role=? WHERE accountholder_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
-            statement.setString(1, accountHolder.getField("status"));
-            statement.setInt(2, accountHolder.getID());
+			statement.setString(1, accountHolder.getField("username"));
+			statement.setString(2, accountHolder.getField("email"));
+			statement.setString(3, accountHolder.getField("firstname"));
+			statement.setString(4, accountHolder.getField("lastname"));
+			statement.setString(5, Password.makeSHA256(accountHolder.getField("password")));
+			statement.setInt(6, accountHolder.getRoleID());
+            statement.setInt(7, accountHolder.getID());
 			
 			if(!statement.execute()) {
 				return true;
@@ -58,25 +64,30 @@ public class AccountHolderDAO {
         return false;
     }
 
-    public AccountHolder search(Map<String, String> data) {
+	public AccountHolder searchUsername(String username) {
 		try {
-			Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
-			System.out.println(data.keySet());
+			Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accountholder WHERE username=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setString(1, "hsimpson"); // FIX
-			System.out.println(statement);
-			// ResultSet result = statement.executeQuery();
+			statement.setString(1, username);
+			ResultSet result = statement.executeQuery();
 			
-			// if(result.next()) {
-				// return new AccountHolder(result.getInt("accountholder_id"), result.getString("status")); FIX
-			// }
-			
-		}catch(SQLException e) {
+			if(result.next()) {
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("role_id", String.valueOf(result.getInt("role")));
+				data.put("username", result.getString("username"));
+				data.put("firstname", result.getString("firstname"));
+				data.put("lastname", result.getString("lastname"));
+				data.put("password", result.getString("password"));
+				data.put("email", result.getString("email"));
+				return new AccountHolder(result.getInt("accountholder_id"), data);
+			}
+		} catch (SQLException e) {
 			System.out.println(e);
 		}
         return null;
-    }
+
+	}
 
     public void delete() {
         try {

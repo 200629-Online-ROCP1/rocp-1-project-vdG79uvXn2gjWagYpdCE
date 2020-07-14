@@ -68,6 +68,26 @@ public class RoleDAO {
 			System.out.println(e);
 		}
         return null;
+	}
+	
+	public Role searchID(String ID) {
+		int id = Integer.parseInt(ID);
+		try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM role WHERE role_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, id);
+			
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				return new Role(result.getInt("role_id"), result.getString("role"));
+			}
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
     }
 
     public void delete() {

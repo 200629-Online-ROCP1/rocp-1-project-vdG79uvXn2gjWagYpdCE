@@ -65,6 +65,11 @@ public class Role {
       return dao.search(role);
     }
 
+    public static Role searchID(String ID) {
+      RoleDAO dao = RoleDAO.getInstance(); 
+      return dao.searchID(ID);
+    }
+
     public static void deleteAll() {
       RoleDAO dao = RoleDAO.getInstance(); 
       dao.delete();

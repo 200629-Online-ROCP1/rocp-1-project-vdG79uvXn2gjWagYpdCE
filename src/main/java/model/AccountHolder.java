@@ -31,7 +31,13 @@ public class AccountHolder {
         if (data.containsKey(field)) {
           this.fieldValues.put(field, data.get(field));
         } else {
-          System.out.println("ERROR: No value was provided for field " + field);
+          if (field=="role") { // Missing the role, need to check if contains role_id
+            if (data.containsKey("role_id")) {
+              this.role_fk = Role.searchID(data.get("role_id"));
+            }
+          } else {
+            System.out.println("ERROR: No value was provided for field " + field);
+          }
         }
       }
       this.role_fk = Role.search(data.get("role")); 
@@ -64,6 +70,7 @@ public class AccountHolder {
       for (String field: data.keySet()) {
         this.fieldValues.put(field, data.get(field));
       }
+      saved = false;
     }
     public int getID() {
       return primaryKey;
@@ -80,19 +87,17 @@ public class AccountHolder {
           saved = true;
         }
       } else {
-        if (dao.insert(this)) { //FIX
-          Map<String, String> data = new HashMap<String, String>();
-		      data.put("username", getField("username"));
-          AccountHolder tmp = AccountHolder.search(data);
+        if (dao.insert(this)) {
+          AccountHolder tmp = AccountHolder.searchUsername(getField("username"));
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
       }
     }
 
-    public static AccountHolder search(Map<String, String> data) {
+    public static AccountHolder searchUsername(String username) {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      return dao.search(data);
+      return dao.searchUsername(username);
     }
 
     public static void deleteAll() {

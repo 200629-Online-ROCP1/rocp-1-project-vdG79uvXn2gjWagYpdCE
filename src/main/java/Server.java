@@ -21,33 +21,51 @@ public class Server {
 
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
-		// initialDataLoad();
+		initialDataLoad();
+	}
 
-		// ArrayList<String> fields = new ArrayList<String>(Arrays.asList("username", "firstname", "lastname"));
-		// ArrayList<String> operators = new ArrayList<String>(Arrays.asList("eq", "gte", "lt"));
-		// System.out.println(QueryBuilder.Where(fields, operators));
-		// fields = new ArrayList<String>(Arrays.asList("username"));
-		// operators = new ArrayList<String>(Arrays.asList("eq"));
-		// System.out.println(QueryBuilder.Where(fields, operators));
-
+	static public void initialDataLoad() {
 		AccountHolder.deleteAll();
+		AccountStatus.deleteAll();
+		AccountType.deleteAll();
+		Role.deleteAll();
+
+		initialDataLoadAccountStatus();
+		initialDataLoadAccountType();
+		initialDataLoadRole();
+		initialDataLoadAccountHolder();
+	}
+	static public void initialDataLoadAccountHolder() {
+		AccountHolder accountHolder;
 		Map<String, String> data = new HashMap<String, String>();
+		
+		
 		data.put("role", "Standard");
 		data.put("username", "hsimpson");
 		data.put("firstname", "Homer");
 		data.put("lastname", "Simpson");
-		data.put("password", "COVID-19forever");
+		data.put("password", "password789");
 		data.put("email", "hsimpson2112@hotmail.com");
-		AccountHolder accountHolder = new AccountHolder(data); 
-		// System.out.println(accountHolder);
+		accountHolder = new AccountHolder(data); 
 		accountHolder.save();
-		// System.out.println(accountHolder);
-	}
 
-	static public void initialDataLoad() {
-		initialDataLoadAccountStatus();
-		initialDataLoadAccountType();
-		initialDataLoadRole();
+		data.put("role", "Standard");
+		data.put("username", "nflanders");
+		data.put("firstname", "Ned");
+		data.put("lastname", "Flanders");
+		data.put("password", "password456");
+		data.put("email", "nflanders@gmail.com");
+		accountHolder = new AccountHolder(data); 
+		accountHolder.save();
+
+		data.put("role", "Employee");
+		data.put("username", "kbrockman");
+		data.put("firstname", "Kent");
+		data.put("lastname", "Brockman");
+		data.put("password", "password123");
+		data.put("email", "kbrockman@gmail.com");
+		accountHolder = new AccountHolder(data); 
+		accountHolder.save();
 	}
 	static public void initialDataLoadAccountStatus() {
 		AccountStatus.deleteAll();
@@ -55,8 +73,9 @@ public class Server {
 		for (String status: Arrays.asList("Pending", "Open", "Closed", "Denied")) {
 			accountStatus = new AccountStatus(status);
 			accountStatus.save();
-        }
+		}
 	}
+
 	static public void initialDataLoadAccountType() {
 		AccountType.deleteAll();
 		AccountType accountType;
