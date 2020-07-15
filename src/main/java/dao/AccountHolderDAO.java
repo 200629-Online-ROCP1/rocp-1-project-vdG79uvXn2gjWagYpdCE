@@ -89,6 +89,30 @@ public class AccountHolderDAO {
 
 	}
 
+	public AccountHolder search(int ID) {
+		try {
+			Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accountholder WHERE accountholder_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("role_id", String.valueOf(result.getInt("role")));
+				data.put("username", result.getString("username"));
+				data.put("firstname", result.getString("firstname"));
+				data.put("lastname", result.getString("lastname"));
+				data.put("password", result.getString("password"));
+				data.put("email", result.getString("email"));
+				return new AccountHolder(result.getInt("accountholder_id"), data);
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+        return null;
+
+	}
     public void delete() {
         try {
             Connection dbconn = DBConnector.getConnection();

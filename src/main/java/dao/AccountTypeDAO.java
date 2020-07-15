@@ -70,6 +70,25 @@ public class AccountTypeDAO {
         return null;
     }
 
+    public AccountType search(int ID) {
+		try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accounttype WHERE accounttype_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
+			
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				return new AccountType(result.getInt("accounttype_id"), result.getString("type"));
+			}
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
+    }
+
     public void delete() {
         try {
             Connection dbconn = DBConnector.getConnection();

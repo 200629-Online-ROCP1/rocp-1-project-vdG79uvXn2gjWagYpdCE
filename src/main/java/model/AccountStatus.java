@@ -65,6 +65,11 @@ public class AccountStatus {
       return dao.search(status);
     }
 
+    public static AccountStatus search(int ID) {
+      AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
+      return dao.search(ID);
+    }
+
     public static void deleteAll() {
       AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
       dao.delete();

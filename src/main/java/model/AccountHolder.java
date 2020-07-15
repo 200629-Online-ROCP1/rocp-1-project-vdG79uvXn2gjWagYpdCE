@@ -100,6 +100,11 @@ public class AccountHolder {
       return dao.searchUsername(username);
     }
 
+    public static AccountHolder search(int ID) {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      return dao.search(ID);
+    }
+
     public static void deleteAll() {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
       dao.delete();

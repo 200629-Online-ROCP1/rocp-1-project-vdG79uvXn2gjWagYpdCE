@@ -68,6 +68,25 @@ public class AccountStatusDAO {
 			System.out.println(e);
 		}
         return null;
+	}
+	
+	public AccountStatus search(int ID) {
+		try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accountstatus WHERE accountstatus_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
+			
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				return new AccountStatus(result.getInt("accountstatus_id"), result.getString("status"));
+			}
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
     }
 
     public void delete() {
