@@ -8,18 +8,6 @@ public class Server {
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
 		initialDataLoad();
-
-		Account account;
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("balance", "100.00");
-		data.put("deleted", "false");
-		data.put("accountstatus", "Open");
-		data.put("accounttype", "Savings");
-		data.put("accountholder", "hsimpson");
-		account = new Account(data);
-		System.out.println(account); 
-		account.save();
-		System.out.println(account); 
 	}
 
 	static public void initialDataLoad() {
@@ -33,7 +21,29 @@ public class Server {
 		initialDataLoadAccountType();
 		initialDataLoadRole();
 		initialDataLoadAccountHolder();
+		initialDataLoadAccount();
 	}
+
+	static public void initialDataLoadAccount() {
+		Account account;
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("balance", "100.00");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Savings");
+		data.put("accountholder", "hsimpson");
+		account = new Account(data);
+		account.save();
+
+		data.put("balance", "1650.28");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Checking");
+		data.put("accountholder", "hsimpson");
+		account = new Account(data);
+		account.save();
+	}
+
 	static public void initialDataLoadAccountHolder() {
 		AccountHolder accountHolder;
 		Map<String, String> data = new HashMap<String, String>();
