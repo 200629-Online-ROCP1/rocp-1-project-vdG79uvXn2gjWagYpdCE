@@ -18,11 +18,12 @@ public class Server {
 		data.put("accountholder", "hsimpson");
 		account = new Account(data);
 		System.out.println(account); 
-		// accountHolder.save();
+		account.save();
+		System.out.println(account); 
 	}
 
 	static public void initialDataLoad() {
-		Account.truncate();
+		Account.deleteAll();
 		AccountHolder.deleteAll();
 		AccountStatus.deleteAll();
 		AccountType.deleteAll();

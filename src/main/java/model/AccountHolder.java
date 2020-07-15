@@ -1,9 +1,6 @@
 package model;
 
 import dao.AccountHolderDAO;
-import database.DBConnector;
-import database.QueryBuilder;
-import field.*;
 
 import model.Role;
 
@@ -105,8 +102,12 @@ public class AccountHolder {
       return dao.search(ID);
     }
 
+    public static void delete(int ID) {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      dao.delete(ID);
+    }
     public static void deleteAll() {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      dao.delete();
+      dao.deleteAll();
     }
 }

@@ -89,7 +89,19 @@ public class AccountTypeDAO {
         return null;
     }
 
-    public void delete() {
+    public void delete(int ID) {
+        try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "DELETE FROM accounttype WHERE accounttype=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.setInt(1, ID);
+            statement.execute();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+    }
+
+    public void deleteAll() {
         try {
             Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accounttype";

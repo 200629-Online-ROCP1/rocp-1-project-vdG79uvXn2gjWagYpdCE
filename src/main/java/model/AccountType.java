@@ -70,8 +70,12 @@ public class AccountType {
       return dao.search(ID);
     }
 
+    public static void delete(int ID) {
+      AccountTypeDAO dao = AccountTypeDAO.getInstance(); 
+      dao.delete(ID);
+    }
     public static void deleteAll() {
       AccountTypeDAO dao = AccountTypeDAO.getInstance(); 
-      dao.delete();
+      dao.deleteAll();
     }
 }

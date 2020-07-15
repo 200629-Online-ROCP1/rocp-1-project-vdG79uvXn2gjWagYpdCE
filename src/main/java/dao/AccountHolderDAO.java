@@ -113,11 +113,22 @@ public class AccountHolderDAO {
         return null;
 
 	}
-    public void delete() {
+    public void deleteAll() {
         try {
             Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accountholder";
             PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.execute();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+	}
+	public void delete(int ID) {
+        try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "DELETE FROM accountholder where accountholder_id=?";
+			PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
             statement.execute();
 		}catch(SQLException e) {
 			System.out.println(e);

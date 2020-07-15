@@ -1,13 +1,10 @@
 package model;
 
 import dao.AccountDAO;
-import database.DBConnector;
-import database.QueryBuilder;
-import field.*;
-
 import model.*;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +19,7 @@ public class Account {
     private AccountHolder accountholder_fk;
     private int primaryKey = 0;
     private boolean saved = false;
+    private String uuid;
 
     // Constructors
     public Account() {
@@ -38,28 +36,29 @@ public class Account {
             if (data.containsKey("accountholder_id")) {
               int id = Integer.parseInt(data.get("accountholder_id"));
               this.accountholder_fk = AccountHolder.search(id);
+            } else {
+              System.out.println("ERROR: No value was provided for field " + field);
             }
-          } else {
-            System.out.println("ERROR: No value was provided for field " + field);
           }
           if (field=="accountstatus") { 
             if (data.containsKey("accountstatus_id")) {
               int id = Integer.parseInt(data.get("accountstatus_id"));
               this.accountstatus_fk = AccountStatus.search(id);
+            } else {
+              System.out.println("ERROR: No value was provided for field " + field);
             }
-          } else {
-            System.out.println("ERROR: No value was provided for field " + field);
           }
           if (field=="accounttype") { 
             if (data.containsKey("accounttype_id")) {
               int id = Integer.parseInt(data.get("accounttype_id"));
               this.accounttype_fk = AccountType.search(id);
+            } else {
+              System.out.println("ERROR: No value was provided for field " + field);
             }
-          } else {
-            System.out.println("ERROR: No value was provided for field " + field);
           }
         }
       }
+      this.uuid = UUID.randomUUID().toString();
       if (this.accounttype_fk==null) { this.accounttype_fk=AccountType.search(data.get("accounttype")); }
       if (this.accountstatus_fk==null) { this.accountstatus_fk=AccountStatus.search(data.get("accountstatus")); }
       if (this.accountholder_fk==null) { this.accountholder_fk=AccountHolder.search(data.get("accountholder")); }
@@ -89,9 +88,11 @@ public class Account {
       return retString;
 
     }
-    
 
     public String getField(String fieldName) {
+      if (fieldName=="uuid") {
+        return this.uuid;
+      }
       return fieldValues.get(fieldName);
     }
     public void setField(Map<String, String> data) {
@@ -103,11 +104,16 @@ public class Account {
     public int getID() {
       return primaryKey;
     }
-    /*
-    public int getRoleID() {
-      return role_fk.getID();
+    public int getFKID(String fieldName) {
+      if (fieldName=="accountstatus") { return accountstatus_fk.getID(); }
+      else if (fieldName=="accounttype") { return accounttype_fk.getID(); }
+      else if (fieldName=="accountholder") { return accountholder_fk.getID(); }
+      else { 
+        System.out.println("ERROR: foreign key " + fieldName + " is unknown.");
+        return 0;
+      }
+
     }
-    */
 
     // Database operations - save(insert or update), search, refresh
     public void save() {
@@ -118,20 +124,20 @@ public class Account {
         }
       } else {
         if (dao.insert(this)) {
-          Account tmp = Account.searchUsername(getField("username"));
+          Account tmp = Account.search(getField("uuid"));
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
       }
     }
 
-    public static Account searchUsername(String username) {
+    public static Account search(String uuid) {
       AccountDAO dao = AccountDAO.getInstance(); 
-      return dao.searchUsername(username);
+      return dao.search(uuid);
     }
 
-    public static void truncate() {
+    public static void deleteAll() {
       AccountDAO dao = AccountDAO.getInstance(); 
-      dao.truncate();
+      dao.deleteAll();
     }
 }
