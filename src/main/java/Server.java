@@ -8,6 +8,17 @@ public class Server {
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
 		initialDataLoad();
+
+		Account account;
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("balance", "100.00");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Savings");
+		data.put("accountholder", "hsimpson");
+		account = new Account(data);
+		System.out.println(account); 
+		// accountHolder.save();
 	}
 
 	static public void initialDataLoad() {

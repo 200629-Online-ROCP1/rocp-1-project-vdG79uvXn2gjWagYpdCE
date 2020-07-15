@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class Account {
     private ArrayList<String> fields = 
-      new ArrayList<String>(Arrays.asList("balance", "deleted", "accountstatus", "accountype", "accountholder"));
+      new ArrayList<String>(Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
     private Map<String, String> fieldValues = new HashMap<String, String>();
 
     private AccountType accounttype_fk;
