@@ -31,7 +31,8 @@ public class AccountDAO {
 			statement.setString(3, account.getField("firstname"));
 			statement.setString(4, account.getField("lastname"));
 			statement.setString(5, Password.makeSHA256(account.getField("password")));
-			statement.setInt(6, account.getRoleID());
+			statement.setInt(6, 1); //FIX
+			// statement.setInt(6, account.getRoleID());
 
 			if(!statement.execute()) {
 				return true;
@@ -52,7 +53,8 @@ public class AccountDAO {
 			statement.setString(3, account.getField("firstname"));
 			statement.setString(4, account.getField("lastname"));
 			statement.setString(5, Password.makeSHA256(account.getField("password")));
-			statement.setInt(6, account.getRoleID());
+			statement.setInt(6, 1);  //FIX
+			// statement.setInt(6, account.getRoleID());
             statement.setInt(7, account.getID());
 			
 			if(!statement.execute()) {
@@ -92,7 +94,7 @@ public class AccountDAO {
 	public void truncate() {
 		try {
             Connection dbconn = DBConnector.getConnection();
-			String sql = "TRUNCATE TABLE account RESTART IDENTITY;";
+			String sql = "DELETE FROM accountholder";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();
 		}catch(SQLException e) {

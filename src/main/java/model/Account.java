@@ -5,7 +5,7 @@ import database.DBConnector;
 import database.QueryBuilder;
 import field.*;
 
-import model.Role;
+import model.*;
 
 import java.util.Map;
 import java.util.ArrayList;
@@ -36,20 +36,40 @@ public class Account {
         } else {
           if (field=="accountholder") { 
             if (data.containsKey("accountholder_id")) {
-              this.accountholder_fk = accountholder.searchID(data.get("accountholder_id"));
+              int id = Integer.parseInt(data.get("accountholder_id"));
+              this.accountholder_fk = AccountHolder.search(id);
+            }
+          } else {
+            System.out.println("ERROR: No value was provided for field " + field);
+          }
+          if (field=="accountstatus") { 
+            if (data.containsKey("accountstatus_id")) {
+              int id = Integer.parseInt(data.get("accountstatus_id"));
+              this.accountstatus_fk = AccountStatus.search(id);
+            }
+          } else {
+            System.out.println("ERROR: No value was provided for field " + field);
+          }
+          if (field=="accounttype") { 
+            if (data.containsKey("accounttype_id")) {
+              int id = Integer.parseInt(data.get("accounttype_id"));
+              this.accounttype_fk = AccountType.search(id);
             }
           } else {
             System.out.println("ERROR: No value was provided for field " + field);
           }
         }
       }
-      this.role_fk = Role.search(data.get("role")); 
+      if (this.accounttype_fk==null) { AccountType.search(data.get("accounttype")); }
+      if (this.accountstatus_fk==null) { AccountStatus.search(data.get("accountstatus")); }
+      if (this.accountholder_fk==null) { AccountType.search(data.get("accountholder")); }
     }
     public Account(int pk, Map<String, String> data) { 
       this(data);
       this.primaryKey = pk;
       this.saved = true;
     }
+    /*
     public String toString() {
       String retString = new String("PK => " + primaryKey + "\n");
       for (String field: fields) {
@@ -65,6 +85,7 @@ public class Account {
       return retString;
 
     }
+    */
 
     public String getField(String fieldName) {
       return fieldValues.get(fieldName);
@@ -78,9 +99,11 @@ public class Account {
     public int getID() {
       return primaryKey;
     }
+    /*
     public int getRoleID() {
       return role_fk.getID();
     }
+    */
 
     // Database operations - save(insert or update), search, refresh
     public void save() {
