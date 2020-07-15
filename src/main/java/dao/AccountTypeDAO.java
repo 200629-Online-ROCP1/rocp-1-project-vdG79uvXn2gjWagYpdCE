@@ -20,7 +20,7 @@ public class AccountTypeDAO {
     
     public boolean insert(AccountType accountType) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "INSERT INTO accounttype(type) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountType.getField("type"));
@@ -36,7 +36,7 @@ public class AccountTypeDAO {
 
     public boolean update(AccountType accountType) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "UPDATE accounttype SET type=? WHERE accounttype_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.setString(1, accountType.getField("type"));
@@ -53,7 +53,7 @@ public class AccountTypeDAO {
 
     public AccountType search(String type) {
 		try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accounttype WHERE type=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, type);
@@ -70,9 +70,40 @@ public class AccountTypeDAO {
         return null;
     }
 
-    public void delete() {
+    public AccountType search(int ID) {
+		try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accounttype WHERE accounttype_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
+			
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				return new AccountType(result.getInt("accounttype_id"), result.getString("type"));
+			}
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
+    }
+
+    public void delete(int ID) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "DELETE FROM accounttype WHERE accounttype=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.setInt(1, ID);
+            statement.execute();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+    }
+
+    public void deleteAll() {
+        try {
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accounttype";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();

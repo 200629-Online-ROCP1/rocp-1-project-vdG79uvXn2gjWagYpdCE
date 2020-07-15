@@ -64,7 +64,7 @@ public class AccountHolderDAO {
         return false;
     }
 
-	public AccountHolder searchUsername(String username) {
+	public AccountHolder search(String username) {
 		try {
 			Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accountholder WHERE username=?";
@@ -89,11 +89,46 @@ public class AccountHolderDAO {
 
 	}
 
-    public void delete() {
+	public AccountHolder search(int ID) {
+		try {
+			Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accountholder WHERE accountholder_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("role_id", String.valueOf(result.getInt("role")));
+				data.put("username", result.getString("username"));
+				data.put("firstname", result.getString("firstname"));
+				data.put("lastname", result.getString("lastname"));
+				data.put("password", result.getString("password"));
+				data.put("email", result.getString("email"));
+				return new AccountHolder(result.getInt("accountholder_id"), data);
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+        return null;
+
+	}
+    public void deleteAll() {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accountholder";
             PreparedStatement statement = dbconn.prepareStatement(sql);
+            statement.execute();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+	}
+	public void delete(int ID) {
+        try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "DELETE FROM accountholder where accountholder_id=?";
+			PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
             statement.execute();
 		}catch(SQLException e) {
 			System.out.println(e);

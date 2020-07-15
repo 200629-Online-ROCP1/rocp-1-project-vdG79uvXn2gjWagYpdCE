@@ -20,7 +20,7 @@ public class AccountStatusDAO {
     
     public boolean insert(AccountStatus accountStatus) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "INSERT INTO accountstatus(status) VALUES(?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountStatus.getField("status"));
@@ -36,7 +36,7 @@ public class AccountStatusDAO {
 
     public boolean update(AccountStatus accountStatus) {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "UPDATE accountstatus SET status=? WHERE accountstatus_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.setString(1, accountStatus.getField("status"));
@@ -53,10 +53,29 @@ public class AccountStatusDAO {
 
     public AccountStatus search(String status) {
 		try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accountstatus WHERE status=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, status);
+			
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				return new AccountStatus(result.getInt("accountstatus_id"), result.getString("status"));
+			}
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
+	}
+	
+	public AccountStatus search(int ID) {
+		try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accountstatus WHERE accountstatus_id=?";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+			statement.setInt(1, ID);
 			
 			ResultSet result = statement.executeQuery();
 			
@@ -72,7 +91,7 @@ public class AccountStatusDAO {
 
     public void delete() {
         try {
-            Connection dbconn = DBConnector.getConnection("172.18.0.2", "bank_database");
+            Connection dbconn = DBConnector.getConnection();
 			String sql = "DELETE FROM accountstatus";
             PreparedStatement statement = dbconn.prepareStatement(sql);
             statement.execute();

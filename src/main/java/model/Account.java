@@ -1,31 +1,143 @@
 package model;
 
-import field.*;
+import dao.AccountDAO;
+import model.*;
 
-/* public class Account {
-    private int accountId; // primary key
-    private double balance;  // not null
-    private AccountStatus status;
-    private AccountType type;
-    private boolean deleted;
-    private User owner;
-}
-*/
+import java.util.Map;
+import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
-public class Account extends Model {
-    DoubleField balance = new DoubleField("balance");
-    BooleanField deleted = new BooleanField("deleted");
-    ForeignKeyField account_status = new ForeignKeyField("AccountStatus");
-    ForeignKeyField account_type = new ForeignKeyField("AccountType");
-    ForeignKeyField owner = new ForeignKeyField("AccountHolder");
+public class Account {
+    private ArrayList<String> fields = 
+      new ArrayList<String>(Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
+    private Map<String, String> fieldValues = new HashMap<String, String>();
 
+    private AccountType accounttype_fk;
+    private AccountStatus accountstatus_fk;
+    private AccountHolder accountholder_fk;
+    private int primaryKey = 0;
+    private boolean saved = false;
+    private String uuid;
+
+    // Constructors
     public Account() {
-        super("Account");
-        this.balance.Option("null_allowed", 0);
-        this.addField(balance);
-        this.addField(deleted);
-        this.addField(account_status);
-        this.addField(account_type);
-        this.addField(owner);
+      super();
+    }
+
+    public Account(Map<String, String> data) {
+      super();
+      for (String field: fields) {
+        if (data.containsKey(field)) {
+          this.fieldValues.put(field, data.get(field));
+        } else {
+          if (field=="accountholder") { 
+            if (data.containsKey("accountholder_id")) {
+              int id = Integer.parseInt(data.get("accountholder_id"));
+              this.accountholder_fk = AccountHolder.search(id);
+            } else {
+              System.out.println("ERROR: No value was provided for field " + field);
+            }
+          }
+          if (field=="accountstatus") { 
+            if (data.containsKey("accountstatus_id")) {
+              int id = Integer.parseInt(data.get("accountstatus_id"));
+              this.accountstatus_fk = AccountStatus.search(id);
+            } else {
+              System.out.println("ERROR: No value was provided for field " + field);
+            }
+          }
+          if (field=="accounttype") { 
+            if (data.containsKey("accounttype_id")) {
+              int id = Integer.parseInt(data.get("accounttype_id"));
+              this.accounttype_fk = AccountType.search(id);
+            } else {
+              System.out.println("ERROR: No value was provided for field " + field);
+            }
+          }
+        }
+      }
+      this.uuid = UUID.randomUUID().toString();
+      if (this.accounttype_fk==null) { this.accounttype_fk=AccountType.search(data.get("accounttype")); }
+      if (this.accountstatus_fk==null) { this.accountstatus_fk=AccountStatus.search(data.get("accountstatus")); }
+      if (this.accountholder_fk==null) { this.accountholder_fk=AccountHolder.search(data.get("accountholder")); }
+    }
+    public Account(int pk, Map<String, String> data) { 
+      this(data);
+      this.primaryKey = pk;
+      this.saved = true;
+    }
+    
+    public String toString() {
+      String retString = new String("PK => " + primaryKey + "\n");
+      for (String field: fields) {
+        if (field=="accounttype") {
+          retString += "    AccountType PK => " + accounttype_fk.getID() + " ("+ accounttype_fk.getField("type") + ")\n";
+        } else if (field=="accountstatus") {
+          retString += "    AccountStatus PK => " + accountstatus_fk.getID() + " ("+ accountstatus_fk.getField("status") + ")\n";
+        } else if (field=="accountholder") {
+          retString += "    AccountHolder PK => " + accountholder_fk.getID() + " ("+ accountholder_fk.getField("username") + ")\n";
+        } else {
+          retString += "    " + getField(field) + "\n";
+        }
+      }
+      if (!saved) {
+        retString += "    (NOT SAVED)";
+      }
+      return retString;
+
+    }
+
+    public String getField(String fieldName) {
+      if (fieldName=="uuid") {
+        return this.uuid;
+      }
+      return fieldValues.get(fieldName);
+    }
+    public void setField(Map<String, String> data) {
+      for (String field: data.keySet()) {
+        this.fieldValues.put(field, data.get(field));
+      }
+      saved = false;
+    }
+    public int getID() {
+      return primaryKey;
+    }
+    public int getFKID(String fieldName) {
+      if (fieldName=="accountstatus") { return accountstatus_fk.getID(); }
+      else if (fieldName=="accounttype") { return accounttype_fk.getID(); }
+      else if (fieldName=="accountholder") { return accountholder_fk.getID(); }
+      else { 
+        System.out.println("ERROR: foreign key " + fieldName + " is unknown.");
+        return 0;
+      }
+
+    }
+
+    // Database operations - save(insert or update), search, refresh
+    public void save() {
+      AccountDAO dao = AccountDAO.getInstance(); 
+      if (primaryKey > 0) { //FIX
+        if (dao.update(this)) {
+          saved = true;
+        }
+      } else {
+        if (dao.insert(this)) {
+          Account tmp = Account.search(getField("uuid"));
+          this.primaryKey = tmp.primaryKey;
+          saved = true;
+        }
+      }
+    }
+
+    public static Account search(String uuid) {
+      AccountDAO dao = AccountDAO.getInstance(); 
+      return dao.search(uuid);
+    }
+
+    public static void deleteAll() {
+      AccountDAO dao = AccountDAO.getInstance(); 
+      dao.deleteAll();
     }
 }

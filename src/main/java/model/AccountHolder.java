@@ -1,9 +1,6 @@
 package model;
 
 import dao.AccountHolderDAO;
-import database.DBConnector;
-import database.QueryBuilder;
-import field.*;
 
 import model.Role;
 
@@ -88,20 +85,29 @@ public class AccountHolder {
         }
       } else {
         if (dao.insert(this)) {
-          AccountHolder tmp = AccountHolder.searchUsername(getField("username"));
+          AccountHolder tmp = AccountHolder.search(getField("username"));
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
       }
     }
 
-    public static AccountHolder searchUsername(String username) {
+    public static AccountHolder search(String username) {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      return dao.searchUsername(username);
+      return dao.search(username);
     }
 
+    public static AccountHolder search(int ID) {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      return dao.search(ID);
+    }
+
+    public static void delete(int ID) {
+      AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
+      dao.delete(ID);
+    }
     public static void deleteAll() {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      dao.delete();
+      dao.deleteAll();
     }
 }

@@ -1,19 +1,5 @@
-import database.DBConnector;
-import database.QueryBuilder;
-import logger.Logger;
-import model.AccountStatus;
-import model.AccountType;
-import model.AccountHolder;
-import model.Role;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.sql.Connection;
-import java.sql.SQLException;
+import model.*;
+import java.util.*;
 
 public class Server {
 	
@@ -25,6 +11,7 @@ public class Server {
 	}
 
 	static public void initialDataLoad() {
+		Account.deleteAll();
 		AccountHolder.deleteAll();
 		AccountStatus.deleteAll();
 		AccountType.deleteAll();
@@ -34,7 +21,29 @@ public class Server {
 		initialDataLoadAccountType();
 		initialDataLoadRole();
 		initialDataLoadAccountHolder();
+		initialDataLoadAccount();
 	}
+
+	static public void initialDataLoadAccount() {
+		Account account;
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("balance", "100.00");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Savings");
+		data.put("accountholder", "hsimpson");
+		account = new Account(data);
+		account.save();
+
+		data.put("balance", "1650.28");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Checking");
+		data.put("accountholder", "hsimpson");
+		account = new Account(data);
+		account.save();
+	}
+
 	static public void initialDataLoadAccountHolder() {
 		AccountHolder accountHolder;
 		Map<String, String> data = new HashMap<String, String>();
