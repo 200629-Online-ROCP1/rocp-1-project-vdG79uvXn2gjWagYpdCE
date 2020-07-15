@@ -88,16 +88,16 @@ public class AccountHolder {
         }
       } else {
         if (dao.insert(this)) {
-          AccountHolder tmp = AccountHolder.searchUsername(getField("username"));
+          AccountHolder tmp = AccountHolder.search(getField("username"));
           this.primaryKey = tmp.primaryKey;
           saved = true;
         }
       }
     }
 
-    public static AccountHolder searchUsername(String username) {
+    public static AccountHolder search(String username) {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
-      return dao.searchUsername(username);
+      return dao.search(username);
     }
 
     public static AccountHolder search(int ID) {

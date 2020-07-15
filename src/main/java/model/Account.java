@@ -60,21 +60,25 @@ public class Account {
           }
         }
       }
-      if (this.accounttype_fk==null) { AccountType.search(data.get("accounttype")); }
-      if (this.accountstatus_fk==null) { AccountStatus.search(data.get("accountstatus")); }
-      if (this.accountholder_fk==null) { AccountType.search(data.get("accountholder")); }
+      if (this.accounttype_fk==null) { this.accounttype_fk=AccountType.search(data.get("accounttype")); }
+      if (this.accountstatus_fk==null) { this.accountstatus_fk=AccountStatus.search(data.get("accountstatus")); }
+      if (this.accountholder_fk==null) { this.accountholder_fk=AccountHolder.search(data.get("accountholder")); }
     }
     public Account(int pk, Map<String, String> data) { 
       this(data);
       this.primaryKey = pk;
       this.saved = true;
     }
-    /*
+    
     public String toString() {
       String retString = new String("PK => " + primaryKey + "\n");
       for (String field: fields) {
-        if (field=="role") {
-          retString += "    Role PK => " + getRoleID() + " ("+ role_fk.getField("role") + ")\n";
+        if (field=="accounttype") {
+          retString += "    AccountType PK => " + accounttype_fk.getID() + " ("+ accounttype_fk.getField("type") + ")\n";
+        } else if (field=="accountstatus") {
+          retString += "    AccountStatus PK => " + accountstatus_fk.getID() + " ("+ accountstatus_fk.getField("status") + ")\n";
+        } else if (field=="accountholder") {
+          retString += "    AccountHolder PK => " + accountholder_fk.getID() + " ("+ accountholder_fk.getField("username") + ")\n";
         } else {
           retString += "    " + getField(field) + "\n";
         }
@@ -85,7 +89,7 @@ public class Account {
       return retString;
 
     }
-    */
+    
 
     public String getField(String fieldName) {
       return fieldValues.get(fieldName);

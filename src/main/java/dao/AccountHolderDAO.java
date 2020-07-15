@@ -64,7 +64,7 @@ public class AccountHolderDAO {
         return false;
     }
 
-	public AccountHolder searchUsername(String username) {
+	public AccountHolder search(String username) {
 		try {
 			Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accountholder WHERE username=?";
