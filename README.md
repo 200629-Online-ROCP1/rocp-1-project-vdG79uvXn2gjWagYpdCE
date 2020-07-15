@@ -1,31 +1,5 @@
 # Overview
 
-## Account Status
-
-* model.AccountStatus
-  * Constructors
-    * AccountStatus()
-    * AccountStatus(String status)
-    * AccountStatus(int pk, String status)
-  * static methods
-    * AccountStatus search(String status)
-    * void deleteAll()
-  * instance methods
-    * String toString()
-    * String getField(String fieldName)
-    * String setField(String fieldName, String status)
-    * int getID()
-    * void save()
-* dao.AccountStatusDAO
-  * Constructors
-    * AccountStatusDAO()  **private**
-  * static methods
-  * instance methods
-    * boolean insert(AccountStatus accountStatus)
-    * boolean update(AccountStatus accountStatus)
-    * AccountStatus search(String status)
-    * void delete()
-
 # To Implement
 
 ## Endpoints
