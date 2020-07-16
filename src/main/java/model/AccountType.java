@@ -1,5 +1,9 @@
 package model;
 
+import java.util.Set;
+
+import org.json.simple.JSONObject;
+
 import dao.AccountTypeDAO;
 import database.DBConnector;
 import field.*;
@@ -29,17 +33,25 @@ public class AccountType {
         retString += " (NOT SAVED)";
       }
       return retString;
-
+    }
+    
+    public String toJSON() {
+    	JSONObject jsonobj = new JSONObject();
+        jsonobj.put("accounttype_id", primaryKey);
+        jsonobj.put("type", getField("type"));
+        return jsonobj.toString();
     }
 
     public String getField(String fieldName) {
       return type;
     }
+    
     public String setField(String fieldName, String type) {
       this.type = type;
       this.saved = false;
       return type;
     }
+    
     public int getID() {
       return primaryKey;
     }
@@ -74,8 +86,13 @@ public class AccountType {
       AccountTypeDAO dao = AccountTypeDAO.getInstance(); 
       dao.delete(ID);
     }
+    
     public static void deleteAll() {
       AccountTypeDAO dao = AccountTypeDAO.getInstance(); 
       dao.deleteAll();
+    }
+    public static Set<AccountType> retrieveAll() {
+    	AccountTypeDAO dao = AccountTypeDAO.getInstance();
+    	return dao.retrieveAll();
     }
 }

@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -110,6 +111,25 @@ public class AccountTypeDAO {
 		}catch(SQLException e) {
 			System.out.println(e);
 		}
+    }
+    
+    public Set<AccountType> retrieveAll() {
+    	try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accounttype";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            Set<AccountType> set = new HashSet<AccountType>();
+			ResultSet result = statement.executeQuery();
+			
+			if(result.next()) {
+				set.add(new AccountType(result.getInt("accounttype_id"), result.getString("type")));
+			}
+			return set;
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
     }
 
     public boolean insertStatement(AccountType accountType) {
