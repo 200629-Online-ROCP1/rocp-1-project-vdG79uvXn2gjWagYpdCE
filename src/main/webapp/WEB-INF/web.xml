@@ -21,4 +21,15 @@
   	<url-pattern>/hello</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<description>API servlet</description>
+  	<display-name>APIServlet</display-name>
+  	<servlet-name>APIServlet</servlet-name>
+  	<servlet-class>servlets.APIServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>APIServlet</servlet-name>
+  	<url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>
