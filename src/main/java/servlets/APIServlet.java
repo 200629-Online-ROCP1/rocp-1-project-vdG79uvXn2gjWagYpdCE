@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +14,10 @@ public class APIServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		System.out.println("In doGet");
-		req.getRequestDispatcher(Router.process(req, res)).forward(req, res);
-		System.out.println("Still in doGet");
+		// req.getRequestDispatcher(Router.process(req, res)).forward(req, res);
+		String results = Router.process(req, res);
+		PrintWriter out = res.getWriter();
+		out.print(results);
 	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

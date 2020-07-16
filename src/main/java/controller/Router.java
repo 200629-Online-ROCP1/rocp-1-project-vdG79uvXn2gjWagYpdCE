@@ -7,16 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 public class Router {
 	
 	public static String process(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println(req.getRequestURI());
+		System.out.println(req.getRequestURI().toString());
 
-//		if (req.getRequestURI()==
-//		switch(req.getRequestURI()) {
-//		case "/HelloMVC/api/Home":
-//			return HomeController.home(req, res);
-//		case "/HelloMVC/api/login":
-//			return LoginController.login(req, res);
-//		}
-		
+		if (req.getRequestURI().toString().equals("/rocp-project/api/users")) {
+			return UsersAPI.list(req, res);
+		}		
 		return "/index.html"; 
 	}
 
