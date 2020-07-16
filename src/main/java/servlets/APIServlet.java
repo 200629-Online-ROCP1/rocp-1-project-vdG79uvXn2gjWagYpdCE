@@ -14,7 +14,6 @@ public class APIServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		System.out.println("In doGet");
-		// req.getRequestDispatcher(Router.process(req, res)).forward(req, res);
 		String results = Router.process(req, res);
 		PrintWriter out = res.getWriter();
 		out.print(results);
