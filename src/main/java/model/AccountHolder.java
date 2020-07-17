@@ -67,12 +67,14 @@ public class AccountHolder {
         jsonobj.put("accountholder_id", primaryKey);
         for (String field: fields) {
         	if (field.equals("role")) {
-        		jsonobj.put("role", role_fk.toJSON());
+        		jsonobj.put("role", role_fk.asJSONObject());
+        	} else if (field.equals("password")) {
         	} else {
         		jsonobj.put(field, getField(field));
         	}
         }
         return jsonobj.toString();
+        
     }
 
     public String getField(String fieldName) {

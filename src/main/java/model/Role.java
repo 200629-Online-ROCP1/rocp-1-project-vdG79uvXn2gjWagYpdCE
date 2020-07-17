@@ -34,12 +34,16 @@ public class Role {
     }
     
     public String toJSON() {
+    	return asJSONObject().toString();
+    }
+
+    public JSONObject asJSONObject() {
     	JSONObject jsonobj = new JSONObject();
         jsonobj.put("role_id", primaryKey);
         jsonobj.put("role", getField("role"));
-        return jsonobj.toString();
+        return jsonobj;
     }
-
+    
     public String getField(String fieldName) {
       return role;
     }
