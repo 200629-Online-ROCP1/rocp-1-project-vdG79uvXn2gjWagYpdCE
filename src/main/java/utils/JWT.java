@@ -60,5 +60,21 @@ public class JWT {
                 .parseClaimsJws(jwt).getBody();
         return claims;
     }
+    
+    /**
+     * Just stub class - always returns false 
+     * @param jwt JSON Web Token
+     * @return false
+     */
+    public static boolean isExpired(String jwt) {
+    	Claims claims = decode(jwt);
+//    	System.out.println(claims.get("exp").getClass());
+//    	long exp = Long.parseLong(claims.get("exp"));
+//    	System.out.println("EXP >>> " + exp);
+//    	long nowMillis = System.currentTimeMillis();
+//    	System.out.println("NOW >>> " + nowMillis);
+    	
+    	return false;
+    }
 
 }

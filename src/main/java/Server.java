@@ -15,6 +15,7 @@ public class Server {
 		System.out.println(jwt);
 		Claims claims = JWT.decode(jwt);
 		System.out.println(claims);
+		JWT.isExpired(jwt);
 	}
 
 	static public void initialDataLoad() {
