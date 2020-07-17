@@ -9,16 +9,20 @@ import model.AccountType;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class AccountTypeAPI {
-	public static String list(HttpServletRequest req, HttpServletResponse res) {
-//		Set<AccountType> types = AccountType.retrieveAll();
-//		String retString = "";
-//		for(AccountType type : types) {
-//			retString += type.toJSON();
-//		}
-//		return retString;
-		AccountType type = new AccountType("Testing");
-		type.save();
-		return type.toJSON();
+	private static final ObjectMapper wrapper = new ObjectMapper();
+	
+	public static String list() {
+		Set<AccountType> all = AccountType.retrieveAll();
+		System.out.println(all);
+		try {
+			return wrapper.writeValueAsString(all);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }
