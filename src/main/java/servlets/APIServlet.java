@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controller.AccountTypeAPI;
+import controller.*;
 import controller.Router;
 
 public class APIServlet extends HttpServlet {
@@ -28,8 +28,13 @@ public class APIServlet extends HttpServlet {
 		String results = new String("");
 //		if (req.getRequestURI().toString().equals("/rocp-project/api/user")) { return UserAPI.list(req, res); }
 //		if (req.getRequestURI().toString().equals("/rocp-project/api/account")) { return AccountAPI.list(req, res); }
-//		if (portions[0]=="/rocp-project/api/accountstatus")) { return AccountStatusAPI.list(req, res); }
-		if (portions[0].equals("accounttype")) { 
+		if (portions[0].equals("accountstatus")) {  
+			if (portions.length == 2) {
+				results = AccountStatusAPI.detail(Integer.parseInt(portions[1]));
+			} else {
+				results = AccountStatusAPI.list(); 
+			}
+		} else if (portions[0].equals("accounttype")) { 
 			if (portions.length == 2) {
 				results = AccountTypeAPI.detail(Integer.parseInt(portions[1]));
 			} else {

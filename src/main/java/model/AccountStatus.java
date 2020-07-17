@@ -1,8 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import org.json.simple.JSONObject;
 import dao.AccountStatusDAO;
-import database.DBConnector;
-import field.*;
 
 public class AccountStatus {
     private String status = "";
@@ -29,7 +29,13 @@ public class AccountStatus {
         retString += " (NOT SAVED)";
       }
       return retString;
-
+    }
+    
+    public String toJSON() {
+    	JSONObject jsonobj = new JSONObject();
+        jsonobj.put("accountstatus_id", primaryKey);
+        jsonobj.put("status", getField("status"));
+        return jsonobj.toString();
     }
 
     public String getField(String fieldName) {
@@ -73,5 +79,10 @@ public class AccountStatus {
     public static void deleteAll() {
       AccountStatusDAO dao = AccountStatusDAO.getInstance(); 
       dao.delete();
+    }
+    
+    public static ArrayList<AccountStatus> retrieveAll() {
+    	AccountStatusDAO dao = AccountStatusDAO.getInstance();
+    	return dao.retrieveAll();
     }
 }

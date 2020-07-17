@@ -1,10 +1,18 @@
 package controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import model.AccountStatus;
+import model.AccountType;
 
 public class AccountStatusAPI {
-	public static String list(HttpServletRequest req, HttpServletResponse res) {
-		return "<h1>list from the account status api</h1>";
+	public static String list() {
+		ArrayList<AccountStatus> all = AccountStatus.retrieveAll();
+		String retString = "[\n";
+		for (AccountStatus obj : all) { retString += obj.toJSON() + "\n\t"; }
+		return retString + "\n]";
+	}
+	
+	public static String detail(int ID) {
+		return "[\n"+ AccountStatus.search(ID).toJSON() + "\n]";
 	}
 }
