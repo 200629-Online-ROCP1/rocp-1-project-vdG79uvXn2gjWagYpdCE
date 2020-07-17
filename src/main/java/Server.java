@@ -8,6 +8,9 @@ public class Server {
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
 		initialDataLoad();
+		AccountType type = new AccountType("Lorem");
+		type.save();
+		System.out.println(type.toJSON());
 	}
 
 	static public void initialDataLoad() {

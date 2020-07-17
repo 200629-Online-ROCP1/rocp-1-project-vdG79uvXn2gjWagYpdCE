@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,16 +10,21 @@ import model.AccountType;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class AccountTypeAPI {
-	public static String list(HttpServletRequest req, HttpServletResponse res) {
-//		Set<AccountType> types = AccountType.retrieveAll();
-//		String retString = "";
-//		for(AccountType type : types) {
-//			retString += type.toJSON();
-//		}
-//		return retString;
-		AccountType type = new AccountType("Testing");
-		type.save();
-		return type.toJSON();
+	private static final ObjectMapper wrapper = new ObjectMapper();
+	
+	public static String list() {
+		ArrayList<AccountType> all = AccountType.retrieveAll();
+		String retString = "[\n";
+		for (AccountType type : all) { retString += type.toJSON() + "\n\t"; }
+		return retString + "\n]";
+	}
+	
+	public static String detail(int ID) {
+		AccountType type = AccountType.search(ID);
+		return "[\n"+ type.toJSON() + "\n]";
 	}
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
@@ -9,10 +10,40 @@ import database.DBConnector;
 import field.*;
 
 public class AccountType {
-    private String type = "";
+	private String type = "";
     private boolean saved = false;
     private int primaryKey = 0;
 
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + primaryKey;
+		result = prime * result + (saved ? 1231 : 1237);
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AccountType other = (AccountType) obj;
+		if (primaryKey != other.primaryKey)
+			return false;
+		if (saved != other.saved)
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+	
     // Constructors
     public AccountType() {
       super();
@@ -46,6 +77,10 @@ public class AccountType {
       return type;
     }
     
+    public String getType() {
+    	return type;
+    }
+    
     public String setField(String fieldName, String type) {
       this.type = type;
       this.saved = false;
@@ -55,7 +90,7 @@ public class AccountType {
     public int getID() {
       return primaryKey;
     }
-
+    
     // Database operations - save(insert or update), search, refresh
     public void save() {
       AccountTypeDAO dao = AccountTypeDAO.getInstance(); 
@@ -91,7 +126,7 @@ public class AccountType {
       AccountTypeDAO dao = AccountTypeDAO.getInstance(); 
       dao.deleteAll();
     }
-    public static Set<AccountType> retrieveAll() {
+    public static ArrayList<AccountType> retrieveAll() {
     	AccountTypeDAO dao = AccountTypeDAO.getInstance();
     	return dao.retrieveAll();
     }
