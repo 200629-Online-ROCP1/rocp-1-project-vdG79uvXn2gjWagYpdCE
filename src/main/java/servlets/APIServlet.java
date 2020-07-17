@@ -40,9 +40,13 @@ public class APIServlet extends HttpServlet {
 			} else {
 				results = AccountTypeAPI.list(); 
 			}
+		} else if (portions[0].equals("role")) { 
+			if (portions.length == 2) {
+				results = RoleAPI.detail(Integer.parseInt(portions[1]));
+			} else {
+				results = RoleAPI.list(); 
+			}
 		}
-//		if (req.getRequestURI().toString().equals("/rocp-project/api/role")) { return RoleAPI.list(req, res); }
-		System.out.println(results);
 		res.setStatus(200);
 		PrintWriter out = res.getWriter();
 		out.print(results);

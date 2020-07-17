@@ -1,15 +1,13 @@
 package dao;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import model.AccountStatus;
-import model.AccountType;
 import database.DBConnector;
+import model.AccountStatus;
 
 public class AccountStatusDAO {
     private static AccountStatusDAO self = new AccountStatusDAO();

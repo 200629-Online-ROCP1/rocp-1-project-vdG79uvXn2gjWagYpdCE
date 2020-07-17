@@ -2,7 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 import model.AccountStatus;
-import model.AccountType;
 
 public class AccountStatusAPI {
 	public static String list() {

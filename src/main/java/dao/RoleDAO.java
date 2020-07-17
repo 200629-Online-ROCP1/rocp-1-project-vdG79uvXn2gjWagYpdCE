@@ -1,13 +1,14 @@
 package dao;
 
-import java.util.Set;
+import java.util.ArrayList;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import model.Role;
 import database.DBConnector;
+import model.AccountStatus;
+import model.Role;
 
 public class RoleDAO {
     private static RoleDAO self = new RoleDAO();
@@ -70,13 +71,12 @@ public class RoleDAO {
         return null;
 	}
 	
-	public Role searchID(String ID) {
-		int id = Integer.parseInt(ID);
+	public Role search(int ID) {
 		try {
             Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM role WHERE role_id=?";
             PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.setInt(1, id);
+			statement.setInt(1, ID);
 			
 			ResultSet result = statement.executeQuery();
 			
@@ -99,5 +99,24 @@ public class RoleDAO {
 		}catch(SQLException e) {
 			System.out.println(e);
 		}
+    }
+    
+    public ArrayList<Role> retrieveAll() {
+    	try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM role";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            ArrayList<Role> all = new ArrayList<Role>();
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				all.add(new Role(result.getInt("role_id"), result.getString("role")));
+			}
+			return all;
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
     }
 }
