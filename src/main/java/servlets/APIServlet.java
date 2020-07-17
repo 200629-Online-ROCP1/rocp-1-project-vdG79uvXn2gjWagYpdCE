@@ -30,9 +30,12 @@ public class APIServlet extends HttpServlet {
 //		if (req.getRequestURI().toString().equals("/rocp-project/api/account")) { return AccountAPI.list(req, res); }
 //		if (portions[0]=="/rocp-project/api/accountstatus")) { return AccountStatusAPI.list(req, res); }
 		if (portions[0].equals("accounttype")) { 
-			results = AccountTypeAPI.list(); 
-			System.out.println(results);
+			if (portions.length == 2) {
+				results = AccountTypeAPI.detail(Integer.parseInt(portions[1]));
+			} else {
+				results = AccountTypeAPI.list(); 
 			}
+		}
 //		if (req.getRequestURI().toString().equals("/rocp-project/api/role")) { return RoleAPI.list(req, res); }
 		System.out.println(results);
 		res.setStatus(200);

@@ -18,9 +18,18 @@ public class AccountTypeAPI {
 	
 	public static String list() {
 		ArrayList<AccountType> all = AccountType.retrieveAll();
-		System.out.println(all);
 		try {
 			return wrapper.writeValueAsString(all);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public static String detail(int ID) {
+		AccountType type = AccountType.search(ID);
+		try {
+			return wrapper.writeValueAsString(type);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
