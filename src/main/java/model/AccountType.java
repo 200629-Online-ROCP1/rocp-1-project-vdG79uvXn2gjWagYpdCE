@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 import dao.AccountTypeDAO;
 
+/**
+ * @author      Patrick Buller <address @ example.com>
+ * @version     0.1
+ * @since       0.1
+ */
+
 public class AccountType {
 	private String type = "";
 	private boolean saved = false;
@@ -56,6 +62,11 @@ public class AccountType {
 		this.saved = true;
 	}
 
+	/**
+	 * The String representation of the AccountType object
+	 *
+	 * @return String string representation of the AccountType object
+	 */
 	public String toString() {
 		String retString = new String("PK => " + primaryKey);
 		retString += ", " + getField("type");
