@@ -77,6 +77,10 @@ public class AccountType {
       return type;
     }
     
+    public String getType() {
+    	return type;
+    }
+    
     public String setField(String fieldName, String type) {
       this.type = type;
       this.saved = false;
