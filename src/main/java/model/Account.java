@@ -1,10 +1,14 @@
 package model;
 
 import dao.AccountDAO;
+import dao.AccountHolderDAO;
 import model.*;
 
 import java.util.Map;
 import java.util.UUID;
+
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -86,7 +90,27 @@ public class Account {
         retString += "    (NOT SAVED)";
       }
       return retString;
-
+    }
+    
+    public String toJSON() {
+    	return asJSONObject().toString();
+    }
+    
+    public JSONObject asJSONObject() {
+    	JSONObject jsonobj = new JSONObject();
+        jsonobj.put("account_id", primaryKey);
+        for (String field: fields) {
+        	if (field.equals("accountstatus")) {
+        		jsonobj.put("accountstatus", accountstatus_fk.asJSONObject());
+        	} else if (field.equals("accounttype")) {
+        		jsonobj.put("accounttype", accounttype_fk.asJSONObject());
+        	} else if (field.equals("accountholder")) {
+        		jsonobj.put("accountholder", accountholder_fk.asJSONObject());
+        	} else {
+        		jsonobj.put(field, getField(field));
+        	}
+        }
+        return jsonobj;
     }
 
     public String getField(String fieldName) {
@@ -135,9 +159,19 @@ public class Account {
       AccountDAO dao = AccountDAO.getInstance(); 
       return dao.search(uuid);
     }
+    
+    public static Account search(int ID) {
+        AccountDAO dao = AccountDAO.getInstance(); 
+        return dao.search(ID);
+      }
 
     public static void deleteAll() {
       AccountDAO dao = AccountDAO.getInstance(); 
       dao.deleteAll();
+    }
+    
+    public static ArrayList<Account> retrieveAll() {
+    	AccountDAO dao = AccountDAO.getInstance();
+    	return dao.retrieveAll();
     }
 }

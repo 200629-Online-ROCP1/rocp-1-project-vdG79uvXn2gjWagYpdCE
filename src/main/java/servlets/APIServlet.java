@@ -40,7 +40,11 @@ public class APIServlet extends HttpServlet {
 				results = AccountHolderAPI.list(); 
 			}
 		} else if (portions[0].equals("account")) {
-			
+			if (portions.length == 2) {
+				results = AccountAPI.detail(ID);
+			} else {
+				results = AccountAPI.list(); 
+			}
 		} else if (portions[0].equals("accountstatus")) {  
 			if (portions.length == 2) {
 				results = AccountStatusAPI.detail(ID);
