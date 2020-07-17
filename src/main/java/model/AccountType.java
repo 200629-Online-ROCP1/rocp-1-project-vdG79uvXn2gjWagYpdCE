@@ -90,7 +90,7 @@ public class AccountType {
     public int getID() {
       return primaryKey;
     }
-
+    
     // Database operations - save(insert or update), search, refresh
     public void save() {
       AccountTypeDAO dao = AccountTypeDAO.getInstance(); 

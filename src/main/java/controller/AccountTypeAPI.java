@@ -18,21 +18,13 @@ public class AccountTypeAPI {
 	
 	public static String list() {
 		ArrayList<AccountType> all = AccountType.retrieveAll();
-		try {
-			return wrapper.writeValueAsString(all);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return "";
+		String retString = "[\n";
+		for (AccountType type : all) { retString += type.toJSON() + "\n\t"; }
+		return retString + "\n]";
 	}
 	
 	public static String detail(int ID) {
 		AccountType type = AccountType.search(ID);
-		try {
-			return wrapper.writeValueAsString(type);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return "";
+		return "[\n"+ type.toJSON() + "\n]";
 	}
 }
