@@ -1,13 +1,8 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Set;
-
 import org.json.simple.JSONObject;
-
 import dao.AccountTypeDAO;
-import database.DBConnector;
-import field.*;
 
 public class AccountType {
 	private String type = "";
