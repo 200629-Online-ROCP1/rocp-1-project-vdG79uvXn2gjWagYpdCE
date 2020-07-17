@@ -33,9 +33,15 @@ public class APIServlet extends HttpServlet {
 		}
 		
 		String results = new String("");
-//		if (req.getRequestURI().toString().equals("/rocp-project/api/user")) { return UserAPI.list(req, res); }
-//		if (req.getRequestURI().toString().equals("/rocp-project/api/account")) { return AccountAPI.list(req, res); }
-		if (portions[0].equals("accountstatus")) {  
+		if (portions[0].equals("user")) {
+			if (portions.length == 2) {
+				results = AccountHolderAPI.detail(ID);
+			} else {
+				results = AccountHolderAPI.list(); 
+			}
+		} else if (portions[0].equals("account")) {
+			
+		} else if (portions[0].equals("accountstatus")) {  
 			if (portions.length == 2) {
 				results = AccountStatusAPI.detail(ID);
 			} else {
@@ -53,6 +59,9 @@ public class APIServlet extends HttpServlet {
 			} else {
 				results = RoleAPI.list(); 
 			}
+		} else {
+			res.getWriter().println("The id you provided is not an integer");
+			res.setStatus(404);
 		}
 		res.setStatus(200);
 		PrintWriter out = res.getWriter();

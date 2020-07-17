@@ -1,8 +1,8 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -133,5 +133,31 @@ public class AccountHolderDAO {
 		}catch(SQLException e) {
 			System.out.println(e);
 		}
+    }
+	
+	public ArrayList<AccountHolder> retrieveAll() {
+    	try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accountholder";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            ArrayList<AccountHolder> all = new ArrayList<AccountHolder>();
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("role_id", String.valueOf(result.getInt("role")));
+				data.put("username", result.getString("username"));
+				data.put("firstname", result.getString("firstname"));
+				data.put("lastname", result.getString("lastname"));
+				data.put("password", result.getString("password"));
+				data.put("email", result.getString("email"));
+				all.add(new AccountHolder(result.getInt("accountholder_id"), data));
+			}
+			return all;
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
     }
 }

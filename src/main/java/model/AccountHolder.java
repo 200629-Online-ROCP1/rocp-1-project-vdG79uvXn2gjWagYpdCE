@@ -1,9 +1,10 @@
 package model;
 
+import java.util.ArrayList;
+import org.json.simple.JSONObject;
 import dao.AccountHolderDAO;
-
+import dao.AccountStatusDAO;
 import model.Role;
-
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,14 +31,16 @@ public class AccountHolder {
         } else {
           if (field=="role") { // Missing the role, need to check if contains role_id
             if (data.containsKey("role_id")) {
-              this.role_fk = Role.searchID(data.get("role_id"));
+              this.role_fk = Role.search(Integer.parseInt(data.get("role_id")));
             }
           } else {
             System.out.println("ERROR: No value was provided for field " + field);
           }
         }
       }
-      this.role_fk = Role.search(data.get("role")); 
+      if (this.role_fk==null) {
+    	  this.role_fk = Role.search(data.get("role"));
+      }
     }
     public AccountHolder(int pk, Map<String, String> data) { 
       this(data);
@@ -57,7 +60,19 @@ public class AccountHolder {
         retString += "    (NOT SAVED)";
       }
       return retString;
-
+    }
+    
+    public String toJSON() {
+    	JSONObject jsonobj = new JSONObject();
+        jsonobj.put("accountholder_id", primaryKey);
+        for (String field: fields) {
+        	if (field.equals("role")) {
+        		jsonobj.put("role", role_fk.toJSON());
+        	} else {
+        		jsonobj.put(field, getField(field));
+        	}
+        }
+        return jsonobj.toString();
     }
 
     public String getField(String fieldName) {
@@ -109,5 +124,9 @@ public class AccountHolder {
     public static void deleteAll() {
       AccountHolderDAO dao = AccountHolderDAO.getInstance(); 
       dao.deleteAll();
+    }
+    public static ArrayList<AccountHolder> retrieveAll() {
+    	AccountHolderDAO dao = AccountHolderDAO.getInstance();
+    	return dao.retrieveAll();
     }
 }
