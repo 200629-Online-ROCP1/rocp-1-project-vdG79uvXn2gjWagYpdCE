@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controller.AccountTypeAPI;
+import controller.*;
 import controller.Router;
 
 public class APIServlet extends HttpServlet {
@@ -20,24 +20,49 @@ public class APIServlet extends HttpServlet {
 		
 		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
 		String[] portions = URI.split("/");
+		int ID=0;
 		
-		System.out.println(req.getRequestURI().toString());
-		System.out.println(Arrays.toString(portions));
-		System.out.println(portions[0]);
+		if (portions.length == 2) {
+			try {
+				ID = Integer.parseInt(portions[1]);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				res.getWriter().println("The id you provided is not an integer");
+				res.setStatus(400);
+			}
+		}
 		
 		String results = new String("");
-//		if (req.getRequestURI().toString().equals("/rocp-project/api/user")) { return UserAPI.list(req, res); }
-//		if (req.getRequestURI().toString().equals("/rocp-project/api/account")) { return AccountAPI.list(req, res); }
-//		if (portions[0]=="/rocp-project/api/accountstatus")) { return AccountStatusAPI.list(req, res); }
-		if (portions[0].equals("accounttype")) { 
+		if (portions[0].equals("user")) {
 			if (portions.length == 2) {
-				results = AccountTypeAPI.detail(Integer.parseInt(portions[1]));
+				results = AccountHolderAPI.detail(ID);
+			} else {
+				results = AccountHolderAPI.list(); 
+			}
+		} else if (portions[0].equals("account")) {
+			
+		} else if (portions[0].equals("accountstatus")) {  
+			if (portions.length == 2) {
+				results = AccountStatusAPI.detail(ID);
+			} else {
+				results = AccountStatusAPI.list(); 
+			}
+		} else if (portions[0].equals("accounttype")) { 
+			if (portions.length == 2) {
+				results = AccountTypeAPI.detail(ID);
 			} else {
 				results = AccountTypeAPI.list(); 
 			}
+		} else if (portions[0].equals("role")) { 
+			if (portions.length == 2) {
+				results = RoleAPI.detail(ID);
+			} else {
+				results = RoleAPI.list(); 
+			}
+		} else {
+			res.getWriter().println("The id you provided is not an integer");
+			res.setStatus(404);
 		}
-//		if (req.getRequestURI().toString().equals("/rocp-project/api/role")) { return RoleAPI.list(req, res); }
-		System.out.println(results);
 		res.setStatus(200);
 		PrintWriter out = res.getWriter();
 		out.print(results);

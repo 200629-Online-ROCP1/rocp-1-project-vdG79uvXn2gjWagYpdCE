@@ -1,8 +1,10 @@
 package model;
 
+import java.util.ArrayList;
+import org.json.simple.JSONObject;
+
+import dao.AccountStatusDAO;
 import dao.RoleDAO;
-import database.DBConnector;
-import field.*;
 
 public class Role {
     private String role = "";
@@ -29,7 +31,13 @@ public class Role {
         retString += " (NOT SAVED)";
       }
       return retString;
-
+    }
+    
+    public String toJSON() {
+    	JSONObject jsonobj = new JSONObject();
+        jsonobj.put("role_id", primaryKey);
+        jsonobj.put("role", getField("role"));
+        return jsonobj.toString();
     }
 
     public String getField(String fieldName) {
@@ -64,14 +72,19 @@ public class Role {
       RoleDAO dao = RoleDAO.getInstance(); 
       return dao.search(role);
     }
-
-    public static Role searchID(String ID) {
+    
+    public static Role search(int ID) {
       RoleDAO dao = RoleDAO.getInstance(); 
-      return dao.searchID(ID);
+      return dao.search(ID);
     }
 
     public static void deleteAll() {
       RoleDAO dao = RoleDAO.getInstance(); 
       dao.delete();
+    }
+    
+    public static ArrayList<Role> retrieveAll() {
+    	RoleDAO dao = RoleDAO.getInstance();
+    	return dao.retrieveAll();
     }
 }

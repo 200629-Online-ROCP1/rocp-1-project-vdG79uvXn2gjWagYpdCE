@@ -1,10 +1,19 @@
 package controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+
+import model.AccountStatus;
+import model.Role;
 
 public class RoleAPI {
-	public static String list(HttpServletRequest req, HttpServletResponse res) {
-		return "<h1>list from the roles api</h1>";
+	public static String list() {
+		ArrayList<Role> all = Role.retrieveAll();
+		String retString = "[\n";
+		for (Role obj : all) { retString += obj.toJSON() + "\n\t"; }
+		return retString + "\n]";
+	}
+	
+	public static String detail(int ID) {
+		return "[\n"+ Role.search(ID).toJSON() + "\n]";
 	}
 }

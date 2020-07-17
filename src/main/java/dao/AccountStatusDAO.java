@@ -1,13 +1,13 @@
 package dao;
 
-import java.util.Set;
+import java.util.ArrayList;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import model.AccountStatus;
 import database.DBConnector;
+import model.AccountStatus;
 
 public class AccountStatusDAO {
     private static AccountStatusDAO self = new AccountStatusDAO();
@@ -98,5 +98,24 @@ public class AccountStatusDAO {
 		}catch(SQLException e) {
 			System.out.println(e);
 		}
+    }
+    
+    public ArrayList<AccountStatus> retrieveAll() {
+    	try {
+            Connection dbconn = DBConnector.getConnection();
+			String sql = "SELECT * FROM accountstatus";
+            PreparedStatement statement = dbconn.prepareStatement(sql);
+            ArrayList<AccountStatus> all = new ArrayList<AccountStatus>();
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				all.add(new AccountStatus(result.getInt("accountstatus_id"), result.getString("status")));
+			}
+			return all;
+			
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+        return null;
     }
 }
