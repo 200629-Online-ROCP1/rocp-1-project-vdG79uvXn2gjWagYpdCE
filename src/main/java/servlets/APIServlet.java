@@ -17,11 +17,11 @@ public class APIServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
 		res.setStatus(404);
-		
+
 		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
 		String[] portions = URI.split("/");
-		int ID=0;
-		
+		int ID = 0;
+
 		if (portions.length == 2) {
 			try {
 				ID = Integer.parseInt(portions[1]);
@@ -31,37 +31,37 @@ public class APIServlet extends HttpServlet {
 				res.setStatus(400);
 			}
 		}
-		
+
 		String results = new String("");
 		if (portions[0].equals("user")) {
 			if (portions.length == 2) {
 				results = AccountHolderAPI.detail(ID);
 			} else {
-				results = AccountHolderAPI.list(); 
+				results = AccountHolderAPI.list();
 			}
 		} else if (portions[0].equals("account")) {
 			if (portions.length == 2) {
 				results = AccountAPI.detail(ID);
 			} else {
-				results = AccountAPI.list(); 
+				results = AccountAPI.list();
 			}
-		} else if (portions[0].equals("accountstatus")) {  
+		} else if (portions[0].equals("accountstatus")) {
 			if (portions.length == 2) {
 				results = AccountStatusAPI.detail(ID);
 			} else {
-				results = AccountStatusAPI.list(); 
+				results = AccountStatusAPI.list();
 			}
-		} else if (portions[0].equals("accounttype")) { 
+		} else if (portions[0].equals("accounttype")) {
 			if (portions.length == 2) {
 				results = AccountTypeAPI.detail(ID);
 			} else {
-				results = AccountTypeAPI.list(); 
+				results = AccountTypeAPI.list();
 			}
-		} else if (portions[0].equals("role")) { 
+		} else if (portions[0].equals("role")) {
 			if (portions.length == 2) {
 				results = RoleAPI.detail(ID);
 			} else {
-				results = RoleAPI.list(); 
+				results = RoleAPI.list();
 			}
 		} else {
 			res.getWriter().println("The id you provided is not an integer");
@@ -71,7 +71,7 @@ public class APIServlet extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		out.print(results);
 	}
-	
+
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		doGet(req, res);
 	}
