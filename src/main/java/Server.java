@@ -1,5 +1,7 @@
 import model.*;
 import java.util.*;
+import utils.JWT;
+import io.jsonwebtoken.Claims;
 
 public class Server {
 
@@ -7,10 +9,12 @@ public class Server {
 
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
-		initialDataLoad();
-		AccountType type = new AccountType("Lorem");
-		type.save();
-		System.out.println(type.toJSON());
+//		initialDataLoad();
+		
+		String jwt = JWT.create("jwtID", "Dewey Cheatem & Howe", "This is your JWT", 360000);
+		System.out.println(jwt);
+		Claims claims = JWT.decode(jwt);
+		System.out.println(claims);
 	}
 
 	static public void initialDataLoad() {
