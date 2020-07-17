@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="/home/pbuller/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar:target/test-classes:/home/pbuller/.m2/repository/org/postgresql/postgresql/42.2.14/postgresql-42.2.14.jar:/home/pbuller/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.11.1/jackson-databind-2.11.1.jar:/home/pbuller/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.11.1/jackson-annotations-2.11.1.jar:/home/pbuller/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.11.1/jackson-core-2.11.1.jar:/home/pbuller/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar:/home/pbuller/.m2/repository/junit/junit/4.10/junit-4.10.jar:/home/pbuller/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="controller,dao,field,model,utils,servlets,database,logger" source="1.6" sourcefiles="src/main/java/Server.java" sourcepath="src/test/java:src/main/resources:src/test/resources:src/main/java" splitindex="true" use="true" version="true"/>
+    </target>
+</project>
