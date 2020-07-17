@@ -16,10 +16,20 @@ public class DBConnector {
 	private static String database = System.getenv("BANKDB_DATABASE");
 	
 	public static Connection getConnection() throws SQLException {
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		String url = "jdbc:postgresql://" + hostname + ":5432/" + database;
 		return DriverManager.getConnection(url, username, password);
 	}
 	public static Connection getConnection(String hostname, String database) throws SQLException {
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		String url = "jdbc:postgresql://" + hostname + ":5432/" + database;
 		return DriverManager.getConnection(url, username, password);
 	}
