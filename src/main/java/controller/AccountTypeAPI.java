@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ public class AccountTypeAPI {
 	private static final ObjectMapper wrapper = new ObjectMapper();
 	
 	public static String list() {
-		Set<AccountType> all = AccountType.retrieveAll();
+		ArrayList<AccountType> all = AccountType.retrieveAll();
 		System.out.println(all);
 		try {
 			return wrapper.writeValueAsString(all);

@@ -1,8 +1,10 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.SQLException;
+import java.awt.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -113,18 +115,20 @@ public class AccountTypeDAO {
 		}
     }
     
-    public Set<AccountType> retrieveAll() {
+    public ArrayList<AccountType> retrieveAll() {
     	try {
             Connection dbconn = DBConnector.getConnection();
 			String sql = "SELECT * FROM accounttype";
             PreparedStatement statement = dbconn.prepareStatement(sql);
-            Set<AccountType> set = new HashSet<AccountType>();
+            ArrayList<AccountType> types = new ArrayList<AccountType>();
 			ResultSet result = statement.executeQuery();
 			
-			if(result.next()) {
-				set.add(new AccountType(result.getInt("accounttype_id"), result.getString("type")));
+			while(result.next()) {
+				types.add(new AccountType(result.getInt("accounttype_id"), result.getString("type")));
+				System.out.println("Adding to the set");
+				System.out.println(types);
 			}
-			return set;
+			return types;
 			
 		}catch(SQLException e) {
 			System.out.println(e);
