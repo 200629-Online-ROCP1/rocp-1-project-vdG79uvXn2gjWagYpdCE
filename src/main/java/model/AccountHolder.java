@@ -63,6 +63,10 @@ public class AccountHolder {
     }
     
     public String toJSON() {
+    	return asJSONObject().toString();
+    }
+    
+    public JSONObject asJSONObject() {
     	JSONObject jsonobj = new JSONObject();
         jsonobj.put("accountholder_id", primaryKey);
         for (String field: fields) {
@@ -73,8 +77,7 @@ public class AccountHolder {
         		jsonobj.put(field, getField(field));
         	}
         }
-        return jsonobj.toString();
-        
+        return jsonobj;
     }
 
     public String getField(String fieldName) {

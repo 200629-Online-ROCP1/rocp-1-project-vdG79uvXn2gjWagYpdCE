@@ -32,10 +32,14 @@ public class AccountStatus {
     }
     
     public String toJSON() {
+    	return asJSONObject().toString();
+    }
+    
+    public JSONObject asJSONObject() {
     	JSONObject jsonobj = new JSONObject();
         jsonobj.put("accountstatus_id", primaryKey);
         jsonobj.put("status", getField("status"));
-        return jsonobj.toString();
+        return jsonobj;
     }
 
     public String getField(String fieldName) {

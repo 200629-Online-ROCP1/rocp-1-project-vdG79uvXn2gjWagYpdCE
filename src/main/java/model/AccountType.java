@@ -62,10 +62,14 @@ public class AccountType {
     }
     
     public String toJSON() {
+    	return asJSONObject().toString();
+    }
+    
+    public JSONObject asJSONObject() {
     	JSONObject jsonobj = new JSONObject();
         jsonobj.put("accounttype_id", primaryKey);
         jsonobj.put("type", getField("type"));
-        return jsonobj.toString();
+        return jsonobj;
     }
 
     public String getField(String fieldName) {
