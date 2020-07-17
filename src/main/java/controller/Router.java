@@ -15,7 +15,7 @@ public class Router {
 		if (req.getRequestURI().toString().equals("/rocp-project/api/accounttype")) { return AccountTypeAPI.list(req, res); }
 		if (req.getRequestURI().toString().equals("/rocp-project/api/role")) { return RoleAPI.list(req, res); }
 		
-		return "/index.html"; 
+		return "/404.html"; 
 	}
 
 }
