@@ -22,6 +22,6 @@ public class AccountStatusAPI {
 		if (obj!=null) {
 			return obj.toJSON();
 		}
-		return "No item found with that ID.";
+		return null;
 	}
 }

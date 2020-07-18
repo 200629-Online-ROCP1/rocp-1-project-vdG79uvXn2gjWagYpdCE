@@ -9,8 +9,8 @@ endpoints = ["user", "account", "accounttype", "accountstatus", "role"]
 
 results = [] # [FAILURES, SUCCESSES]
 
-def check(res, endpoint, descriptor, checkJSON=True):
-    if res.status_code!=200:
+def check(res, endpoint, descriptor, checkJSON=True, status_code=200):
+    if res.status_code!=status_code:
         print(f"FAILURE: {descriptor} for {endpoint} returned status code {res.status_code}")
         return [1, 0]
     elif checkJSON:
@@ -34,7 +34,9 @@ for endpoint in endpoints:
     res = requests.get(base_url + endpoint + "/1/")
     results.append(check(res, endpoint, "Detail", checkJSON=True))
     res = requests.get(base_url + endpoint + "/1000/")
-    results.append(check(res, endpoint, "ID Unknown", checkJSON=False))
+    results.append(check(res, endpoint, "ID Unknown", checkJSON=False, status_code=404))
+    res = requests.get(base_url + endpoint + "/abc/")
+    results.append(check(res, endpoint, "Bad ID Provided", checkJSON=False, status_code=400))
     
 print(f"SUCCESS => {dsum(results)[1]}")
 print(f"FAILURE => {dsum(results)[0]}")
