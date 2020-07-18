@@ -156,6 +156,27 @@ public class APIServlet extends HttpServlet {
             	res.setStatus(400);
             	return; 
             }
+		} else if (portions[0].equals("user")) {
+			ArrayList<String> fields = new ArrayList<String>(
+                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+			Map<String, String> data = new HashMap<String, String>();
+			for (String field : fields) {
+                if (jsonObject.containsKey(field)) {
+                	data.put(field, jsonObject.get(field).toString());
+                } else {
+                	res.getWriter().println("The field " + field + " was not provided");
+    				res.setStatus(400);
+    				return;
+                }
+			}
+            AccountHolder entry = new AccountHolder(data);
+            entry.save();
+            results = AccountHolderAPI.detail(entry.getID());
+            if (results==null) {
+            	res.getWriter().println("There was a problem creating your object.");
+            	res.setStatus(400);
+            	return; 
+            }
 		}
 		
 		System.out.println(jsonObject.get("status"));
