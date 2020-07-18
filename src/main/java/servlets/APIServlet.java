@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,15 @@ public class APIServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
+		
+		String auth = req.getHeader("authorization");
+		if (auth==null) {
+			res.getWriter().println("Authorization required");
+			res.setStatus(401);
+			return;
+		} else {
+			System.out.println("AUTH HEADER >> " + auth);
+		}
 		
 		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
 		String[] portions = URI.split("/");
@@ -108,6 +118,16 @@ public class APIServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
+		
+		String auth = req.getHeader("authorization");
+		if (auth==null) {
+			res.getWriter().println("Authorization required");
+			res.setStatus(401);
+			return;
+		} else {
+			System.out.println("AUTH HEADER >> " + auth);
+		}
+		
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject;
 		
