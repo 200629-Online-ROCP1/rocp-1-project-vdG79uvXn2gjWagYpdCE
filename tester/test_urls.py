@@ -7,35 +7,34 @@ base_url = "http://localhost:8080/rocp-project/api/"
 
 endpoints = ["user", "account", "accounttype", "accountstatus", "role"]
 
-fail = 0
-success = 0
+results = [] # [FAILURES, SUCCESSES]
+
+def check(res, endpoint, descriptor, checkJSON=True):
+    if res.status_code!=200:
+        print(f"FAILURE: {descriptor} for {endpoint} returned status code {res.status_code}")
+        return [1, 0]
+    elif checkJSON:
+        try:
+            json = res.json()
+            return [0, 1]
+        except simplejson.errors.JSONDecodeError as err:
+            print(f"FAILURE: {descriptor} for {endpoint} returned bad json => {err}")
+            return [1, 0]
+    return [0, 1]
+ 
+def dsum(results):
+    ret = [0, 0]
+    for r in results:
+        ret = [ret[0]+r[0], ret[1]+r[1]]
+    return ret
 
 for endpoint in endpoints:
-    list = requests.get(base_url + endpoint + "/")
-    if list.status_code!=200:
-        print(f"FAILURE: list for {endpoint} returned status code {list.status_code}")
-        fail += 1
-    else:
-        try:
-            json = list.json()
-            success += 1
-            print(f"SUCCESS: list for {endpoint} returns valid json")
-        except simplejson.errors.JSONDecodeError as err:
-            fail += 1
-            print(f"FAILURE: list for {endpoint} returned bad json => {err}")
-
-    detail = requests.get(base_url + endpoint + "/1/")
-    if detail.status_code!=200:
-        print(f"FAILURE: detail for {endpoint} returned status code {detail.status_code}")
-        fail += 1
-    else:
-        try:
-            json = detail.json()
-            success += 1
-            print(f"SUCCESS: detail for {endpoint} returns valid json")
-        except simplejson.errors.JSONDecodeError as err:
-            fail += 1
-            print(f"FAILURE: detail for {endpoint} returned bad json => {err}")
-
-print(f"SUCCESS => {success}")
-print(f"FAILURE => {fail}")
+    res = requests.get(base_url + endpoint + "/")
+    results.append(check(res, endpoint, "List", checkJSON=True))
+    res = requests.get(base_url + endpoint + "/1/")
+    results.append(check(res, endpoint, "Detail", checkJSON=True))
+    res = requests.get(base_url + endpoint + "/1000/")
+    results.append(check(res, endpoint, "ID Unknown", checkJSON=False))
+    
+print(f"SUCCESS => {dsum(results)[1]}")
+print(f"FAILURE => {dsum(results)[0]}")

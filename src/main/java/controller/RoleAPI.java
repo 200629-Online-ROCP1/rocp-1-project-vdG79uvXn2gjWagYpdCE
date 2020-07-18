@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import org.json.simple.JSONArray;
+
+import model.AccountStatus;
 import model.Role;
 
 public class RoleAPI {
@@ -15,6 +17,10 @@ public class RoleAPI {
 	}
 
 	public static String detail(int ID) {
-		return "[\n" + Role.search(ID).toJSON() + "\n]";
+		Role obj = Role.search(ID);
+		if (obj!=null) {
+			return obj.toJSON();
+		}
+		return "No item found with that ID.";
 	}
 }

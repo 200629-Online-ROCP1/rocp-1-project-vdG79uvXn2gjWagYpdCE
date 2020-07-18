@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 
 import model.Account;
+import model.AccountStatus;
 import model.AccountType;
 
 public class AccountTypeAPI {
@@ -19,7 +20,10 @@ public class AccountTypeAPI {
 	}
 
 	public static String detail(int ID) {
-		AccountType type = AccountType.search(ID);
-		return "[\n" + type.toJSON() + "\n]";
+		AccountType obj = AccountType.search(ID);
+		if (obj!=null) {
+			return obj.toJSON();
+		}
+		return "No item found with that ID.";
 	}
 }

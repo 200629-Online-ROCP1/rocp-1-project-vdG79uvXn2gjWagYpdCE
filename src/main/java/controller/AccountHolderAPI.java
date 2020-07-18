@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 
 import model.Account;
 import model.AccountHolder;
+import model.AccountStatus;
 
 public class AccountHolderAPI {
 
@@ -19,7 +20,11 @@ public class AccountHolderAPI {
 	}
 
 	public static String detail(int ID) {
-		return "[\n" + AccountHolder.search(ID).toJSON() + "\n]";
+		AccountHolder obj = AccountHolder.search(ID);
+		if (obj!=null) {
+			return obj.toJSON();
+		}
+		return "No item found with that ID.";
 	}
 
 }

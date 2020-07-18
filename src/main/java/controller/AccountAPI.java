@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 
 import model.Account;
+import model.AccountStatus;
 
 public class AccountAPI {
 
@@ -18,6 +19,10 @@ public class AccountAPI {
 	}
 
 	public static String detail(int ID) {
-		return "[\n" + Account.search(ID).toJSON() + "\n]";
+		Account obj = Account.search(ID);
+		if (obj!=null) {
+			return obj.toJSON();
+		}
+		return "No item found with that ID.";
 	}
 }

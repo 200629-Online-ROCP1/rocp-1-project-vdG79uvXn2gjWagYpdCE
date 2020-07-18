@@ -18,6 +18,10 @@ public class AccountStatusAPI {
 	}
 
 	public static String detail(int ID) {
-		return AccountStatus.search(ID).toJSON();
+		AccountStatus obj = AccountStatus.search(ID);
+		if (obj!=null) {
+			return obj.toJSON();
+		}
+		return "No item found with that ID.";
 	}
 }
