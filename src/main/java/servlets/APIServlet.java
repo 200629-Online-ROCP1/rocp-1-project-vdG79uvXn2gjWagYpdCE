@@ -3,7 +3,10 @@ package servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +18,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import controller.*;
-import controller.Router;
+import model.*;
 
 public class APIServlet extends HttpServlet {
 
@@ -104,6 +107,7 @@ public class APIServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		res.setContentType("application/json");
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject;
 		
@@ -128,6 +132,35 @@ public class APIServlet extends HttpServlet {
 			return;
 		}
 		
+		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
+		String[] portions = URI.split("/");
+		String results = new String("");
+		if (portions[0].equals("account")) {
+			ArrayList<String> fields = new ArrayList<String>(
+                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
+			Map<String, String> data = new HashMap<String, String>();
+			for (String field : fields) {
+                if (jsonObject.containsKey(field)) {
+                	data.put(field, jsonObject.get(field).toString());
+                } else {
+                	res.getWriter().println("The field " + field + " was not provided");
+    				res.setStatus(400);
+    				return;
+                }
+			}
+            Account entry = new Account(data);
+            entry.save();
+            results = AccountAPI.detail(entry.getID());
+            if (results==null) {
+            	res.getWriter().println("There was a problem creating your object.");
+            	res.setStatus(400);
+            	return; 
+            }
+		}
+		
 		System.out.println(jsonObject.get("status"));
+		res.setStatus(200);
+		PrintWriter out = res.getWriter();
+		out.print(results);
 	}
 }
