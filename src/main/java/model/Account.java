@@ -30,7 +30,7 @@ public class Account {
 		super();
 	}
 
-	public Account(Map<String, String> data) {
+	public Account(Map<String, String> data) throws IllegalArgumentException {
 		super();
 		for (String field : fields) {
 			if (data.containsKey(field)) {
@@ -71,6 +71,10 @@ public class Account {
 		}
 		if (this.accountholder_fk == null) {
 			this.accountholder_fk = AccountHolder.search(data.get("accountholder"));
+		}
+		Role role_fk = Role.search(this.accountholder_fk.getRoleID()); 
+		if (!role_fk.getField("role").equals("Standard")) {
+			throw new IllegalArgumentException("The Account owner must have a role of Standard");
 		}
 	}
 
@@ -156,7 +160,7 @@ public class Account {
 	}
 
 	// Database operations - save(insert or update), search, refresh
-	public void save() {
+	public void save() throws IllegalArgumentException {
 		AccountDAO dao = AccountDAO.getInstance();
 		if (primaryKey > 0) { // FIX
 			if (dao.update(this)) {
