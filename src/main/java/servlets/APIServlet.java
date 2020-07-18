@@ -148,9 +148,17 @@ public class APIServlet extends HttpServlet {
     				return;
                 }
 			}
-            Account entry = new Account(data);
-            entry.save();
-            results = AccountAPI.detail(entry.getID());
+			
+            try {
+            	Account entry = new Account(data);
+            	entry.save();
+            	results = AccountAPI.detail(entry.getID());
+            } catch (IllegalArgumentException e) {
+            	res.getWriter().println(e);
+            	res.setStatus(400);
+            	return;
+            }
+            
             if (results==null) {
             	res.getWriter().println("There was a problem creating your object.");
             	res.setStatus(400);
