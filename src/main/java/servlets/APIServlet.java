@@ -1,5 +1,6 @@
 package servlets;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -8,6 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.parser.ParseException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import controller.*;
 import controller.Router;
@@ -16,8 +21,7 @@ public class APIServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
-		res.setStatus(404);
-
+		
 		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
 		String[] portions = URI.split("/");
 		int ID = 0;
@@ -92,6 +96,7 @@ public class APIServlet extends HttpServlet {
 		} else {
 			res.getWriter().println("The id you provided is not an integer");
 			res.setStatus(404);
+			return;
 		}
 		res.setStatus(200);
 		PrintWriter out = res.getWriter();
@@ -99,6 +104,30 @@ public class APIServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doGet(req, res);
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject;
+		
+		BufferedReader reader = req.getReader();
+		StringBuilder s = new StringBuilder();
+		String line = reader.readLine();
+		while (line != null) {
+			s.append(line);
+			line = reader.readLine();
+		}
+		String body = new String(s);
+		
+		try {
+			Object jsonObj = parser.parse(body);
+			jsonObject = (JSONObject) jsonObj;
+			
+		} catch (ParseException e){
+			System.out.println("position: " + e.getPosition());
+			System.out.println(e);
+			res.getWriter().println("The json provided is not parsable");
+			res.setStatus(400);
+			return;
+		}
+		
+		System.out.println(jsonObject.get("status"));
 	}
 }

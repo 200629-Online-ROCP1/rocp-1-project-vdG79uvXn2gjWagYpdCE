@@ -38,5 +38,9 @@ for endpoint in endpoints:
     res = requests.get(base_url + endpoint + "/abc/")
     results.append(check(res, endpoint, "Bad ID Provided", checkJSON=False, status_code=400))
     
+
+res = requests.post(base_url + "accountstatus/", data = {"status": "FromPost", "another": "thing"})
+
+
 print(f"SUCCESS => {dsum(results)[1]}")
 print(f"FAILURE => {dsum(results)[0]}")
