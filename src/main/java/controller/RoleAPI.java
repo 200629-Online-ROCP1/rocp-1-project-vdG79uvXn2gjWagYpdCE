@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import org.json.simple.JSONArray;
 
 import model.AccountStatus;
 import model.Role;
@@ -8,14 +9,18 @@ import model.Role;
 public class RoleAPI {
 	public static String list() {
 		ArrayList<Role> all = Role.retrieveAll();
-		String retString = "[\n";
+		JSONArray jsonall = new JSONArray();
 		for (Role obj : all) {
-			retString += obj.toJSON() + "\n\t";
+			jsonall.add(obj.asJSONObject());
 		}
-		return retString + "\n]";
+		return jsonall.toJSONString();
 	}
 
 	public static String detail(int ID) {
-		return "[\n" + Role.search(ID).toJSON() + "\n]";
+		Role obj = Role.search(ID);
+		if (obj!=null) {
+			return obj.toJSON();
+		}
+		return null;
 	}
 }

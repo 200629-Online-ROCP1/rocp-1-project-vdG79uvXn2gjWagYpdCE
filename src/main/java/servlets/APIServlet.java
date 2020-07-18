@@ -29,6 +29,7 @@ public class APIServlet extends HttpServlet {
 				e.printStackTrace();
 				res.getWriter().println("The id you provided is not an integer");
 				res.setStatus(400);
+				return;
 			}
 		}
 
@@ -36,30 +37,55 @@ public class APIServlet extends HttpServlet {
 		if (portions[0].equals("user")) {
 			if (portions.length == 2) {
 				results = AccountHolderAPI.detail(ID);
+				if (results==null) { 
+					res.getWriter().println("The id you provided was not found");
+					res.setStatus(404);
+					return; 
+					}
 			} else {
 				results = AccountHolderAPI.list();
 			}
 		} else if (portions[0].equals("account")) {
 			if (portions.length == 2) {
 				results = AccountAPI.detail(ID);
+				if (results==null) { 
+					res.getWriter().println("The id you provided was not found");
+					res.setStatus(404);
+					return; 
+					}
 			} else {
 				results = AccountAPI.list();
 			}
 		} else if (portions[0].equals("accountstatus")) {
 			if (portions.length == 2) {
 				results = AccountStatusAPI.detail(ID);
+				if (results==null) { 
+					res.getWriter().println("The id you provided was not found");
+					res.setStatus(404);
+					return; 
+					}
 			} else {
 				results = AccountStatusAPI.list();
 			}
 		} else if (portions[0].equals("accounttype")) {
 			if (portions.length == 2) {
 				results = AccountTypeAPI.detail(ID);
+				if (results==null) { 
+					res.getWriter().println("The id you provided was not found");
+					res.setStatus(404);
+					return; 
+					}
 			} else {
 				results = AccountTypeAPI.list();
 			}
 		} else if (portions[0].equals("role")) {
 			if (portions.length == 2) {
 				results = RoleAPI.detail(ID);
+				if (results==null) { 
+					res.getWriter().println("The id you provided was not found");
+					res.setStatus(404);
+					return; 
+					}
 			} else {
 				results = RoleAPI.list();
 			}
@@ -75,5 +101,4 @@ public class APIServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		doGet(req, res);
 	}
-
 }

@@ -1,7 +1,5 @@
 # Overview
 
-# To Implement
-
 ## Endpoints
 * RPC
   * Login
