@@ -1,17 +1,20 @@
 package controller;
 
 import java.util.ArrayList;
+
+import org.json.simple.JSONArray;
+
 import model.Account;
 
 public class AccountAPI {
 
 	public static String list() {
 		ArrayList<Account> all = Account.retrieveAll();
-		String retString = "[\n";
+		JSONArray jsonall = new JSONArray();
 		for (Account obj : all) {
-			retString += obj.toJSON() + "\n\t";
+			jsonall.add(obj.asJSONObject());
 		}
-		return retString + "\n]";
+		return jsonall.toJSONString();
 	}
 
 	public static String detail(int ID) {

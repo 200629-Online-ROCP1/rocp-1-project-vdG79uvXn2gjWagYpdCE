@@ -17,8 +17,9 @@ for endpoint in endpoints:
         fail += 1
     else:
         try:
-            print(f"{list.json()}")
+            json = list.json()
             success += 1
+            print(f"SUCCESS: list for {endpoint} returns valid json")
         except simplejson.errors.JSONDecodeError as err:
             fail += 1
             print(f"FAILURE: list for {endpoint} returned bad json => {err}")
