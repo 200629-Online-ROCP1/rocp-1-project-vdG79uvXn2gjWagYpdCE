@@ -227,9 +227,26 @@ public class APIServlet extends HttpServlet {
             	res.setStatus(400);
             	return; 
             }
+		} else if (portions[0].equals("deposit")) {
+			AccountAPI.transaction(
+					Integer.parseInt(jsonObject.get("account_id").toString()), 
+					Double.parseDouble(jsonObject.get("amount").toString()) 
+					);
+			res.setStatus(200);
+			PrintWriter out = res.getWriter();
+			out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("account_id").toString());
+			return;
+		} else if (portions[0].equals("withdraw")) {
+			AccountAPI.transaction(
+					Integer.parseInt(jsonObject.get("account_id").toString()), 
+					Double.parseDouble(jsonObject.get("amount").toString()) * -1
+					);
+			res.setStatus(200);
+			PrintWriter out = res.getWriter();
+			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("account_id").toString());
+			return;
 		}
 		
-		System.out.println(jsonObject.get("status"));
 		res.setStatus(201);
 		PrintWriter out = res.getWriter();
 		out.print(results);
