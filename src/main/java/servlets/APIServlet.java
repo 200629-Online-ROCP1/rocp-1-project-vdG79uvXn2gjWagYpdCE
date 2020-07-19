@@ -1,5 +1,6 @@
 package servlets;
 
+import servlets.ServletUtils;
 import java.io.BufferedReader;
 
 import java.io.IOException;
@@ -36,8 +37,7 @@ public class APIServlet extends HttpServlet {
 		String requestOwnerRole;
 		int requestOwnerID;
 		if (auth==null) {
-			res.getWriter().println("Authorization required");
-			res.setStatus(401);
+			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
 			return;
 		} else {
 			String token = auth.replace("Bearer ", "");
@@ -49,8 +49,7 @@ public class APIServlet extends HttpServlet {
 				requestOwnerID = obj.getID(); 
 				
 			} catch (MalformedJwtException e) {
-				res.getWriter().println("Malformed Token");
-				res.setStatus(401);
+				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
 				return;
 			}
 		}
@@ -64,8 +63,7 @@ public class APIServlet extends HttpServlet {
 				ID = Integer.parseInt(portions[1]);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
-				res.getWriter().println("The id you provided is not an integer");
-				res.setStatus(400);
+				res = ServletUtils.sendMessage(res, 400, "The id you provided is not an integer");
 				return;
 			}
 		} else if (portions.length == 3) {  //TODO refactor into switch
@@ -73,8 +71,7 @@ public class APIServlet extends HttpServlet {
 				ID = Integer.parseInt(portions[2]);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
-				res.getWriter().println("The id you provided is not an integer");
-				res.setStatus(400);
+				res = ServletUtils.sendMessage(res, 400, "The id you provided is not an integer");
 				return;
 			}
 		}
@@ -84,8 +81,7 @@ public class APIServlet extends HttpServlet {
 			if (portions.length == 2) {
 				results = AccountHolderAPI.detail(ID);
 				if (results==null) { 
-					res.getWriter().println("The id you provided was not found");
-					res.setStatus(404);
+					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
 					return; 
 					}
 			} else {
@@ -95,8 +91,7 @@ public class APIServlet extends HttpServlet {
 			if (portions.length == 2) {
 				results = AccountAPI.detail(ID);
 				if (results==null) { 
-					res.getWriter().println("The id you provided was not found");
-					res.setStatus(404);
+					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
 					return; 
 					}
 			} else if (portions.length == 3) {
@@ -106,16 +101,14 @@ public class APIServlet extends HttpServlet {
 					results = AccountAPI.filter("accountholder", ID);
 				}
 				if (results==null) { 
-					res.getWriter().println("The id you provided was not found");
-					res.setStatus(404);
+					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
 					return; 
 				}
 			} else {
 				results = AccountAPI.list();
 			}
 		} else {
-			res.getWriter().println("The id you provided is not an integer");
-			res.setStatus(404);
+			res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
 			return;
 		}
 		res.setStatus(200);
@@ -131,8 +124,7 @@ public class APIServlet extends HttpServlet {
 		String requestOwnerRole;
 		int requestOwnerID;
 		if (auth==null) {
-			res.getWriter().println("Authorization required");
-			res.setStatus(401);
+			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
 			return;
 		} else {
 			String token = auth.replace("Bearer ", "");
@@ -143,8 +135,7 @@ public class APIServlet extends HttpServlet {
 				requestOwnerRole = obj.getField("role");
 				requestOwnerID = obj.getID(); 
 			} catch (MalformedJwtException e) {
-				res.getWriter().println("Malformed Token");
-				res.setStatus(401);
+				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
 				return;
 			}
 		}
@@ -168,8 +159,7 @@ public class APIServlet extends HttpServlet {
 		} catch (ParseException e){
 			System.out.println("position: " + e.getPosition());
 			System.out.println(e);
-			res.getWriter().println("The json provided is not parsable");
-			res.setStatus(400);
+			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
 			return;
 		}
 		
@@ -185,8 +175,7 @@ public class APIServlet extends HttpServlet {
                 if (jsonObject.containsKey(field)) {
                 	data.put(field, jsonObject.get(field).toString());
                 } else {
-                	res.getWriter().println("The field " + field + " was not provided");
-    				res.setStatus(400);
+                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
     				return;
                 }
 			}
@@ -196,14 +185,12 @@ public class APIServlet extends HttpServlet {
             	entry.save();
             	results = AccountAPI.detail(entry.getID());
             } catch (IllegalArgumentException e) {
-            	res.getWriter().println(e);
-            	res.setStatus(400);
+            	res = ServletUtils.sendMessage(res, 400, e.toString());
             	return;
             }
             
             if (results==null) {
-            	res.getWriter().println("There was a problem creating your object.");
-            	res.setStatus(400);
+            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
             	return; 
             }
 		} else if (portions[0].equals("users") || portions[0].equals("register")) {
@@ -214,8 +201,7 @@ public class APIServlet extends HttpServlet {
                 if (jsonObject.containsKey(field)) {
                 	data.put(field, jsonObject.get(field).toString());
                 } else {
-                	res.getWriter().println("The field " + field + " was not provided");
-    				res.setStatus(400);
+                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
     				return;
                 }
 			}
@@ -223,8 +209,7 @@ public class APIServlet extends HttpServlet {
             entry.save();
             results = AccountHolderAPI.detail(entry.getID());
             if (results==null) {
-            	res.getWriter().println("There was a problem creating your object.");
-            	res.setStatus(400);
+            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
             	return; 
             }
 		} else if (portions[0].equals("deposit")) {
@@ -234,7 +219,7 @@ public class APIServlet extends HttpServlet {
 					);
 			res.setStatus(200);
 			PrintWriter out = res.getWriter();
-			out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("account_id").toString());
+			out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString());
 			return;
 		} else if (portions[0].equals("withdraw")) {
 			AccountAPI.transaction(
@@ -243,7 +228,7 @@ public class APIServlet extends HttpServlet {
 					);
 			res.setStatus(200);
 			PrintWriter out = res.getWriter();
-			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("account_id").toString());
+			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString());
 			return;
 		} else if (portions[0].equals("transfer")) {
 			String amount = jsonObject.get("amount").toString();
@@ -270,10 +255,9 @@ public class APIServlet extends HttpServlet {
 		String requestOwner;
 		String requestOwnerRole;
 		int requestOwnerID;
-		if (auth==null) {
-			res.getWriter().println("Authorization required");
-			res.setStatus(401);
-			return;
+		if (auth==null) { 
+			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
+			return; 
 		} else {
 			String token = auth.replace("Bearer ", "");
 			try {
@@ -283,8 +267,7 @@ public class APIServlet extends HttpServlet {
 				requestOwnerRole = obj.getField("role");
 				requestOwnerID = obj.getID(); 
 			} catch (MalformedJwtException e) {
-				res.getWriter().println("Malformed Token");
-				res.setStatus(401);
+				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
 				return;
 			}
 		}
@@ -306,10 +289,7 @@ public class APIServlet extends HttpServlet {
 			jsonObject = (JSONObject) jsonObj;
 			
 		} catch (ParseException e){
-			System.out.println("position: " + e.getPosition());
-			System.out.println(e);
-			res.getWriter().println("The json provided is not parsable");
-			res.setStatus(400);
+			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
 			return;
 		}
 		
@@ -321,8 +301,7 @@ public class APIServlet extends HttpServlet {
 			ArrayList<String> fields = new ArrayList<String>(
                     Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
 			if (!jsonObject.containsKey("account_id")) {
-				res.getWriter().println("The field account_id was not provided");
-				res.setStatus(400);
+				res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
 				return;
 			}
 			int ID = Integer.parseInt(jsonObject.get("account_id").toString());
@@ -331,8 +310,7 @@ public class APIServlet extends HttpServlet {
                 if (jsonObject.containsKey(field)) {
                 	data.put(field, jsonObject.get(field).toString());
                 } else {
-                	res.getWriter().println("The field " + field + " was not provided");
-    				res.setStatus(400);
+                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
     				return;
                 }
 			}
@@ -342,20 +320,17 @@ public class APIServlet extends HttpServlet {
             	entry.save();
             	results = AccountAPI.detail(entry.getID());
             } catch (IllegalArgumentException e) {
-            	res.getWriter().println(e);
-            	res.setStatus(400);
+            	res = ServletUtils.sendMessage(res, 400, e.toString());
             	return;
             }
             
             if (results==null) {
-            	res.getWriter().println("There was a problem creating your object.");
-            	res.setStatus(400);
+            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
             	return; 
             }
 		} else if (portions[0].equals("users")) {
 			if (!jsonObject.containsKey("account_id")) {
-				res.getWriter().println("The field account_id was not provided");
-				res.setStatus(400);
+				res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
 				return;
 			}
 			int ID = Integer.parseInt(jsonObject.get("account_id").toString());
@@ -366,8 +341,7 @@ public class APIServlet extends HttpServlet {
                 if (jsonObject.containsKey(field)) {
                 	data.put(field, jsonObject.get(field).toString());
                 } else {
-                	res.getWriter().println("The field " + field + " was not provided");
-    				res.setStatus(400);
+                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
     				return;
                 }
 			}
@@ -376,14 +350,12 @@ public class APIServlet extends HttpServlet {
             	entry.save();
             	results = AccountHolderAPI.detail(entry.getID());
             } catch (IllegalArgumentException e) {
-            	res.getWriter().println(e);
-            	res.setStatus(400);
+            	res = ServletUtils.sendMessage(res, 400, e.toString());
             	return;
             }
             
 			if (results==null) {
-            	res.getWriter().println("There was a problem creating your object.");
-            	res.setStatus(400);
+				res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
             	return; 
             }
 		}

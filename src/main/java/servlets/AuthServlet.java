@@ -42,11 +42,8 @@ public class AuthServlet extends HttpServlet {
 			Object jsonObj = parser.parse(body);
 			jsonObject = (JSONObject) jsonObj;
 			
-		} catch (ParseException e){
-			System.out.println("position: " + e.getPosition());
-			System.out.println(e);
-			res.getWriter().println("The json provided is not parsable");
-			res.setStatus(400);
+		} catch (ParseException e) {
+			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
 			return;
 		}
 		
@@ -54,8 +51,7 @@ public class AuthServlet extends HttpServlet {
 		String password = jsonObject.get("password").toString();
 		AccountHolder user = AccountHolder.search(username);
 		if (!user.getField("password").equals(Password.makeSHA256(password))) {
-			res.getWriter().println("Username and password do not match");
-			res.setStatus(401);
+			res = ServletUtils.sendMessage(res, 401, "Username and password do not match");
 			return;
 		}
 		String jwt = JWT.create(username);

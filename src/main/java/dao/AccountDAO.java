@@ -103,7 +103,7 @@ public class AccountDAO {
 				data.put("accounttype_id", String.valueOf(result.getInt("accounttype")));
 				data.put("accountstatus_id", String.valueOf(result.getInt("accountstatus")));
 				data.put("accountholder_id", String.valueOf(result.getInt("accountholder")));
-				data.put("balance", String.valueOf(result.getLong("balance")));
+				data.put("balance", String.valueOf(result.getDouble("balance")));
 				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
 				dbconn.close();
 				return new Account(result.getInt("account_id"), data);
