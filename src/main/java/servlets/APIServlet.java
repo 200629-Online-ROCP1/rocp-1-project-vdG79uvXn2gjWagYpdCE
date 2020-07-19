@@ -185,7 +185,7 @@ public class APIServlet extends HttpServlet {
             	entry.save();
             	results = AccountAPI.detail(entry.getID());
             } catch (IllegalArgumentException e) {
-            	res = ServletUtils.sendMessage(res, 400, e);
+            	res = ServletUtils.sendMessage(res, 400, e.toString());
             	return;
             }
             
@@ -219,7 +219,7 @@ public class APIServlet extends HttpServlet {
 					);
 			res.setStatus(200);
 			PrintWriter out = res.getWriter();
-			out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("account_id").toString());
+			out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString());
 			return;
 		} else if (portions[0].equals("withdraw")) {
 			AccountAPI.transaction(
@@ -228,7 +228,7 @@ public class APIServlet extends HttpServlet {
 					);
 			res.setStatus(200);
 			PrintWriter out = res.getWriter();
-			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("account_id").toString());
+			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString());
 			return;
 		} else if (portions[0].equals("transfer")) {
 			String amount = jsonObject.get("amount").toString();
@@ -320,7 +320,7 @@ public class APIServlet extends HttpServlet {
             	entry.save();
             	results = AccountAPI.detail(entry.getID());
             } catch (IllegalArgumentException e) {
-            	res = ServletUtils.sendMessage(res, 400, e);
+            	res = ServletUtils.sendMessage(res, 400, e.toString());
             	return;
             }
             
@@ -350,7 +350,7 @@ public class APIServlet extends HttpServlet {
             	entry.save();
             	results = AccountHolderAPI.detail(entry.getID());
             } catch (IllegalArgumentException e) {
-            	res = ServletUtils.sendMessage(res, 400, e);
+            	res = ServletUtils.sendMessage(res, 400, e.toString());
             	return;
             }
             
