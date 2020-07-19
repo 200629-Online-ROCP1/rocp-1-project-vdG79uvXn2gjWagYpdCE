@@ -206,7 +206,7 @@ public class APIServlet extends HttpServlet {
             	res.setStatus(400);
             	return; 
             }
-		} else if (portions[0].equals("users")) {
+		} else if (portions[0].equals("users") || portions[0].equals("register")) {
 			ArrayList<String> fields = new ArrayList<String>(
                     Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
 			Map<String, String> data = new HashMap<String, String>();
