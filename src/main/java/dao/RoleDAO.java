@@ -59,7 +59,6 @@ public class RoleDAO {
 			String sql = "SELECT * FROM role WHERE role=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, role);
-
 			ResultSet result = statement.executeQuery();
 
 			if (result.next()) {
