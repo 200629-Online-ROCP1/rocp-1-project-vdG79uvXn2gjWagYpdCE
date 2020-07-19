@@ -32,6 +32,7 @@ public class AccountHolder {
 				if (field == "role") { // Missing the role, need to check if contains role_id
 					if (data.containsKey("role_id")) {
 						this.role_fk = Role.search(Integer.parseInt(data.get("role_id")));
+						this.fieldValues.put("role", this.role_fk.getField("role"));
 					}
 				} else {
 					System.out.println("ERROR: No value was provided for field " + field);
