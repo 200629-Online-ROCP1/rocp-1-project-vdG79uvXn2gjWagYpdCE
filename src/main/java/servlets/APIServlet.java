@@ -33,6 +33,8 @@ public class APIServlet extends HttpServlet {
 		
 		String auth = req.getHeader("authorization");
 		String requestOwner;
+		String requestOwnerRole;
+		int requestOwnerID;
 		if (auth==null) {
 			res.getWriter().println("Authorization required");
 			res.setStatus(401);
@@ -42,6 +44,10 @@ public class APIServlet extends HttpServlet {
 			try {
 				Claims claims = JWT.decode(token);
 				requestOwner = claims.get("username").toString();
+				AccountHolder obj = AccountHolder.search(requestOwner);
+				requestOwnerRole = obj.getField("role");
+				requestOwnerID = obj.getID(); 
+				
 			} catch (MalformedJwtException e) {
 				res.getWriter().println("Malformed Token");
 				res.setStatus(401);
@@ -102,6 +108,8 @@ public class APIServlet extends HttpServlet {
 		
 		String auth = req.getHeader("authorization");
 		String requestOwner;
+		String requestOwnerRole;
+		int requestOwnerID;
 		if (auth==null) {
 			res.getWriter().println("Authorization required");
 			res.setStatus(401);
@@ -111,6 +119,9 @@ public class APIServlet extends HttpServlet {
 			try {
 				Claims claims = JWT.decode(token);
 				requestOwner = claims.get("username").toString();
+				AccountHolder obj = AccountHolder.search(requestOwner);
+				requestOwnerRole = obj.getField("role");
+				requestOwnerID = obj.getID(); 
 			} catch (MalformedJwtException e) {
 				res.getWriter().println("Malformed Token");
 				res.setStatus(401);
@@ -209,6 +220,8 @@ public class APIServlet extends HttpServlet {
 		
 		String auth = req.getHeader("authorization");
 		String requestOwner;
+		String requestOwnerRole;
+		int requestOwnerID;
 		if (auth==null) {
 			res.getWriter().println("Authorization required");
 			res.setStatus(401);
@@ -218,6 +231,9 @@ public class APIServlet extends HttpServlet {
 			try {
 				Claims claims = JWT.decode(token);
 				requestOwner = claims.get("username").toString();
+				AccountHolder obj = AccountHolder.search(requestOwner);
+				requestOwnerRole = obj.getField("role");
+				requestOwnerID = obj.getID(); 
 			} catch (MalformedJwtException e) {
 				res.getWriter().println("Malformed Token");
 				res.setStatus(401);
