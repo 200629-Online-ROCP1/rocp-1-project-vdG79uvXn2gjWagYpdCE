@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -19,7 +20,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import controller.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.MalformedJwtException;
 import model.*;
+import utils.JWT;
+import io.jsonwebtoken.Claims;
 
 public class APIServlet extends HttpServlet {
 
@@ -27,12 +32,21 @@ public class APIServlet extends HttpServlet {
 		res.setContentType("application/json");
 		
 		String auth = req.getHeader("authorization");
+		String requestOwner;
 		if (auth==null) {
 			res.getWriter().println("Authorization required");
 			res.setStatus(401);
 			return;
 		} else {
-			System.out.println("AUTH HEADER >> " + auth);
+			String token = auth.replace("Bearer ", "");
+			try {
+				Claims claims = JWT.decode(token);
+				requestOwner = claims.get("username").toString();
+			} catch (MalformedJwtException e) {
+				res.getWriter().println("Malformed Token");
+				res.setStatus(401);
+				return;
+			}
 		}
 		
 		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
@@ -120,12 +134,21 @@ public class APIServlet extends HttpServlet {
 		res.setContentType("application/json");
 		
 		String auth = req.getHeader("authorization");
+		String requestOwner;
 		if (auth==null) {
 			res.getWriter().println("Authorization required");
 			res.setStatus(401);
 			return;
 		} else {
-			System.out.println("AUTH HEADER >> " + auth);
+			String token = auth.replace("Bearer ", "");
+			try {
+				Claims claims = JWT.decode(token);
+				requestOwner = claims.get("username").toString();
+			} catch (MalformedJwtException e) {
+				res.getWriter().println("Malformed Token");
+				res.setStatus(401);
+				return;
+			}
 		}
 		
 		JSONParser parser = new JSONParser();
