@@ -194,4 +194,9 @@ public class Account {
 		AccountDAO dao = AccountDAO.getInstance();
 		return dao.retrieveAll();
 	}
+	
+	public static ArrayList<Account> filter(String fieldName, int ID) {
+		AccountDAO dao = AccountDAO.getInstance();
+		return dao.filter(fieldName, ID);
+	}
 }

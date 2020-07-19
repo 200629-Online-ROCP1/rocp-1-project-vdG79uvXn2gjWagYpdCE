@@ -22,4 +22,13 @@ public class AccountAPI {
 		}
 		return null;
 	}
+	
+	public static String filter(String fieldName, int ID) {
+		ArrayList<Account> all = Account.filter(fieldName, ID);
+		JSONArray jsonall = new JSONArray();
+		for (Account obj : all) {
+			jsonall.add(obj.asJSONObject());
+		}
+		return jsonall.toJSONString();
+	}
 }

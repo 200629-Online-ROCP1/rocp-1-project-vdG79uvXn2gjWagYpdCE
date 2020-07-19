@@ -68,6 +68,15 @@ public class APIServlet extends HttpServlet {
 				res.setStatus(400);
 				return;
 			}
+		} else if (portions.length == 3) {  //TODO refactor into switch
+			try {
+				ID = Integer.parseInt(portions[2]);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				res.getWriter().println("The id you provided is not an integer");
+				res.setStatus(400);
+				return;
+			}
 		}
 
 		String results = new String("");
@@ -90,6 +99,17 @@ public class APIServlet extends HttpServlet {
 					res.setStatus(404);
 					return; 
 					}
+			} else if (portions.length == 3) {
+				if (portions[1].equals("status")) {
+					results = AccountAPI.filter("accountstatus", ID);
+				} else if (portions[1].equals("owner")) {
+					results = AccountAPI.filter("accountholder", ID);
+				}
+				if (results==null) { 
+					res.getWriter().println("The id you provided was not found");
+					res.setStatus(404);
+					return; 
+				}
 			} else {
 				results = AccountAPI.list();
 			}
