@@ -5,7 +5,7 @@ import simplejson
 
 base_url = "http://localhost:8080/rocp-project/api/"
 
-endpoints = ["user", "account", "accounttype", "accountstatus", "role"]
+endpoints = ["users", "account", "accounttype", "accountstatus", "role"]
 
 results = [] # [FAILURES, SUCCESSES]
 

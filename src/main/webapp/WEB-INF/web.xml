@@ -21,6 +21,18 @@
   	<url-pattern>/hello</url-pattern>
   </servlet-mapping>
   
+  
+  <servlet>
+  	<description>API Auth Servlet</description>
+  	<display-name>AuthServlet</display-name>
+  	<servlet-name>AuthServlet</servlet-name>
+  	<servlet-class>servlets.AuthServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AuthServlet</servlet-name>
+  	<url-pattern>/api/auth</url-pattern>
+  </servlet-mapping>
+    
   <servlet>
   	<description>API servlet</description>
   	<display-name>APIServlet</display-name>
