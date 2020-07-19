@@ -53,12 +53,16 @@ public class AuthServlet extends HttpServlet {
 		String username = jsonObject.get("username").toString();
 		String password = jsonObject.get("password").toString();
 		AccountHolder user = AccountHolder.search(username);
-		System.out.println("From Post username => " + username);
-		System.out.println("From Post password => " + password);
-		System.out.println("From database hashed password => " + user.getField("password"));
-		System.out.println("From Post hashed password =>     " + Password.makeSHA256(password));
-		
-		String jwt = JWT.create("hsimpson");
+		if (!user.getField("password").equals(Password.makeSHA256(password))) {
+			res.getWriter().println("Username and password do not match");
+			res.setStatus(401);
+			return;
+		}
+		String jwt = JWT.create(username);
+		JSONObject jsonjwt = new JSONObject();
+		jsonjwt.put("token", jwt);
+		res.getWriter().println(jsonjwt.toJSONString());
+		res.setStatus(200);
 	}
 }
 
