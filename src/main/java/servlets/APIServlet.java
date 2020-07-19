@@ -47,7 +47,6 @@ public class APIServlet extends HttpServlet {
 				AccountHolder obj = AccountHolder.search(requestOwner);
 				requestOwnerRole = obj.getField("role");
 				requestOwnerID = obj.getID(); 
-				
 			} catch (MalformedJwtException e) {
 				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
 				return;
@@ -79,13 +78,19 @@ public class APIServlet extends HttpServlet {
 		String results = new String("");
 		if (portions[0].equals("users")) {
 			if (portions.length == 2) {
+				System.out.println("Request Owner => " + requestOwner);
+				System.out.println("Request Owner Role => " + requestOwnerRole);
 				results = AccountHolderAPI.detail(ID);
 				if (results==null) { 
 					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
 					return; 
 					}
 			} else {
-				results = AccountHolderAPI.list();
+				if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
+					results = AccountHolderAPI.list();
+				}
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
+				return;
 			}
 		} else if (portions[0].equals("accounts")) {
 			if (portions.length == 2) {
