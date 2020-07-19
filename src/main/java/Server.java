@@ -9,26 +9,26 @@ public class Server {
 
 		// Logger.setFilename("/tmp/bank_app.log");
 		// Logger.makeEntry("INFO", "Starting application");
-//		initialDataLoad();
+		initialDataLoad();
 		
-		String jwt = JWT.create("hsimpson");
-		System.out.println(jwt);
-		Claims claims = JWT.decode(jwt);
-		System.out.println(claims.get("username"));
-		JWT.isExpired(jwt);
+//		String jwt = JWT.create("hsimpson");
+//		System.out.println(jwt);
+//		Claims claims = JWT.decode(jwt);
+//		System.out.println(claims.get("username"));
+//		JWT.isExpired(jwt);
 	}
 
 	static public void initialDataLoad() {
 		Account.deleteAll();
-		AccountHolder.deleteAll();
-		AccountStatus.deleteAll();
-		AccountType.deleteAll();
-		Role.deleteAll();
+//		AccountHolder.deleteAll();
+//		AccountStatus.deleteAll();
+//		AccountType.deleteAll();
+//		Role.deleteAll();
 
-		initialDataLoadAccountStatus();
-		initialDataLoadAccountType();
-		initialDataLoadRole();
-		initialDataLoadAccountHolder();
+//		initialDataLoadAccountStatus();
+//		initialDataLoadAccountType();
+//		initialDataLoadRole();
+//		initialDataLoadAccountHolder();
 		initialDataLoadAccount();
 	}
 
@@ -50,6 +50,38 @@ public class Server {
 		data.put("accountholder", "hsimpson");
 		account = new Account(data);
 		account.save();
+		
+		data.put("balance", "150.28");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Checking");
+		data.put("accountholder", "hsimpson");
+		account = new Account(data);
+		account.save();
+		
+		data.put("balance", "150.28");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Checking");
+		data.put("accountholder", "nflanders");
+		account = new Account(data);
+		account.save();
+		
+		data.put("balance", "1250.28");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Savings");
+		data.put("accountholder", "nflanders");
+		account = new Account(data);
+		account.save();
+		
+		data.put("balance", "1250.28");
+		data.put("deleted", "false");
+		data.put("accountstatus", "Open");
+		data.put("accounttype", "Savings");
+		data.put("accountholder", "wsmithers");
+		account = new Account(data);
+		account.save();
 	}
 
 	static public void initialDataLoadAccountHolder() {
@@ -60,7 +92,7 @@ public class Server {
 		data.put("username", "hsimpson");
 		data.put("firstname", "Homer");
 		data.put("lastname", "Simpson");
-		data.put("password", "password789");
+		data.put("password", "password");
 		data.put("email", "hsimpson2112@hotmail.com");
 		accountHolder = new AccountHolder(data);
 		accountHolder.save();
@@ -69,17 +101,44 @@ public class Server {
 		data.put("username", "nflanders");
 		data.put("firstname", "Ned");
 		data.put("lastname", "Flanders");
-		data.put("password", "password456");
+		data.put("password", "password");
 		data.put("email", "nflanders@gmail.com");
 		accountHolder = new AccountHolder(data);
 		accountHolder.save();
 
+		data.put("role", "Standard");
+		data.put("username", "wsmithers");
+		data.put("firstname", "Waylon");
+		data.put("lastname", "Smithers");
+		data.put("password", "password");
+		data.put("email", "wsmithers@gmail.com");
+		accountHolder = new AccountHolder(data);
+		accountHolder.save();
+		
 		data.put("role", "Employee");
-		data.put("username", "kbrockman");
-		data.put("firstname", "Kent");
-		data.put("lastname", "Brockman");
-		data.put("password", "password123");
-		data.put("email", "kbrockman@gmail.com");
+		data.put("username", "rwiggum");
+		data.put("firstname", "Ralph");
+		data.put("lastname", "Wiggum");
+		data.put("password", "password");
+		data.put("email", "rwiggum@gmail.com");
+		accountHolder = new AccountHolder(data);
+		accountHolder.save();
+		
+		data.put("role", "Employee");
+		data.put("username", "nmuntz");
+		data.put("firstname", "Nelson");
+		data.put("lastname", "Muntz");
+		data.put("password", "password");
+		data.put("email", "nmuntz@gmail.com");
+		accountHolder = new AccountHolder(data);
+		accountHolder.save();
+		
+		data.put("role", "Admin");
+		data.put("username", "msimpson");
+		data.put("firstname", "Marge");
+		data.put("lastname", "Simpson");
+		data.put("password", "password");
+		data.put("email", "msimpson@gmail.com");
 		accountHolder = new AccountHolder(data);
 		accountHolder.save();
 	}

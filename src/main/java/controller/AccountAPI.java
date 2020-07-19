@@ -1,6 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.simple.JSONArray;
 import model.Account;
 
@@ -30,5 +33,15 @@ public class AccountAPI {
 			jsonall.add(obj.asJSONObject());
 		}
 		return jsonall.toJSONString();
+	}
+	
+	public static void transaction(int ID, double amount) {
+		Account obj = Account.search(ID);
+		double balance = Double.parseDouble(obj.getField("balance"));
+		Double new_balance = balance + amount;
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("balance", new_balance.toString());
+		obj.setField(data);
+		obj.save();
 	}
 }
