@@ -229,7 +229,7 @@ public class APIServlet extends HttpServlet {
             }
 		} else if (portions[0].equals("deposit")) {
 			AccountAPI.transaction(
-					Integer.parseInt(jsonObject.get("account_id").toString()), 
+					Integer.parseInt(jsonObject.get("accountId").toString()), 
 					Double.parseDouble(jsonObject.get("amount").toString()) 
 					);
 			res.setStatus(200);
@@ -238,12 +238,23 @@ public class APIServlet extends HttpServlet {
 			return;
 		} else if (portions[0].equals("withdraw")) {
 			AccountAPI.transaction(
-					Integer.parseInt(jsonObject.get("account_id").toString()), 
+					Integer.parseInt(jsonObject.get("accountId").toString()), 
 					Double.parseDouble(jsonObject.get("amount").toString()) * -1
 					);
 			res.setStatus(200);
 			PrintWriter out = res.getWriter();
 			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("account_id").toString());
+			return;
+		} else if (portions[0].equals("transfer")) {
+			String amount = jsonObject.get("amount").toString();
+			String source = jsonObject.get("sourceAccountId").toString();
+			String target = jsonObject.get("targetAccountId").toString();
+			AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount));
+			AccountAPI.transaction(Integer.parseInt(target), Double.parseDouble(amount) * -1);
+			res.setStatus(200);
+			String message = amount + " has been transferred from Account #" + source + " to Account #" + target;
+			PrintWriter out = res.getWriter();
+			out.print(message);
 			return;
 		}
 		
