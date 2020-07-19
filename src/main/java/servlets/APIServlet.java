@@ -1,5 +1,6 @@
 package servlets;
 
+import servlets.ServletUtils;
 import java.io.BufferedReader;
 
 import java.io.IOException;
@@ -36,8 +37,7 @@ public class APIServlet extends HttpServlet {
 		String requestOwnerRole;
 		int requestOwnerID;
 		if (auth==null) {
-			res.getWriter().println("Authorization required");
-			res.setStatus(401);
+			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
 			return;
 		} else {
 			String token = auth.replace("Bearer ", "");
@@ -131,8 +131,7 @@ public class APIServlet extends HttpServlet {
 		String requestOwnerRole;
 		int requestOwnerID;
 		if (auth==null) {
-			res.getWriter().println("Authorization required");
-			res.setStatus(401);
+			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
 			return;
 		} else {
 			String token = auth.replace("Bearer ", "");
@@ -270,10 +269,9 @@ public class APIServlet extends HttpServlet {
 		String requestOwner;
 		String requestOwnerRole;
 		int requestOwnerID;
-		if (auth==null) {
-			res.getWriter().println("Authorization required");
-			res.setStatus(401);
-			return;
+		if (auth==null) { 
+			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
+			return; 
 		} else {
 			String token = auth.replace("Bearer ", "");
 			try {
