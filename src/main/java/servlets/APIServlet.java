@@ -79,18 +79,24 @@ public class APIServlet extends HttpServlet {
 		if (portions[0].equals("users")) {
 			if (portions.length == 2) {
 				System.out.println("Request Owner => " + requestOwner);
-				System.out.println("Request Owner Role => " + requestOwnerRole);
-				results = AccountHolderAPI.detail(ID);
-				if (results==null) { 
-					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
-					return; 
-					}
+				System.out.println("Request Owner ID => " + requestOwnerID);
+				System.out.println("ID => " + ID);
+				if ((requestOwnerID==ID) ||
+					(requestOwnerRole.equals("Admin")) ||
+					(requestOwnerRole.equals("Employee"))) 
+				{
+					results = AccountHolderAPI.detail(ID);
+				} else {
+					res = ServletUtils.sendMessage(res, 403, "Forbidden");
+					return;
+				}
 			} else {
 				if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
 					results = AccountHolderAPI.list();
+				} else {
+					res = ServletUtils.sendMessage(res, 403, "Forbidden");
+					return;
 				}
-				res = ServletUtils.sendMessage(res, 403, "Forbidden");
-				return;
 			}
 		} else if (portions[0].equals("accounts")) {
 			if (portions.length == 2) {
