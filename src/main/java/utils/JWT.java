@@ -26,7 +26,7 @@ public class JWT {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        long ttlMillis = 3600000;
+        long ttlMillis = 360000000;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
