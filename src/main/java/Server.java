@@ -11,10 +11,10 @@ public class Server {
 		// Logger.makeEntry("INFO", "Starting application");
 //		initialDataLoad();
 		
-		String jwt = JWT.create("jwtID", "Dewey Cheatem & Howe", "This is your JWT", 360000);
+		String jwt = JWT.create("hsimpson");
 		System.out.println(jwt);
 		Claims claims = JWT.decode(jwt);
-		System.out.println(claims);
+		System.out.println(claims.get("username"));
 		JWT.isExpired(jwt);
 	}
 
