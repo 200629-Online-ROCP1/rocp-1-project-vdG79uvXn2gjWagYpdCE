@@ -449,15 +449,20 @@ public class APIServlet extends HttpServlet {
 //		} 
 		
 		URLPortions pieces = new URLPortions(req);
-		if (pieces.getEndpoint().equals("accounts")) {
-			Account.delete(pieces.getID());
-		} else if (pieces.getEndpoint().equals("users")) {
-			AccountHolder.delete(pieces.getID());
+		if (Authorization.getRequestOwnerRole().equals("Admin")) {
+			if (pieces.getEndpoint().equals("accounts")) {
+				Account.delete(pieces.getID());
+			} else if (pieces.getEndpoint().equals("users")) {
+				AccountHolder.delete(pieces.getID());
+			} else {
+				res = ServletUtils.sendMessage(res, 404, "Resource not found");
+				return;
+			}
 		} else {
-			res = ServletUtils.sendMessage(res, 404, "Resource not found");
+			res = ServletUtils.sendMessage(res, 403, "Forbidden");
 			return;
 		}
-		res = ServletUtils.sendMessage(res, 200, "You are inside the doDelete");
+		res = ServletUtils.sendMessage(res, 202, "The object was deleted.");
 		return;
 	}
 }
