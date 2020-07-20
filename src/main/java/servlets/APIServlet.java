@@ -437,9 +437,18 @@ public class APIServlet extends HttpServlet {
 	}
 	
 	protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		JSONObject jsonObject;
 		res = ServletUtils.APISetup(res);
 		if (!Authorization.processJWT(req, res)) { return; }
 		
+//		try {
+//			jsonObject = ServletUtils.bodyAsJSON(req, res);
+//		} catch (ParseException e){
+//			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
+//			return;
+//		} 
+		
+		System.out.println(jsonObject.toJSONString());
 		res = ServletUtils.sendMessage(res, 200, "You are inside the doDelete");
 		return;
 	}
