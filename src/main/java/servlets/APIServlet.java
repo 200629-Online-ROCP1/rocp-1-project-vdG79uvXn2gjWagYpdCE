@@ -262,9 +262,8 @@ public class APIServlet extends HttpServlet {
 						Integer.parseInt(jsonObject.get("accountId").toString()), 
 						Double.parseDouble(jsonObject.get("amount").toString()) 
 						);
-				res.setStatus(200);
-				PrintWriter out = res.getWriter();
-				out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString());
+				String message = jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString();
+				res = ServletUtils.sendMessage(res, 200, message);
 				return;
 			} else {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
@@ -276,9 +275,8 @@ public class APIServlet extends HttpServlet {
 						Integer.parseInt(jsonObject.get("accountId").toString()), 
 						Double.parseDouble(jsonObject.get("amount").toString()) * -1
 						);
-				res.setStatus(200);
-				PrintWriter out = res.getWriter();
-				out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString());
+				String message = jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString();
+				res = ServletUtils.sendMessage(res, 200, message);
 				return;
 			} else {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
