@@ -35,10 +35,8 @@ def check(method, endpoint, expected_status=200, token=None):
     payload = {}
     headers = {}
     if token:
-        headers = {
-            'Authorization': 'Bearer ' + token
-            }
-    res = requests.request(method, base_url+endpoint, headers=headers, data = payload)
+        headers = {"Authorization": "Bearer " + token}
+    res = requests.request(method, base_url + endpoint, headers=headers, data=payload)
     if res.status_code != expected_status:
         print(
             f"FAILURE: {method} {res.url} returned status code {res.status_code} not {expected_status}"
@@ -50,19 +48,20 @@ def check(method, endpoint, expected_status=200, token=None):
 
 
 if __name__ == "__main__":
-    tokens = {}
-    tokens["Standard"] = get_token("hsimpson", "password")
-    tokens["NonOwner"] = get_token("wsmithers", "password")
-    tokens["Employee"] = get_token("rwiggum", "password")
-    tokens["Admin"] = get_token("msimpson", "password")
+    tokens = {
+        "Standard": get_token("hsimpson", "password"),
+        "NonOwner": get_token("wsmithers", "password"),
+        "Employee": get_token("rwiggum", "password"),
+        "Admin": get_token("msimpson", "password"),
+    }
     test_bad_token("nflanders", "badentry")
     test_bad_token("unknown", "password")
 
+    # 46 => hsimpson
+    # 58 => hsimpson owns
+    ID = {"users": "/46", "accounts": "/58"}
+
     for endpoint in ["users", "accounts"]:
-        #46 => hsimpson
-        #58 => hsimpson owns
-        ID = {'users': '/46', 'accounts': '/58'}
-        accountID = '/'
         # list endpoints
         check("GET", endpoint, expected_status=401)
         check("GET", endpoint, expected_status=200, token=tokens["Admin"])
@@ -70,9 +69,24 @@ if __name__ == "__main__":
         check("GET", endpoint, expected_status=403, token=tokens["Standard"])
         # detail endpoints
         check("GET", endpoint + ID[endpoint], expected_status=401)
-        check("GET", endpoint + ID[endpoint], expected_status=200, token=tokens["Admin"])
-        check("GET", endpoint + ID[endpoint], expected_status=200, token=tokens["Employee"])
-        check("GET", endpoint + ID[endpoint], expected_status=200, token=tokens["Standard"]) 
-
-
-
+        check(
+            "GET", endpoint + ID[endpoint], expected_status=200, token=tokens["Admin"]
+        )
+        check(
+            "GET",
+            endpoint + ID[endpoint],
+            expected_status=200,
+            token=tokens["Employee"],
+        )
+        check(
+            "GET",
+            endpoint + ID[endpoint],
+            expected_status=200,
+            token=tokens["Standard"],
+        )
+        check(
+            "GET",
+            endpoint + ID[endpoint],
+            expected_status=403,
+            token=tokens["NonOwner"],
+        )
