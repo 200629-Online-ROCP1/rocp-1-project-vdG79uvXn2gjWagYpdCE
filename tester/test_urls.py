@@ -135,4 +135,12 @@ if __name__ == "__main__":
     check("POST", "register", expected_status=201, token=tokens["Admin"], json=user_post)
     check("POST", "register", expected_status=403, token=tokens["Employee"], json=user_post)
     check("POST", "register", expected_status=403, token=tokens["Standard"], json=user_post)
+
+    check("DELETE", "users/58", expected_status=202, token=tokens["Admin"])
+    check("DELETE", "users/58", expected_status=403, token=tokens["Employee"])
+    check("DELETE", "users/58", expected_status=403, token=tokens["Standard"])
+
+    check("DELETE", "accounts/99", expected_status=202, token=tokens["Admin"])
+    check("DELETE", "accounts/99", expected_status=403, token=tokens["Employee"])
+    check("DELETE", "accounts/99", expected_status=403, token=tokens["Standard"])
     
