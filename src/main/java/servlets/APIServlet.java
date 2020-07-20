@@ -435,4 +435,10 @@ public class APIServlet extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		out.print(results);
 	}
+	
+	protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		res = ServletUtils.APISetup(res);
+		res = ServletUtils.sendMessage(res, 200, "You are inside the doDelete");
+		return;
+	}
 }

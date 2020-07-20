@@ -13,11 +13,17 @@ import model.AccountHolder;
 import utils.JWT;
 
 public class ServletUtils {
+	
 	public static HttpServletResponse sendMessage(HttpServletResponse res, int status, String message) throws IOException {
 		JSONObject obj = new JSONObject();
 		obj.put("message", message);
 		res.getWriter().println(obj.toJSONString());
 		res.setStatus(status);
+		return res;
+	}
+	
+	public static HttpServletResponse APISetup(HttpServletResponse res) throws IOException {
+		res.setContentType("application/json");
 		return res;
 	}
 
