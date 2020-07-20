@@ -437,7 +437,7 @@ public class APIServlet extends HttpServlet {
 	}
 	
 	protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		JSONObject jsonObject;
+//		JSONObject jsonObject;
 		res = ServletUtils.APISetup(res);
 		if (!Authorization.processJWT(req, res)) { return; }
 		
@@ -448,7 +448,15 @@ public class APIServlet extends HttpServlet {
 //			return;
 //		} 
 		
-		System.out.println(jsonObject.toJSONString());
+		URLPortions pieces = new URLPortions(req);
+		if (pieces.getEndpoint().equals("accounts")) {
+			System.out.println("Inside of DELETE accounts");
+		} else if (pieces.getEndpoint().equals("users")) {
+			System.out.println("Inside of DELETE users");
+		} else {
+			res = ServletUtils.sendMessage(res, 404, "Resource not found");
+			return;
+		}
 		res = ServletUtils.sendMessage(res, 200, "You are inside the doDelete");
 		return;
 	}
