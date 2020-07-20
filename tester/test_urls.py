@@ -121,11 +121,14 @@ if __name__ == "__main__":
     check("POST", "accounts", expected_status=201, token=tokens["Standard"], json=account_post)
     check("POST", "accounts", expected_status=403, token=tokens["NonOwner"], json=account_post)
 
+    import random
+    extra = random.randint(0, 5000)
+
     user_post = {
         "firstname": "New",
         "role": "Standard",
-        "email": "new_user@gmail.com",
-        "username": "newuser",
+        "email": f"new_user{extra}@gmail.com",
+        "username": f"newuser{extra}",
         "password": "something",
         "lastname": "User"
         }
