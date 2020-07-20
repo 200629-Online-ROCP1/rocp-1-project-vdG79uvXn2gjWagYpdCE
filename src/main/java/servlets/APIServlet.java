@@ -78,9 +78,6 @@ public class APIServlet extends HttpServlet {
 		String results = new String("");
 		if (portions[0].equals("users")) {
 			if (portions.length == 2) {
-				System.out.println("Request Owner => " + requestOwner);
-				System.out.println("Request Owner ID => " + requestOwnerID);
-				System.out.println("ID => " + ID);
 				if ((requestOwnerID==ID) ||
 					(requestOwnerRole.equals("Admin")) ||
 					(requestOwnerRole.equals("Employee"))) 
@@ -100,23 +97,44 @@ public class APIServlet extends HttpServlet {
 			}
 		} else if (portions[0].equals("accounts")) {
 			if (portions.length == 2) {
-				results = AccountAPI.detail(ID);
-				if (results==null) { 
-					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
-					return; 
-					}
+				if ((requestOwnerID==ID) ||
+					(requestOwnerRole.equals("Admin")) ||
+					(requestOwnerRole.equals("Employee"))) {
+					results = AccountAPI.detail(ID);
+				} else {
+					res = ServletUtils.sendMessage(res, 403, "Forbidden");
+					return;
+				}
 			} else if (portions.length == 3) {
 				if (portions[1].equals("status")) {
-					results = AccountAPI.filter("accountstatus", ID);
+					if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
+						results = AccountAPI.filter("accountstatus", ID);
+					} else {
+						res = ServletUtils.sendMessage(res, 403, "Forbidden");
+						return;
+					}
 				} else if (portions[1].equals("owner")) {
-					results = AccountAPI.filter("accountholder", ID);
+					if ((requestOwnerID==ID) ||
+						(requestOwnerRole.equals("Admin")) ||
+						(requestOwnerRole.equals("Employee"))) 
+					{
+						results = AccountAPI.filter("accountholder", ID);
+					} else {
+						res = ServletUtils.sendMessage(res, 403, "Forbidden");
+						return;
+					}
 				}
 				if (results==null) { 
 					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
 					return; 
 				}
 			} else {
-				results = AccountAPI.list();
+				if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
+					results = AccountAPI.list();
+				} else {
+					res = ServletUtils.sendMessage(res, 403, "Forbidden");
+					return;
+				}
 			}
 		} else {
 			res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
@@ -179,31 +197,40 @@ public class APIServlet extends HttpServlet {
 		String results = new String("");
 		
 		if (portions[0].equals("accounts")) {
-			ArrayList<String> fields = new ArrayList<String>(
-                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
-			Map<String, String> data = new HashMap<String, String>();
-			for (String field : fields) {
-                if (jsonObject.containsKey(field)) {
-                	data.put(field, jsonObject.get(field).toString());
-                } else {
-                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
-    				return;
-                }
-			}
-			
-            try {
-            	Account entry = new Account(data);
-            	entry.save();
-            	results = AccountAPI.detail(entry.getID());
-            } catch (IllegalArgumentException e) {
-            	res = ServletUtils.sendMessage(res, 400, e.toString());
-            	return;
-            }
+			AccountHolder new_owner = AccountHolder.search(jsonObject.get("accountholder").toString())
+			if ((requestOwnerID==ID) ||
+				(requestOwnerRole.equals("Admin")) || 
+				(requestOwnerRole.equals("Employee"))
+				) {
+				ArrayList<String> fields = new ArrayList<String>(
+	                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
+				Map<String, String> data = new HashMap<String, String>();
+				for (String field : fields) {
+	                if (jsonObject.containsKey(field)) {
+	                	data.put(field, jsonObject.get(field).toString());
+	                } else {
+	                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
+	    				return;
+	                }
+				}
+				
+	            try {
+	            	Account entry = new Account(data);
+	            	entry.save();
+	            	results = AccountAPI.detail(entry.getID());
+	            } catch (IllegalArgumentException e) {
+	            	res = ServletUtils.sendMessage(res, 400, e.toString());
+	            	return;
+	            }
             
-            if (results==null) {
-            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
-            	return; 
-            }
+	            if (results==null) {
+	            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
+	            	return; 
+	            }
+			} else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
+				return;
+			}
 		} else if (portions[0].equals("users") || portions[0].equals("register")) {
 			ArrayList<String> fields = new ArrayList<String>(
                     Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
