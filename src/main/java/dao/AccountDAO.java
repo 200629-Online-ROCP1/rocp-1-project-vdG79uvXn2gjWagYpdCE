@@ -36,7 +36,6 @@ public class AccountDAO {
 			statement.setInt(6, account.getFKID("accountstatus"));
 			
 			if (!statement.execute()) {
-				dbconn.close();
 				return true;
 			}
 		} catch (SQLException e) {
@@ -81,7 +80,6 @@ public class AccountDAO {
 				data.put("accountholder_id", String.valueOf(result.getInt("accountholder")));
 				data.put("balance", String.valueOf(result.getLong("balance")));
 				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
-				dbconn.close();
 				return new Account(result.getInt("account_id"), data);
 			}
 		} catch (SQLException e) {
@@ -105,7 +103,6 @@ public class AccountDAO {
 				data.put("accountholder_id", String.valueOf(result.getInt("accountholder")));
 				data.put("balance", String.valueOf(result.getDouble("balance")));
 				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
-				dbconn.close();
 				return new Account(result.getInt("account_id"), data);
 			}
 		} catch (SQLException e) {
@@ -120,7 +117,6 @@ public class AccountDAO {
 			String sql = "DELETE FROM account";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.execute();
-			dbconn.close();
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
@@ -133,7 +129,6 @@ public class AccountDAO {
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setInt(1, ID);
 			statement.execute();
-			dbconn.close();
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
@@ -156,7 +151,6 @@ public class AccountDAO {
 				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
 				all.add(new Account(result.getInt("account_id"), data));
 			}
-			dbconn.close();
 			return all;
 
 		} catch (SQLException e) {
@@ -183,7 +177,6 @@ public class AccountDAO {
 				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
 				all.add(new Account(result.getInt("account_id"), data));
 			}
-			dbconn.close();
 			return all;
 
 		} catch (SQLException e) {

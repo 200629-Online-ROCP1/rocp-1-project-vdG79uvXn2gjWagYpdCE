@@ -50,8 +50,8 @@ public class AuthServlet extends HttpServlet {
 		String username = jsonObject.get("username").toString();
 		String password = jsonObject.get("password").toString();
 		AccountHolder user = AccountHolder.search(username);
-		if (!user.getField("password").equals(Password.makeSHA256(password))) {
-			res = ServletUtils.sendMessage(res, 401, "Username and password do not match");
+		if ((user==null) || (!user.getField("password").equals(Password.makeSHA256(password)))) {
+			res = ServletUtils.sendMessage(res, 401, "Invalid username and password pair");
 			return;
 		}
 		String jwt = JWT.create(username);

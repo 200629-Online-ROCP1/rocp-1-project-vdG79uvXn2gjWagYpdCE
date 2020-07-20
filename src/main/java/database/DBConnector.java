@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import dao.AccountDAO;
+import dao.AccountTypeDAO;
 import logger.Logger;
 
 public class DBConnector {
@@ -18,14 +19,26 @@ public class DBConnector {
 	private static String hostname = System.getenv("BANKDB_HOSTNAME");
 	private static String database = System.getenv("BANKDB_DATABASE");
 
+	private static Connection self = makeConnection();
+
 	public static Connection getConnection() throws SQLException {
+		return self;
+	}
+	
+	public static Connection makeConnection() {
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		String url = "jdbc:postgresql://" + hostname + ":5432/" + database;
-		return DriverManager.getConnection(url, username, password);
+		try {
+			Connection dbconn = DriverManager.getConnection(url, username, password);
+			return dbconn;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static Connection getConnection(String hostname, String database) throws SQLException {
