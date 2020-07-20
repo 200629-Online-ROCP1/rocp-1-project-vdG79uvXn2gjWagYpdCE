@@ -197,8 +197,8 @@ public class APIServlet extends HttpServlet {
 		String results = new String("");
 		
 		if (portions[0].equals("accounts")) {
-			AccountHolder new_owner = AccountHolder.search(jsonObject.get("accountholder").toString())
-			if ((requestOwnerID==ID) ||
+			AccountHolder new_owner = AccountHolder.search(jsonObject.get("accountholder").toString());
+			if ((requestOwnerID==new_owner.getID()) ||
 				(requestOwnerRole.equals("Admin")) || 
 				(requestOwnerRole.equals("Employee"))
 				) {
@@ -232,53 +232,73 @@ public class APIServlet extends HttpServlet {
 				return;
 			}
 		} else if (portions[0].equals("users") || portions[0].equals("register")) {
-			ArrayList<String> fields = new ArrayList<String>(
-                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
-			Map<String, String> data = new HashMap<String, String>();
-			for (String field : fields) {
-                if (jsonObject.containsKey(field)) {
-                	data.put(field, jsonObject.get(field).toString());
-                } else {
-                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
-    				return;
-                }
+			if (requestOwnerRole.equals("Admin")) {
+				ArrayList<String> fields = new ArrayList<String>(
+	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+				Map<String, String> data = new HashMap<String, String>();
+				for (String field : fields) {
+	                if (jsonObject.containsKey(field)) {
+	                	data.put(field, jsonObject.get(field).toString());
+	                } else {
+	                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
+	    				return;
+	                }
+				}
+	            AccountHolder entry = new AccountHolder(data);
+	            entry.save();
+	            results = AccountHolderAPI.detail(entry.getID());
+	            if (results==null) {
+	            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
+	            	return; 
+	            }
+			} else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
+				return;
 			}
-            AccountHolder entry = new AccountHolder(data);
-            entry.save();
-            results = AccountHolderAPI.detail(entry.getID());
-            if (results==null) {
-            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
-            	return; 
-            }
 		} else if (portions[0].equals("deposit")) {
-			AccountAPI.transaction(
-					Integer.parseInt(jsonObject.get("accountId").toString()), 
-					Double.parseDouble(jsonObject.get("amount").toString()) 
-					);
-			res.setStatus(200);
-			PrintWriter out = res.getWriter();
-			out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString());
-			return;
+			if ((requestOwnerID==Integer.parseInt(jsonObject.get("accountId").toString())) || (requestOwnerRole.equals("Admin"))) {
+				AccountAPI.transaction(
+						Integer.parseInt(jsonObject.get("accountId").toString()), 
+						Double.parseDouble(jsonObject.get("amount").toString()) 
+						);
+				res.setStatus(200);
+				PrintWriter out = res.getWriter();
+				out.print(jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString());
+				return;
+			} else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
+				return;
+			}
 		} else if (portions[0].equals("withdraw")) {
-			AccountAPI.transaction(
-					Integer.parseInt(jsonObject.get("accountId").toString()), 
-					Double.parseDouble(jsonObject.get("amount").toString()) * -1
-					);
-			res.setStatus(200);
-			PrintWriter out = res.getWriter();
-			out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString());
-			return;
+			if ((requestOwnerID==Integer.parseInt(jsonObject.get("accountId").toString())) || (requestOwnerRole.equals("Admin"))) {
+				AccountAPI.transaction(
+						Integer.parseInt(jsonObject.get("accountId").toString()), 
+						Double.parseDouble(jsonObject.get("amount").toString()) * -1
+						);
+				res.setStatus(200);
+				PrintWriter out = res.getWriter();
+				out.print(jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString());
+				return;
+			} else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
+				return;
+			}
 		} else if (portions[0].equals("transfer")) {
-			String amount = jsonObject.get("amount").toString();
-			String source = jsonObject.get("sourceAccountId").toString();
-			String target = jsonObject.get("targetAccountId").toString();
-			AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount));
-			AccountAPI.transaction(Integer.parseInt(target), Double.parseDouble(amount) * -1);
-			res.setStatus(200);
-			String message = amount + " has been transferred from Account #" + source + " to Account #" + target;
-			PrintWriter out = res.getWriter();
-			out.print(message);
-			return;
+			if ((requestOwnerID==Integer.parseInt(jsonObject.get("sourceAccountId").toString())) || (requestOwnerRole.equals("Admin"))) {
+				String amount = jsonObject.get("amount").toString();
+				String source = jsonObject.get("sourceAccountId").toString();
+				String target = jsonObject.get("targetAccountId").toString();
+				AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount));
+				AccountAPI.transaction(Integer.parseInt(target), Double.parseDouble(amount) * -1);
+				res.setStatus(200);
+				String message = amount + " has been transferred from Account #" + source + " to Account #" + target;
+				PrintWriter out = res.getWriter();
+				out.print(message);
+				return;
+			} else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
+				return;
+			}
 		}
 		
 		res.setStatus(201);
@@ -336,66 +356,77 @@ public class APIServlet extends HttpServlet {
 		String results = new String("");
 		
 		if (portions[0].equals("accounts")) {
-			ArrayList<String> fields = new ArrayList<String>(
-                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
-			if (!jsonObject.containsKey("account_id")) {
-				res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
+			if (requestOwnerRole.equals("Admin")) {
+				ArrayList<String> fields = new ArrayList<String>(
+	                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
+				if (!jsonObject.containsKey("account_id")) {
+					res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
+					return;
+				}
+				int ID = Integer.parseInt(jsonObject.get("account_id").toString());
+				Map<String, String> data = new HashMap<String, String>();
+				for (String field : fields) {
+	                if (jsonObject.containsKey(field)) {
+	                	data.put(field, jsonObject.get(field).toString());
+	                } else {
+	                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
+	    				return;
+	                }
+				}
+				
+	            try {
+	            	Account entry = new Account(ID, data);
+	            	entry.save();
+	            	results = AccountAPI.detail(entry.getID());
+	            } catch (IllegalArgumentException e) {
+	            	res = ServletUtils.sendMessage(res, 400, e.toString());
+	            	return;
+	            }
+	            
+	            if (results==null) {
+	            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
+	            	return; 
+	            }
+			} else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-			int ID = Integer.parseInt(jsonObject.get("account_id").toString());
-			Map<String, String> data = new HashMap<String, String>();
-			for (String field : fields) {
-                if (jsonObject.containsKey(field)) {
-                	data.put(field, jsonObject.get(field).toString());
-                } else {
-                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
-    				return;
-                }
-			}
-			
-            try {
-            	Account entry = new Account(ID, data);
-            	entry.save();
-            	results = AccountAPI.detail(entry.getID());
-            } catch (IllegalArgumentException e) {
-            	res = ServletUtils.sendMessage(res, 400, e.toString());
-            	return;
-            }
-            
-            if (results==null) {
-            	res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
-            	return; 
-            }
 		} else if (portions[0].equals("users")) {
-			if (!jsonObject.containsKey("account_id")) {
-				res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
+			if ((requestOwnerRole.equals("Admin")) || (requestOwner==jsonObject.get("username").toString())) {
+				if (!jsonObject.containsKey("account_id")) {
+					res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
+					return;
+				}
+				int ID = Integer.parseInt(jsonObject.get("account_id").toString());
+				ArrayList<String> fields = new ArrayList<String>(
+	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+				Map<String, String> data = new HashMap<String, String>();
+				for (String field : fields) {
+	                if (jsonObject.containsKey(field)) {
+	                	data.put(field, jsonObject.get(field).toString());
+	                } else {
+	                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
+	    				return;
+	                }
+				}
+				try {
+					AccountHolder entry = new AccountHolder(ID, data);
+	            	entry.save();
+	            	results = AccountHolderAPI.detail(entry.getID());
+	            } catch (IllegalArgumentException e) {
+	            	res = ServletUtils.sendMessage(res, 400, e.toString());
+	            	return;
+	            }
+	            
+				if (results==null) {
+					res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
+	            	return; 
+	            }
+			else {
+				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-			int ID = Integer.parseInt(jsonObject.get("account_id").toString());
-			ArrayList<String> fields = new ArrayList<String>(
-                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
-			Map<String, String> data = new HashMap<String, String>();
-			for (String field : fields) {
-                if (jsonObject.containsKey(field)) {
-                	data.put(field, jsonObject.get(field).toString());
-                } else {
-                	res = ServletUtils.sendMessage(res, 400, "The field " + field + " was not provided");
-    				return;
-                }
-			}
-			try {
-				AccountHolder entry = new AccountHolder(ID, data);
-            	entry.save();
-            	results = AccountHolderAPI.detail(entry.getID());
-            } catch (IllegalArgumentException e) {
-            	res = ServletUtils.sendMessage(res, 400, e.toString());
-            	return;
-            }
-            
-			if (results==null) {
-				res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
-            	return; 
-            }
+		}
 		}
 		
 		System.out.println(jsonObject.get("status"));
