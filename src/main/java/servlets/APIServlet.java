@@ -96,8 +96,9 @@ public class APIServlet extends HttpServlet {
 				}
 			}
 		} else if (portions[0].equals("accounts")) {
+			Account accountholder = Account.search(ID);
 			if (portions.length == 2) {
-				if ((requestOwnerID==ID) ||
+				if ((requestOwnerID==accountholder.getFKID("accountholder")) ||
 					(requestOwnerRole.equals("Admin")) ||
 					(requestOwnerRole.equals("Employee"))) {
 					results = AccountAPI.detail(ID);
