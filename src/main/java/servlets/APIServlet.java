@@ -452,7 +452,7 @@ public class APIServlet extends HttpServlet {
 		if (pieces.getEndpoint().equals("accounts")) {
 			Account.delete(pieces.getID());
 		} else if (pieces.getEndpoint().equals("users")) {
-			System.out.println("Inside of DELETE users");
+			AccountHolder.delete(pieces.getID());
 		} else {
 			res = ServletUtils.sendMessage(res, 404, "Resource not found");
 			return;
