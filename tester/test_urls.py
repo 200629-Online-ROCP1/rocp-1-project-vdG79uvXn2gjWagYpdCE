@@ -84,17 +84,17 @@ if __name__ == "__main__":
         check("GET", endpoint + ID[endpoint], expected_status=403, token=tokens["NonOwner"])
 
     user_put = {
-        "firstname": "Nelson",
-        "role": "Employee",
-        "accountholder_id": 50,
+        "firstname": "Homer",
+        "role": "Standard",
+        "accountholder_id": 46,
         "email": "something_new@gmail.com",
-        "username": "nmuntz",
+        "username": "hsimpson",
         "password": "password",
-        "lastname": "Muntz"
+        "lastname": "Simpson"
         }
     check("PUT", "users", expected_status=202, token=tokens["Admin"], json=user_put)
     check("PUT", "users", expected_status=403, token=tokens["Employee"], json=user_put)
-    # check("PUT", "users", expected_status=202, token=tokens["Standard"], json=user_put)
+    check("PUT", "users", expected_status=202, token=tokens["Standard"], json=user_put)
     check("PUT", "users", expected_status=403, token=tokens["NonOwner"], json=user_put)
     account_put = {
         "account_id": 58,
@@ -108,3 +108,28 @@ if __name__ == "__main__":
     check("PUT", "accounts", expected_status=403, token=tokens["Employee"], json=account_put)
     check("PUT", "accounts", expected_status=403, token=tokens["Standard"], json=account_put)
     check("PUT", "accounts", expected_status=403, token=tokens["NonOwner"], json=account_put)
+
+    account_post = {
+        "deleted": "false",
+        "balance": "250.0",
+        "accountstatus": "Open",
+        "accounttype": "Savings",
+        "accountholder": "hsimpson",
+        }
+    check("POST", "accounts", expected_status=201, token=tokens["Admin"], json=account_post)
+    check("POST", "accounts", expected_status=201, token=tokens["Employee"], json=account_post)
+    check("POST", "accounts", expected_status=201, token=tokens["Standard"], json=account_post)
+    check("POST", "accounts", expected_status=403, token=tokens["NonOwner"], json=account_post)
+
+    user_post = {
+        "firstname": "New",
+        "role": "Standard",
+        "email": "new_user@gmail.com",
+        "username": "newuser",
+        "password": "something",
+        "lastname": "User"
+        }
+    check("POST", "register", expected_status=201, token=tokens["Admin"], json=user_post)
+    check("POST", "register", expected_status=403, token=tokens["Employee"], json=user_post)
+    check("POST", "register", expected_status=403, token=tokens["Standard"], json=user_post)
+    
