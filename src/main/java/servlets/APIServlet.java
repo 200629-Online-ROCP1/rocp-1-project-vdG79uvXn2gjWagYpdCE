@@ -393,12 +393,15 @@ public class APIServlet extends HttpServlet {
 				return;
 			}
 		} else if (portions[0].equals("users")) {
-			if ((requestOwnerRole.equals("Admin")) || (requestOwner==jsonObject.get("username").toString())) {
-				if (!jsonObject.containsKey("account_id")) {
-					res = ServletUtils.sendMessage(res, 400, "The field account_id was not provided");
+			if (
+				(requestOwnerRole.equals("Admin")) || 
+				(requestOwner.equals(jsonObject.get("username").toString()))
+			   ) {
+				if (!jsonObject.containsKey("accountholder_id")) {
+					res = ServletUtils.sendMessage(res, 400, "The field accountholder_id was not provided");
 					return;
 				}
-				int ID = Integer.parseInt(jsonObject.get("account_id").toString());
+				int ID = Integer.parseInt(jsonObject.get("accountholder_id").toString());
 				ArrayList<String> fields = new ArrayList<String>(
 	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
 				Map<String, String> data = new HashMap<String, String>();
@@ -423,15 +426,14 @@ public class APIServlet extends HttpServlet {
 					res = ServletUtils.sendMessage(res, 400, "There was a problem creating your object.");
 	            	return; 
 	            }
-			else {
+			} else {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
 		}
-		}
 		
 		System.out.println(jsonObject.get("status"));
-		res.setStatus(201);
+		res.setStatus(202);
 		PrintWriter out = res.getWriter();
 		out.print(results);
 	}
