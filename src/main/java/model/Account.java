@@ -189,6 +189,15 @@ public class Account {
 		AccountDAO dao = AccountDAO.getInstance();
 		dao.deleteAll();
 	}
+	
+	/** Does not actually delete the account, sets the deleted to true */
+	public static void delete(int ID) {
+		Map<String, String> data = new HashMap<String, String>();
+		Account account = Account.search(ID);
+		data.put("deleted", "true");
+		account.setField(data);
+		account.save();
+	}
 
 	public static ArrayList<Account> retrieveAll() {
 		AccountDAO dao = AccountDAO.getInstance();

@@ -450,7 +450,7 @@ public class APIServlet extends HttpServlet {
 		
 		URLPortions pieces = new URLPortions(req);
 		if (pieces.getEndpoint().equals("accounts")) {
-			System.out.println("Inside of DELETE accounts");
+			Account.delete(pieces.getID());
 		} else if (pieces.getEndpoint().equals("users")) {
 			System.out.println("Inside of DELETE users");
 		} else {
