@@ -438,6 +438,8 @@ public class APIServlet extends HttpServlet {
 	
 	protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res = ServletUtils.APISetup(res);
+		if (!Authorization.processJWT(req, res)) { return; }
+		
 		res = ServletUtils.sendMessage(res, 200, "You are inside the doDelete");
 		return;
 	}
