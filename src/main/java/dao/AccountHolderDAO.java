@@ -25,7 +25,7 @@ public class AccountHolderDAO {
 	public boolean insert(AccountHolder accountHolder) {
 		try {
 			Connection dbconn = DBConnector.getConnection();
-			String sql = "INSERT INTO accountholder(username, email, firstname, lastname, password, role) VALUES(?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO accountholder(username, email, firstname, lastname, password, role, deleted) VALUES(?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountHolder.getField("username"));
 			statement.setString(2, accountHolder.getField("email"));
@@ -33,6 +33,7 @@ public class AccountHolderDAO {
 			statement.setString(4, accountHolder.getField("lastname"));
 			statement.setString(5, Password.makeSHA256(accountHolder.getField("password")));
 			statement.setInt(6, accountHolder.getRoleID());
+			statement.setBoolean(7, Boolean.parseBoolean(accountHolder.getField("deleted")));
 
 			if (!statement.execute()) {
 				return true;
@@ -46,7 +47,7 @@ public class AccountHolderDAO {
 	public boolean update(AccountHolder accountHolder) {
 		try {
 			Connection dbconn = DBConnector.getConnection();
-			String sql = "UPDATE accountholder SET username=?, email=?, firstname=?, lastname=?, password=?, role=? WHERE accountholder_id=?";
+			String sql = "UPDATE accountholder SET username=?, email=?, firstname=?, lastname=?, password=?, role=?, deleted=? WHERE accountholder_id=?";
 			PreparedStatement statement = dbconn.prepareStatement(sql);
 			statement.setString(1, accountHolder.getField("username"));
 			statement.setString(2, accountHolder.getField("email"));
@@ -54,7 +55,8 @@ public class AccountHolderDAO {
 			statement.setString(4, accountHolder.getField("lastname"));
 			statement.setString(5, Password.makeSHA256(accountHolder.getField("password")));
 			statement.setInt(6, accountHolder.getRoleID());
-			statement.setInt(7, accountHolder.getID());
+			statement.setBoolean(7, Boolean.parseBoolean(accountHolder.getField("deleted")));
+			statement.setInt(8, accountHolder.getID());
 
 			if (!statement.execute()) {
 				return true;
@@ -81,6 +83,7 @@ public class AccountHolderDAO {
 				data.put("lastname", result.getString("lastname"));
 				data.put("password", result.getString("password"));
 				data.put("email", result.getString("email"));
+				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
 				return new AccountHolder(result.getInt("accountholder_id"), data);
 			}
 		} catch (SQLException e) {
@@ -106,6 +109,7 @@ public class AccountHolderDAO {
 				data.put("lastname", result.getString("lastname"));
 				data.put("password", result.getString("password"));
 				data.put("email", result.getString("email"));
+				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
 				return new AccountHolder(result.getInt("accountholder_id"), data);
 			}
 		} catch (SQLException e) {
@@ -154,6 +158,7 @@ public class AccountHolderDAO {
 				data.put("lastname", result.getString("lastname"));
 				data.put("password", result.getString("password"));
 				data.put("email", result.getString("email"));
+				data.put("deleted", String.valueOf(result.getBoolean("deleted")));
 				all.add(new AccountHolder(result.getInt("accountholder_id"), data));
 			}
 			return all;

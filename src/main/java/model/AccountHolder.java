@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class AccountHolder {
 	private ArrayList<String> fields = new ArrayList<String>(
-			Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+			Arrays.asList("username", "password", "firstname", "lastname", "email", "role", "deleted"));
 	private Map<String, String> fieldValues = new HashMap<String, String>();
 	private Role role_fk;
 	private int primaryKey = 0;
@@ -129,8 +129,11 @@ public class AccountHolder {
 	}
 
 	public static void delete(int ID) {
-		AccountHolderDAO dao = AccountHolderDAO.getInstance();
-		dao.delete(ID);
+		Map<String, String> data = new HashMap<String, String>();
+		AccountHolder accountholder = AccountHolder.search(ID);
+		data.put("deleted", "true");
+		accountholder.setField(data);
+		accountholder.save();
 	}
 
 	public static void deleteAll() {
