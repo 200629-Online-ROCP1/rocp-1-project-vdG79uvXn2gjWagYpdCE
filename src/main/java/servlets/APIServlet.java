@@ -259,17 +259,18 @@ public class APIServlet extends HttpServlet {
 		} else if (portions[0].equals("deposit")) {
 			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("accountId").toString()));
 			if ((requestOwnerID==accountholder.getFKID("accountholder")) || (requestOwnerRole.equals("Admin"))) {
-				AccountAPI.transaction(
-						Integer.parseInt(jsonObject.get("accountId").toString()), 
-						Double.parseDouble(jsonObject.get("amount").toString()) 
-						);
-				String message = "$" + jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString();
-				res = ServletUtils.sendMessage(res, 200, message);
-				return;
+				String amount = jsonObject.get("amount").toString();
+				String source = jsonObject.get("accountId").toString();
+				if (AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount))) {
+					String message = "$" + jsonObject.get("amount").toString() + " has been deposited to Account #" + jsonObject.get("accountId").toString();
+					res = ServletUtils.sendMessage(res, 200, message);
+				} else {
+					res = ServletUtils.sendMessage(res, 403, "The deposit is not allowed.");
+				}
 			} else {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
-				return;
 			}
+			return;
 		} else if (portions[0].equals("withdraw")) {
 			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("accountId").toString()));
 			if ((requestOwnerID==accountholder.getFKID("accountholder")) || (requestOwnerRole.equals("Admin"))) {
@@ -279,7 +280,7 @@ public class APIServlet extends HttpServlet {
 					String message = "$" + jsonObject.get("amount").toString() + " has been withdrawn from Account #" + jsonObject.get("accountId").toString();
 					res = ServletUtils.sendMessage(res, 200, message);
 				} else {
-					res = ServletUtils.sendMessage(res, 403, "This would result in the balance going below $0.");
+					res = ServletUtils.sendMessage(res, 403, "The withdrawal is not allowed.");
 				}
 			} else {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
@@ -295,7 +296,7 @@ public class APIServlet extends HttpServlet {
 					String message = "$" + amount + " has been transferred from Account #" + source + " to Account #" + target;
 					res = ServletUtils.sendMessage(res, 200, message);
 				} else {
-					res = ServletUtils.sendMessage(res, 403, "This would result in the balance going below $0.");
+					res = ServletUtils.sendMessage(res, 403, "The transaction is not allowed.");
 				}
 				return;
 			} else {
