@@ -171,7 +171,7 @@ public class Account {
 	// Database operations - save(insert or update), search, refresh
 	public void save() throws IllegalArgumentException {
 		AccountDAO dao = AccountDAO.getInstance();
-		if (!saved) { 
+		if (primaryKey > 0) { 
 			if (dao.update(this)) {
 				saved = true;
 			}

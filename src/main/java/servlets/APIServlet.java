@@ -117,6 +117,10 @@ public class APIServlet extends HttpServlet {
 		
 		if (pieces.getEndpoint().equals("accounts")) {
 			AccountHolder new_owner = AccountHolder.search(jsonObject.get("accountholder").toString());
+			if (new_owner==null) {
+				res = ServletUtils.sendMessage(res, 400, "The account holder is not valid");
+				return;
+			}
 			if ((Authorization.getRequestOwnerID()==new_owner.getID()) ||
 				(Authorization.getRequestOwnerRole().equals("Admin")) || 
 				(Authorization.getRequestOwnerRole().equals("Employee"))
@@ -137,6 +141,7 @@ public class APIServlet extends HttpServlet {
 	            	Account entry = new Account(data);
 	            	entry.save();
 	            	results = AccountAPI.detail(entry.getID());
+	            	
 	            } catch (IllegalArgumentException e) {
 	            	res = ServletUtils.sendMessage(res, 400, e.toString());
 	            	return;
