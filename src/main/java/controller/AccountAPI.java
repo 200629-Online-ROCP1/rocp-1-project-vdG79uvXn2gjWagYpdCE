@@ -35,13 +35,15 @@ public class AccountAPI {
 		return jsonall.toJSONString();
 	}
 	
-	public static void transaction(int ID, double amount) {
+	public static boolean transaction(int ID, double amount) {
 		Account obj = Account.search(ID);
 		double balance = Double.parseDouble(obj.getField("balance"));
 		Double new_balance = balance + amount;
+		if (new_balance < 0) { return false; }
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("balance", new_balance.toString());
 		obj.setField(data);
 		obj.save();
+		return true;
 	}
 }
