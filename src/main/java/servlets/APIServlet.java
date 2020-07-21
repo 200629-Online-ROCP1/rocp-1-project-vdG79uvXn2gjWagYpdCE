@@ -105,6 +105,12 @@ public class APIServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
 		JSONObject jsonObject;
+		try {
+			jsonObject = ServletUtils.bodyAsJSON(req, res);
+		} catch (ParseException e){
+			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
+			return;
+		} 
 		if (!Authorization.processJWT(req, res)) { return; }
 		URLPortions pieces = new URLPortions(req);
 		String results = "";
