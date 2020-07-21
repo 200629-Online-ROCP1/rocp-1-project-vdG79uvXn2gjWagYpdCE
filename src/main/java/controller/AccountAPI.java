@@ -35,13 +35,20 @@ public class AccountAPI {
 		return jsonall.toJSONString();
 	}
 	
-	public static void transaction(int ID, double amount) {
+	/** Used when a servlet does a withdrawal, deposit, or transfer */
+	public static boolean transaction(int ID, double amount) {
 		Account obj = Account.search(ID);
+//		System.out.println("deleted >> " + obj.getField("deleted"));
+//		System.out.println("status >> " + obj.getField("accountstatus"));
+		if (!obj.getField("accountstatus").equals("Open")) { return false; }
+		if (obj.getField("deleted").equals("true")) { return false; }
 		double balance = Double.parseDouble(obj.getField("balance"));
 		Double new_balance = balance + amount;
+		if (new_balance < 0) { return false; }
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("balance", new_balance.toString());
 		obj.setField(data);
 		obj.save();
+		return true;
 	}
 }

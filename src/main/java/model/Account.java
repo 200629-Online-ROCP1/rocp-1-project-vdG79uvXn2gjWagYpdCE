@@ -48,6 +48,7 @@ public class Account {
 					if (data.containsKey("accountstatus_id")) {
 						int id = Integer.parseInt(data.get("accountstatus_id"));
 						this.accountstatus_fk = AccountStatus.search(id);
+						this.fieldValues.put("accountstatus", this.accountstatus_fk.getField("status"));
 					} else {
 						System.out.println("ERROR: No value was provided for field " + field);
 					}
