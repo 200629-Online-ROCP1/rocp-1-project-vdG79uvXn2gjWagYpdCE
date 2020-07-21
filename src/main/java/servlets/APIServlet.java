@@ -311,56 +311,22 @@ public class APIServlet extends HttpServlet {
 	}
 	
 	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		res.setContentType("application/json");
-		
-		String auth = req.getHeader("authorization");
-		String requestOwner;
-		String requestOwnerRole;
-		int requestOwnerID;
-		if (auth==null) { 
-			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
-			return; 
-		} else {
-			String token = auth.replace("Bearer ", "");
-			try {
-				Claims claims = JWT.decode(token);
-				requestOwner = claims.get("username").toString();
-				AccountHolder obj = AccountHolder.search(requestOwner);
-				requestOwnerRole = obj.getField("role");
-				requestOwnerID = obj.getID(); 
-			} catch (MalformedJwtException e) {
-				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
-				return;
-			}
-		}
-		
-		JSONParser parser = new JSONParser();
 		JSONObject jsonObject;
-		
-		BufferedReader reader = req.getReader();
-		StringBuilder s = new StringBuilder();
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-		String body = new String(s);
+		res = ServletUtils.APISetup(res);
+		if (!Authorization.processJWT(req, res)) { return; }
 		
 		try {
-			Object jsonObj = parser.parse(body);
-			jsonObject = (JSONObject) jsonObj;
-			
+			jsonObject = ServletUtils.bodyAsJSON(req, res);
 		} catch (ParseException e){
 			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
 			return;
 		}
 		
-		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
-		String[] portions = URI.split("/");
-		String results = new String("");
+		URLPortions pieces = new URLPortions(req);
 		
-		if (portions[0].equals("accounts")) {
-			if (requestOwnerRole.equals("Admin")) {
+		String results = "";
+		if (pieces.getEndpoint().equals("accounts")) {
+			if (Authorization.getRequestOwnerRole().equals("Admin")) {
 				ArrayList<String> fields = new ArrayList<String>(
 	                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
 				if (!jsonObject.containsKey("account_id")) {
@@ -395,10 +361,10 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-		} else if (portions[0].equals("users")) {
+		} else if (pieces.getEndpoint().equals("users")) {
 			if (
-				(requestOwnerRole.equals("Admin")) || 
-				(requestOwner.equals(jsonObject.get("username").toString()))
+				(Authorization.getRequestOwnerRole().equals("Admin")) || 
+				(Authorization.getRequestOwner().equals(jsonObject.get("username").toString()))
 			   ) {
 				if (!jsonObject.containsKey("accountholder_id")) {
 					res = ServletUtils.sendMessage(res, 400, "The field accountholder_id was not provided");
