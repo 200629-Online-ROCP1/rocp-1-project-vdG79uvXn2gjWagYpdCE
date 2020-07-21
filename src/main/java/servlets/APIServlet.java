@@ -191,7 +191,7 @@ public class APIServlet extends HttpServlet {
 		} else if (portions[0].equals("users") || portions[0].equals("register")) {
 			if (requestOwnerRole.equals("Admin")) {
 				ArrayList<String> fields = new ArrayList<String>(
-	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "deleted", "role"));
 				Map<String, String> data = new HashMap<String, String>();
 				for (String field : fields) {
 	                if (jsonObject.containsKey(field)) {
@@ -328,7 +328,7 @@ public class APIServlet extends HttpServlet {
 				}
 				int ID = Integer.parseInt(jsonObject.get("accountholder_id").toString());
 				ArrayList<String> fields = new ArrayList<String>(
-	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "deleted", "role"));
 				Map<String, String> data = new HashMap<String, String>();
 				for (String field : fields) {
 	                if (jsonObject.containsKey(field)) {

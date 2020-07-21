@@ -86,8 +86,9 @@ if __name__ == "__main__":
     user_put = {
         "firstname": "Homer",
         "role": "Standard",
+        "deleted": "false",
         "accountholder_id": 46,
-        "email": "something_new@gmail.com",
+        "email": "doh2112@gmail.com",
         "username": "hsimpson",
         "password": "password",
         "lastname": "Simpson"
@@ -121,10 +122,16 @@ if __name__ == "__main__":
     check("POST", "accounts", expected_status=201, token=tokens["Standard"], json=account_post)
     check("POST", "accounts", expected_status=403, token=tokens["NonOwner"], json=account_post)
 
+    tmp = "BadInput"
+    for field in ["accountstatus", "accounttype", "accountholder"]:
+        tmp, account_post[field] = account_post[field], tmp
+        check("POST", "accounts", expected_status=400, token=tokens["Admin"], json=account_post)
+        account_post[field], tmp = tmp, account_post[field]
+ 
     import random
     extra = random.randint(0, 5000)
-
     user_post = {
+        "deleted": "false",
         "firstname": "New",
         "role": "Standard",
         "email": f"new_user{extra}@gmail.com",

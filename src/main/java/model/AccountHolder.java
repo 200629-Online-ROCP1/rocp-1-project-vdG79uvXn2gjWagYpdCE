@@ -23,7 +23,7 @@ public class AccountHolder {
 		super();
 	}
 
-	public AccountHolder(Map<String, String> data) {
+	public AccountHolder(Map<String, String> data) throws IllegalArgumentException {
 		super();
 		for (String field : fields) {
 			if (data.containsKey(field)) {
@@ -35,7 +35,7 @@ public class AccountHolder {
 						this.fieldValues.put("role", this.role_fk.getField("role"));
 					}
 				} else {
-					System.out.println("ERROR: No value was provided for field " + field);
+					throw new IllegalArgumentException("No value was provided for field " + field);
 				}
 			}
 		}
