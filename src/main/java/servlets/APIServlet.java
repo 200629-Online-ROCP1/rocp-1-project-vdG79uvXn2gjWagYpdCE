@@ -104,60 +104,16 @@ public class APIServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
-		
-		String auth = req.getHeader("authorization");
-		String requestOwner;
-		String requestOwnerRole;
-		int requestOwnerID;
-		if (auth==null) {
-			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
-			return;
-		} else {
-			String token = auth.replace("Bearer ", "");
-			try {
-				Claims claims = JWT.decode(token);
-				requestOwner = claims.get("username").toString();
-				AccountHolder obj = AccountHolder.search(requestOwner);
-				requestOwnerRole = obj.getField("role");
-				requestOwnerID = obj.getID(); 
-			} catch (MalformedJwtException e) {
-				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
-				return;
-			}
-		}
-		
-		JSONParser parser = new JSONParser();
 		JSONObject jsonObject;
+		if (!Authorization.processJWT(req, res)) { return; }
+		URLPortions pieces = new URLPortions(req);
+		String results = "";
 		
-		BufferedReader reader = req.getReader();
-		StringBuilder s = new StringBuilder();
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-		String body = new String(s);
-		
-		try {
-			Object jsonObj = parser.parse(body);
-			jsonObject = (JSONObject) jsonObj;
-			
-		} catch (ParseException e){
-			System.out.println("position: " + e.getPosition());
-			System.out.println(e);
-			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
-			return;
-		}
-		
-		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
-		String[] portions = URI.split("/");
-		String results = new String("");
-		
-		if (portions[0].equals("accounts")) {
+		if (pieces.getEndpoint().equals("accounts")) {
 			AccountHolder new_owner = AccountHolder.search(jsonObject.get("accountholder").toString());
-			if ((requestOwnerID==new_owner.getID()) ||
-				(requestOwnerRole.equals("Admin")) || 
-				(requestOwnerRole.equals("Employee"))
+			if ((Authorization.getRequestOwnerID()==new_owner.getID()) ||
+				(Authorization.getRequestOwnerRole().equals("Admin")) || 
+				(Authorization.getRequestOwnerRole().equals("Employee"))
 				) {
 				ArrayList<String> fields = new ArrayList<String>(
 	                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
@@ -188,8 +144,8 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-		} else if (portions[0].equals("users") || portions[0].equals("register")) {
-			if (requestOwnerRole.equals("Admin")) {
+		} else if (pieces.getEndpoint().equals("users") || pieces.getEndpoint().equals("register")) {
+			if (Authorization.getRequestOwnerRole().equals("Admin")) {
 				ArrayList<String> fields = new ArrayList<String>(
 	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "deleted", "role"));
 				Map<String, String> data = new HashMap<String, String>();
@@ -212,9 +168,9 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-		} else if (portions[0].equals("deposit")) {
+		} else if (pieces.getEndpoint().equals("deposit")) {
 			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("accountId").toString()));
-			if ((requestOwnerID==accountholder.getFKID("accountholder")) || (requestOwnerRole.equals("Admin"))) {
+			if ((Authorization.getRequestOwnerID()==accountholder.getFKID("accountholder")) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("accountId").toString();
 				if (AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount))) {
@@ -227,9 +183,9 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 			}
 			return;
-		} else if (portions[0].equals("withdraw")) {
+		} else if (pieces.getEndpoint().equals("withdraw")) {
 			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("accountId").toString()));
-			if ((requestOwnerID==accountholder.getFKID("accountholder")) || (requestOwnerRole.equals("Admin"))) {
+			if ((Authorization.getRequestOwnerID()==accountholder.getFKID("accountholder")) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("accountId").toString();
 				if (AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount) * -1)) {
@@ -242,8 +198,8 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 			}
 			return;
-		} else if (portions[0].equals("transfer")) {
-			if ((requestOwnerID==Integer.parseInt(jsonObject.get("sourceAccountId").toString())) || (requestOwnerRole.equals("Admin"))) {
+		} else if (pieces.getEndpoint().equals("transfer")) {
+			if ((Authorization.getRequestOwnerID()==Integer.parseInt(jsonObject.get("sourceAccountId").toString())) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("sourceAccountId").toString();
 				String target = jsonObject.get("targetAccountId").toString();
