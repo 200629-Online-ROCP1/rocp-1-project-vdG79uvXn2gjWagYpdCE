@@ -9,15 +9,11 @@ import java.sql.ResultSet;
 import database.DBConnector;
 import model.AccountStatus;
 
-public class AccountStatusDAO {
-	private static AccountStatusDAO self = new AccountStatusDAO();
-
-	private AccountStatusDAO() {
-	}
-
-	public static AccountStatusDAO getInstance() {
-		return self;
-	}
+public class AccountStatusDAO extends ModelDAO {
+private static AccountStatusDAO self = new AccountStatusDAO("accountstatus");
+	
+	public static AccountStatusDAO getInstance() { return self; }
+	protected AccountStatusDAO(String tablename) { super(tablename); }
 
 	public boolean insert(AccountStatus accountStatus) {
 		try {
@@ -88,17 +84,6 @@ public class AccountStatusDAO {
 			System.out.println(e);
 		}
 		return null;
-	}
-
-	public void delete() {
-		try {
-			Connection dbconn = DBConnector.getConnection();
-			String sql = "DELETE FROM accountstatus";
-			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.execute();
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
 	}
 
 	public ArrayList<AccountStatus> retrieveAll() {
