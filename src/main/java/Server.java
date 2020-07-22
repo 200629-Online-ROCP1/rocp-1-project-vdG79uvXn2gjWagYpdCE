@@ -1,14 +1,10 @@
 import model.*;
 import java.util.*;
-import utils.JWT;
-import io.jsonwebtoken.Claims;
 
 public class Server {
 
 	static public void main(String... args) {
 
-		// Logger.setFilename("/tmp/bank_app.log");
-		// Logger.makeEntry("INFO", "Starting application");
 		initialDataLoad();
 		
 //		String jwt = JWT.create("hsimpson");
@@ -20,15 +16,15 @@ public class Server {
 
 	static public void initialDataLoad() {
 		Account.deleteAll();
-//		AccountHolder.deleteAll();
-//		AccountStatus.deleteAll();
-//		AccountType.deleteAll();
-//		Role.deleteAll();
+		AccountHolder.deleteAll();
+		AccountStatus.deleteAll();
+		AccountType.deleteAll();
+		Role.deleteAll();
 
-//		initialDataLoadAccountStatus();
-//		initialDataLoadAccountType();
-//		initialDataLoadRole();
-//		initialDataLoadAccountHolder();
+		initialDataLoadAccountStatus();
+		initialDataLoadAccountType();
+		initialDataLoadRole();
+		initialDataLoadAccountHolder();
 		initialDataLoadAccount();
 	}
 

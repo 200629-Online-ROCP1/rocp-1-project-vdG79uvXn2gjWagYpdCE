@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import dao.AccountDAO;
-import dao.AccountTypeDAO;
-import logger.Logger;
-
 public class DBConnector {
 	/**
 	 * Utility class to create a connection to our database. The username and

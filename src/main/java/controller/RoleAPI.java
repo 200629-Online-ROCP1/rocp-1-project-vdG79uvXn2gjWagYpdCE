@@ -2,8 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 import org.json.simple.JSONArray;
-
-import model.AccountStatus;
 import model.Role;
 
 public class RoleAPI {

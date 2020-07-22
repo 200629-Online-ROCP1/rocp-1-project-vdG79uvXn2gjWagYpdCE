@@ -1,10 +1,7 @@
 package dao;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.sql.SQLException;
-import java.awt.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -136,20 +133,4 @@ public class AccountTypeDAO {
 		}
 		return null;
 	}
-
-	public boolean insertStatement(AccountType accountType) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public AccountType findByFirstName(String firstName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Set<AccountType> selectAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

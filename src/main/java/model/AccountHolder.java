@@ -3,10 +3,7 @@ package model;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 import dao.AccountHolderDAO;
-import dao.AccountStatusDAO;
-import model.Role;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 

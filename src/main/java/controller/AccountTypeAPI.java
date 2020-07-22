@@ -1,11 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
-
 import org.json.simple.JSONArray;
-
-import model.Account;
-import model.AccountStatus;
 import model.AccountType;
 
 public class AccountTypeAPI {

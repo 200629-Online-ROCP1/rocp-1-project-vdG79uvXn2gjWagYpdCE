@@ -1,7 +1,5 @@
 package servlets;
 
-import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -16,13 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.parser.ParseException;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import controller.*;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.MalformedJwtException;
 import model.*;
-import utils.JWT;
 
 public class APIServlet extends HttpServlet {
 

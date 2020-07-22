@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import database.DBConnector;
-import model.AccountStatus;
 import model.Role;
 
 public class RoleDAO {
