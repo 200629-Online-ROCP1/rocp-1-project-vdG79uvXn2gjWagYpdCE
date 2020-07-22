@@ -37,27 +37,15 @@ public class Authorization {
 		return true;
 	}
 
-	private static int getRequestOwnerID() {
+	public static int getRequestOwnerID() {
 		return requestOwnerID;
-	}
-
-	private static void setRequestOwnerID(int requestOwnerID) {
-		Authorization.requestOwnerID = requestOwnerID;
 	}
 
 	public static String getRequestOwner() {
 		return requestOwner;
 	}
 
-	public static void setRequestOwner(String requestOwner) {
-		Authorization.requestOwner = requestOwner;
-	}
-
 	public static String getRequestOwnerRole() {
 		return requestOwnerRole;
-	}
-
-	public static void setRequestOwnerRole(String requestOwnerRole) {
-		Authorization.requestOwnerRole = requestOwnerRole;
 	}
 }

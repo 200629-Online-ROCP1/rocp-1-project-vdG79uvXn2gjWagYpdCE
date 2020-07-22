@@ -2,8 +2,6 @@ package controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import servlets.ServletUtils;
-
 public class URLPortions {
 	private String[] portions;
 	private int len;

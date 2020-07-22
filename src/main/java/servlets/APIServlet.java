@@ -1,13 +1,9 @@
 package servlets;
 
-import servlets.ServletUtils;
-import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,108 +14,62 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.parser.ParseException;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import controller.*;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.MalformedJwtException;
 import model.*;
-import utils.JWT;
-import io.jsonwebtoken.Claims;
 
 public class APIServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		res.setContentType("application/json");
+		res = ServletUtils.APISetup(res);
+		if (!Authorization.processJWT(req, res)) { return; }
+		URLPortions pieces = new URLPortions(req);
+		String results = "";
 		
-		String auth = req.getHeader("authorization");
-		String requestOwner;
-		String requestOwnerRole;
-		int requestOwnerID;
-		if (auth==null) {
-			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
-			return;
-		} else {
-			String token = auth.replace("Bearer ", "");
-			try {
-				Claims claims = JWT.decode(token);
-				requestOwner = claims.get("username").toString();
-				AccountHolder obj = AccountHolder.search(requestOwner);
-				requestOwnerRole = obj.getField("role");
-				requestOwnerID = obj.getID(); 
-			} catch (MalformedJwtException e) {
-				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
-				return;
-			}
-		}
-		
-		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
-		String[] portions = URI.split("/");
-		int ID = 0;
-
-		if (portions.length == 2) {
-			try {
-				ID = Integer.parseInt(portions[1]);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				res = ServletUtils.sendMessage(res, 400, "The id you provided is not an integer");
-				return;
-			}
-		} else if (portions.length == 3) {  //TODO refactor into switch
-			try {
-				ID = Integer.parseInt(portions[2]);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				res = ServletUtils.sendMessage(res, 400, "The id you provided is not an integer");
-				return;
-			}
-		}
-
-		String results = new String("");
-		if (portions[0].equals("users")) {
-			if (portions.length == 2) {
-				if ((requestOwnerID==ID) ||
-					(requestOwnerRole.equals("Admin")) ||
-					(requestOwnerRole.equals("Employee"))) 
+		if (pieces.getEndpoint().equals("users")) {
+			if (pieces.getLength() == 2) {
+				if ((Authorization.getRequestOwnerID()==pieces.getID()) ||
+					(Authorization.getRequestOwnerRole().equals("Admin")) ||
+					(Authorization.getRequestOwnerRole().equals("Employee"))) 
 				{
-					results = AccountHolderAPI.detail(ID);
+					results = AccountHolderAPI.detail(pieces.getID());
 				} else {
 					res = ServletUtils.sendMessage(res, 403, "Forbidden");
 					return;
 				}
 			} else {
-				if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
+				if ((Authorization.getRequestOwnerRole().equals("Admin"))||(Authorization.getRequestOwnerRole().equals("Employee"))) {
 					results = AccountHolderAPI.list();
 				} else {
 					res = ServletUtils.sendMessage(res, 403, "Forbidden");
 					return;
 				}
 			}
-		} else if (portions[0].equals("accounts")) {
-			Account accountholder = Account.search(ID);
-			if (portions.length == 2) {
-				if ((requestOwnerID==accountholder.getFKID("accountholder")) ||
-					(requestOwnerRole.equals("Admin")) ||
-					(requestOwnerRole.equals("Employee"))) {
-					results = AccountAPI.detail(ID);
+		} else if (pieces.getEndpoint().equals("accounts")) {
+			Account accountholder = Account.search(pieces.getID());
+			if (pieces.getLength() == 2) {
+				if ((Authorization.getRequestOwnerID()==accountholder.getFKID("accountholder")) ||
+					(Authorization.getRequestOwnerRole().equals("Admin")) ||
+					(Authorization.getRequestOwnerRole().equals("Employee"))) {
+					results = AccountAPI.detail(pieces.getID());
 				} else {
 					res = ServletUtils.sendMessage(res, 403, "Forbidden");
 					return;
 				}
-			} else if (portions.length == 3) {
-				if (portions[1].equals("status")) {
-					if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
-						results = AccountAPI.filter("accountstatus", ID);
+			} else if (pieces.getLength() == 3) {
+				if (pieces.getFilterField().equals("status")) {
+					if ((Authorization.getRequestOwnerRole().equals("Admin"))||(Authorization.getRequestOwnerRole().equals("Employee"))) {
+						results = AccountAPI.filter("accountstatus", pieces.getID());
 					} else {
 						res = ServletUtils.sendMessage(res, 403, "Forbidden");
 						return;
 					}
-				} else if (portions[1].equals("owner")) {
-					if ((requestOwnerID==ID) ||
-						(requestOwnerRole.equals("Admin")) ||
-						(requestOwnerRole.equals("Employee"))) 
+				} else if (pieces.getFilterField().equals("owner")) {
+					if ((Authorization.getRequestOwnerID()==pieces.getID()) ||
+						(Authorization.getRequestOwnerRole().equals("Admin")) ||
+						(Authorization.getRequestOwnerRole().equals("Employee"))) 
 					{
-						results = AccountAPI.filter("accountholder", ID);
+						results = AccountAPI.filter("accountholder", pieces.getID());
 					} else {
 						res = ServletUtils.sendMessage(res, 403, "Forbidden");
 						return;
@@ -130,7 +80,7 @@ public class APIServlet extends HttpServlet {
 					return; 
 				}
 			} else {
-				if ((requestOwnerRole.equals("Admin"))||(requestOwnerRole.equals("Employee"))) {
+				if ((Authorization.getRequestOwnerRole().equals("Admin"))||(Authorization.getRequestOwnerRole().equals("Employee"))) {
 					results = AccountAPI.list();
 				} else {
 					res = ServletUtils.sendMessage(res, 403, "Forbidden");
@@ -148,60 +98,26 @@ public class APIServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
-		
-		String auth = req.getHeader("authorization");
-		String requestOwner;
-		String requestOwnerRole;
-		int requestOwnerID;
-		if (auth==null) {
-			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
-			return;
-		} else {
-			String token = auth.replace("Bearer ", "");
-			try {
-				Claims claims = JWT.decode(token);
-				requestOwner = claims.get("username").toString();
-				AccountHolder obj = AccountHolder.search(requestOwner);
-				requestOwnerRole = obj.getField("role");
-				requestOwnerID = obj.getID(); 
-			} catch (MalformedJwtException e) {
-				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
-				return;
-			}
-		}
-		
-		JSONParser parser = new JSONParser();
 		JSONObject jsonObject;
-		
-		BufferedReader reader = req.getReader();
-		StringBuilder s = new StringBuilder();
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-		String body = new String(s);
-		
 		try {
-			Object jsonObj = parser.parse(body);
-			jsonObject = (JSONObject) jsonObj;
-			
+			jsonObject = ServletUtils.bodyAsJSON(req, res);
 		} catch (ParseException e){
-			System.out.println("position: " + e.getPosition());
-			System.out.println(e);
 			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
 			return;
-		}
+		} 
+		if (!Authorization.processJWT(req, res)) { return; }
+		URLPortions pieces = new URLPortions(req);
+		String results = "";
 		
-		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
-		String[] portions = URI.split("/");
-		String results = new String("");
-		
-		if (portions[0].equals("accounts")) {
+		if (pieces.getEndpoint().equals("accounts")) {
 			AccountHolder new_owner = AccountHolder.search(jsonObject.get("accountholder").toString());
-			if ((requestOwnerID==new_owner.getID()) ||
-				(requestOwnerRole.equals("Admin")) || 
-				(requestOwnerRole.equals("Employee"))
+			if (new_owner==null) {
+				res = ServletUtils.sendMessage(res, 400, "The account holder is not valid");
+				return;
+			}
+			if ((Authorization.getRequestOwnerID()==new_owner.getID()) ||
+				(Authorization.getRequestOwnerRole().equals("Admin")) || 
+				(Authorization.getRequestOwnerRole().equals("Employee"))
 				) {
 				ArrayList<String> fields = new ArrayList<String>(
 	                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
@@ -219,6 +135,7 @@ public class APIServlet extends HttpServlet {
 	            	Account entry = new Account(data);
 	            	entry.save();
 	            	results = AccountAPI.detail(entry.getID());
+	            	
 	            } catch (IllegalArgumentException e) {
 	            	res = ServletUtils.sendMessage(res, 400, e.toString());
 	            	return;
@@ -232,10 +149,10 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-		} else if (portions[0].equals("users") || portions[0].equals("register")) {
-			if (requestOwnerRole.equals("Admin")) {
+		} else if (pieces.getEndpoint().equals("users") || pieces.getEndpoint().equals("register")) {
+			if (Authorization.getRequestOwnerRole().equals("Admin")) {
 				ArrayList<String> fields = new ArrayList<String>(
-	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "deleted", "role"));
 				Map<String, String> data = new HashMap<String, String>();
 				for (String field : fields) {
 	                if (jsonObject.containsKey(field)) {
@@ -256,9 +173,9 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-		} else if (portions[0].equals("deposit")) {
+		} else if (pieces.getEndpoint().equals("deposit")) {
 			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("accountId").toString()));
-			if ((requestOwnerID==accountholder.getFKID("accountholder")) || (requestOwnerRole.equals("Admin"))) {
+			if ((Authorization.getRequestOwnerID()==accountholder.getFKID("accountholder")) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("accountId").toString();
 				if (AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount))) {
@@ -271,9 +188,9 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 			}
 			return;
-		} else if (portions[0].equals("withdraw")) {
+		} else if (pieces.getEndpoint().equals("withdraw")) {
 			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("accountId").toString()));
-			if ((requestOwnerID==accountholder.getFKID("accountholder")) || (requestOwnerRole.equals("Admin"))) {
+			if ((Authorization.getRequestOwnerID()==accountholder.getFKID("accountholder")) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("accountId").toString();
 				if (AccountAPI.transaction(Integer.parseInt(source), Double.parseDouble(amount) * -1)) {
@@ -286,8 +203,8 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 			}
 			return;
-		} else if (portions[0].equals("transfer")) {
-			if ((requestOwnerID==Integer.parseInt(jsonObject.get("sourceAccountId").toString())) || (requestOwnerRole.equals("Admin"))) {
+		} else if (pieces.getEndpoint().equals("transfer")) {
+			if ((Authorization.getRequestOwnerID()==Integer.parseInt(jsonObject.get("sourceAccountId").toString())) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("sourceAccountId").toString();
 				String target = jsonObject.get("targetAccountId").toString();
@@ -311,56 +228,22 @@ public class APIServlet extends HttpServlet {
 	}
 	
 	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		res.setContentType("application/json");
-		
-		String auth = req.getHeader("authorization");
-		String requestOwner;
-		String requestOwnerRole;
-		int requestOwnerID;
-		if (auth==null) { 
-			res = ServletUtils.sendMessage(res, 401, "Authorization required"); 
-			return; 
-		} else {
-			String token = auth.replace("Bearer ", "");
-			try {
-				Claims claims = JWT.decode(token);
-				requestOwner = claims.get("username").toString();
-				AccountHolder obj = AccountHolder.search(requestOwner);
-				requestOwnerRole = obj.getField("role");
-				requestOwnerID = obj.getID(); 
-			} catch (MalformedJwtException e) {
-				res = ServletUtils.sendMessage(res, 401, "Malformed Token");
-				return;
-			}
-		}
-		
-		JSONParser parser = new JSONParser();
 		JSONObject jsonObject;
-		
-		BufferedReader reader = req.getReader();
-		StringBuilder s = new StringBuilder();
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-		String body = new String(s);
+		res = ServletUtils.APISetup(res);
+		if (!Authorization.processJWT(req, res)) { return; }
 		
 		try {
-			Object jsonObj = parser.parse(body);
-			jsonObject = (JSONObject) jsonObj;
-			
+			jsonObject = ServletUtils.bodyAsJSON(req, res);
 		} catch (ParseException e){
 			res = ServletUtils.sendMessage(res, 400, "The json provided is not parsable");
 			return;
 		}
 		
-		String URI = req.getRequestURI().replace("/rocp-project/api/", "");
-		String[] portions = URI.split("/");
-		String results = new String("");
+		URLPortions pieces = new URLPortions(req);
 		
-		if (portions[0].equals("accounts")) {
-			if (requestOwnerRole.equals("Admin")) {
+		String results = "";
+		if (pieces.getEndpoint().equals("accounts")) {
+			if (Authorization.getRequestOwnerRole().equals("Admin")) {
 				ArrayList<String> fields = new ArrayList<String>(
 	                    Arrays.asList("balance", "deleted", "accountstatus", "accounttype", "accountholder"));
 				if (!jsonObject.containsKey("account_id")) {
@@ -395,10 +278,10 @@ public class APIServlet extends HttpServlet {
 				res = ServletUtils.sendMessage(res, 403, "Forbidden");
 				return;
 			}
-		} else if (portions[0].equals("users")) {
+		} else if (pieces.getEndpoint().equals("users")) {
 			if (
-				(requestOwnerRole.equals("Admin")) || 
-				(requestOwner.equals(jsonObject.get("username").toString()))
+				(Authorization.getRequestOwnerRole().equals("Admin")) || 
+				(Authorization.getRequestOwner().equals(jsonObject.get("username").toString()))
 			   ) {
 				if (!jsonObject.containsKey("accountholder_id")) {
 					res = ServletUtils.sendMessage(res, 400, "The field accountholder_id was not provided");
@@ -406,7 +289,7 @@ public class APIServlet extends HttpServlet {
 				}
 				int ID = Integer.parseInt(jsonObject.get("accountholder_id").toString());
 				ArrayList<String> fields = new ArrayList<String>(
-	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "role"));
+	                    Arrays.asList("username", "password", "firstname", "lastname", "email", "deleted", "role"));
 				Map<String, String> data = new HashMap<String, String>();
 				for (String field : fields) {
 	                if (jsonObject.containsKey(field)) {

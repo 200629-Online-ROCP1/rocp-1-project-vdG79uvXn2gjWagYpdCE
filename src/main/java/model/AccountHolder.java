@@ -3,10 +3,7 @@ package model;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 import dao.AccountHolderDAO;
-import dao.AccountStatusDAO;
-import model.Role;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -23,7 +20,7 @@ public class AccountHolder {
 		super();
 	}
 
-	public AccountHolder(Map<String, String> data) {
+	public AccountHolder(Map<String, String> data) throws IllegalArgumentException {
 		super();
 		for (String field : fields) {
 			if (data.containsKey(field)) {
@@ -35,7 +32,7 @@ public class AccountHolder {
 						this.fieldValues.put("role", this.role_fk.getField("role"));
 					}
 				} else {
-					System.out.println("ERROR: No value was provided for field " + field);
+					throw new IllegalArgumentException("No value was provided for field " + field);
 				}
 			}
 		}

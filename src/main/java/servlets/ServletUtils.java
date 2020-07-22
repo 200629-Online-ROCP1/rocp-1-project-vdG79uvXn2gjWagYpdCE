@@ -2,17 +2,10 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.MalformedJwtException;
-import model.AccountHolder;
-import utils.JWT;
 
 public class ServletUtils {
 	

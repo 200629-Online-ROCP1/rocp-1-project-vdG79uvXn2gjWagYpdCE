@@ -1,14 +1,9 @@
 package model;
 
 import dao.AccountDAO;
-import dao.AccountHolderDAO;
-import model.*;
-
 import java.util.Map;
 import java.util.UUID;
-
 import org.json.simple.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +36,7 @@ public class Account {
 						int id = Integer.parseInt(data.get("accountholder_id"));
 						this.accountholder_fk = AccountHolder.search(id);
 					} else {
-						System.out.println("ERROR: No value was provided for field " + field);
+						throw new IllegalArgumentException("No value was provided for field " + field);
 					}
 				}
 				if (field == "accountstatus") {
@@ -50,7 +45,7 @@ public class Account {
 						this.accountstatus_fk = AccountStatus.search(id);
 						this.fieldValues.put("accountstatus", this.accountstatus_fk.getField("status"));
 					} else {
-						System.out.println("ERROR: No value was provided for field " + field);
+						throw new IllegalArgumentException("No value was provided for field " + field);
 					}
 				}
 				if (field == "accounttype") {
@@ -58,7 +53,7 @@ public class Account {
 						int id = Integer.parseInt(data.get("accounttype_id"));
 						this.accounttype_fk = AccountType.search(id);
 					} else {
-						System.out.println("ERROR: No value was provided for field " + field);
+						throw new IllegalArgumentException("No value was provided for field " + field);
 					}
 				}
 			}
@@ -146,16 +141,24 @@ public class Account {
 		return primaryKey;
 	}
 
-	public int getFKID(String fieldName) {
+	public int getFKID(String fieldName) throws IllegalArgumentException {
 		if (fieldName == "accountstatus") {
+			if (accountstatus_fk==null) {
+				throw new IllegalArgumentException("The value for accountstatus is not valid");
+			}
 			return accountstatus_fk.getID();
 		} else if (fieldName == "accounttype") {
+			if (accounttype_fk==null) {
+				throw new IllegalArgumentException("The value for accounttype is not valid");
+			}
 			return accounttype_fk.getID();
 		} else if (fieldName == "accountholder") {
+			if (accountholder_fk==null) {
+				throw new IllegalArgumentException("The value for accountholder is not valid");
+			}
 			return accountholder_fk.getID();
 		} else {
-			System.out.println("ERROR: foreign key " + fieldName + " is unknown.");
-			return 0;
+			throw new IllegalArgumentException("foreign key " + fieldName + " is unknown.");
 		}
 
 	}
@@ -163,7 +166,7 @@ public class Account {
 	// Database operations - save(insert or update), search, refresh
 	public void save() throws IllegalArgumentException {
 		AccountDAO dao = AccountDAO.getInstance();
-		if (primaryKey > 0) { // FIX
+		if (primaryKey > 0) { 
 			if (dao.update(this)) {
 				saved = true;
 			}

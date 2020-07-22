@@ -2,12 +2,6 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +12,6 @@ import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import controller.*;
 import model.*;
 import utils.JWT;
 import utils.Password;
