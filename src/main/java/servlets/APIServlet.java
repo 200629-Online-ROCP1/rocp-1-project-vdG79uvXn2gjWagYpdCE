@@ -76,7 +76,7 @@ public class APIServlet extends HttpServlet {
 					}
 				}
 				if (results==null) { 
-					res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
+					res = ServletUtils.sendMessage(res, 404, "I'm sorry Dave, I'm afraid I can't do that.");
 					return; 
 				}
 			} else {
@@ -88,7 +88,11 @@ public class APIServlet extends HttpServlet {
 				}
 			}
 		} else {
-			res = ServletUtils.sendMessage(res, 404, "The id provided was not found");
+			res = ServletUtils.sendMessage(res, 404, "I'm sorry Dave, I'm afraid I can't do that.");
+			return;
+		}
+		if (results==null) {
+			res = ServletUtils.sendMessage(res, 404, "I'm sorry Dave, I'm afraid I can't do that.");
 			return;
 		}
 		res.setStatus(200);
@@ -336,7 +340,7 @@ public class APIServlet extends HttpServlet {
 			} else if (pieces.getEndpoint().equals("users")) {
 				AccountHolder.delete(pieces.getID());
 			} else {
-				res = ServletUtils.sendMessage(res, 404, "Resource not found");
+				res = ServletUtils.sendMessage(res, 404, "I'm sorry Dave, I'm afraid I can't do that.");
 				return;
 			} 
 		} else {
