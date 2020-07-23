@@ -9,15 +9,11 @@ import java.sql.ResultSet;
 import database.DBConnector;
 import model.Role;
 
-public class RoleDAO {
-	private static RoleDAO self = new RoleDAO();
-
-	private RoleDAO() {
-	}
-
-	public static RoleDAO getInstance() {
-		return self;
-	}
+public class RoleDAO extends ModelDAO {
+	private static RoleDAO self = new RoleDAO("role");
+	
+	public static RoleDAO getInstance() { return self; }
+	protected RoleDAO(String tablename) { super(tablename); }
 
 	public boolean insert(Role accountStatus) {
 		try {
@@ -87,17 +83,6 @@ public class RoleDAO {
 			System.out.println(e);
 		}
 		return null;
-	}
-
-	public void delete() {
-		try {
-			Connection dbconn = DBConnector.getConnection();
-			String sql = "DELETE FROM role";
-			PreparedStatement statement = dbconn.prepareStatement(sql);
-			statement.execute();
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
 	}
 
 	public ArrayList<Role> retrieveAll() {

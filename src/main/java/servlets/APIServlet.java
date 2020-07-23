@@ -208,7 +208,8 @@ public class APIServlet extends HttpServlet {
 			}
 			return;
 		} else if (pieces.getEndpoint().equals("transfer")) {
-			if ((Authorization.getRequestOwnerID()==Integer.parseInt(jsonObject.get("sourceAccountId").toString())) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
+			Account accountholder = Account.search(Integer.parseInt(jsonObject.get("sourceAccountId").toString()));
+			if ((Authorization.getRequestOwnerID()==accountholder.getFKID("accountholder")) || (Authorization.getRequestOwnerRole().equals("Admin"))) {
 				String amount = jsonObject.get("amount").toString();
 				String source = jsonObject.get("sourceAccountId").toString();
 				String target = jsonObject.get("targetAccountId").toString();

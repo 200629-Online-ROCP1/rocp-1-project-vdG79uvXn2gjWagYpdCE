@@ -85,6 +85,7 @@ public class Server {
 		Map<String, String> data = new HashMap<String, String>();
 
 		data.put("role", "Standard");
+		data.put("deleted", "false");
 		data.put("username", "hsimpson");
 		data.put("firstname", "Homer");
 		data.put("lastname", "Simpson");
@@ -94,6 +95,7 @@ public class Server {
 		accountHolder.save();
 
 		data.put("role", "Standard");
+		data.put("deleted", "false");
 		data.put("username", "nflanders");
 		data.put("firstname", "Ned");
 		data.put("lastname", "Flanders");
@@ -103,6 +105,7 @@ public class Server {
 		accountHolder.save();
 
 		data.put("role", "Standard");
+		data.put("deleted", "false");
 		data.put("username", "wsmithers");
 		data.put("firstname", "Waylon");
 		data.put("lastname", "Smithers");
@@ -112,6 +115,7 @@ public class Server {
 		accountHolder.save();
 		
 		data.put("role", "Employee");
+		data.put("deleted", "false");
 		data.put("username", "rwiggum");
 		data.put("firstname", "Ralph");
 		data.put("lastname", "Wiggum");
@@ -121,6 +125,7 @@ public class Server {
 		accountHolder.save();
 		
 		data.put("role", "Employee");
+		data.put("deleted", "false");
 		data.put("username", "nmuntz");
 		data.put("firstname", "Nelson");
 		data.put("lastname", "Muntz");
@@ -130,6 +135,7 @@ public class Server {
 		accountHolder.save();
 		
 		data.put("role", "Admin");
+		data.put("deleted", "false");
 		data.put("username", "msimpson");
 		data.put("firstname", "Marge");
 		data.put("lastname", "Simpson");
